@@ -15,7 +15,7 @@ func _process(delta: float) -> void:
 	
 	var hex_coords = tilemap.get_hex_coordinates(get_global_mouse_position())
 	#tilemap_overlay.clear()
-	if hex_coords:
+	if hex_coords or hex_coords == Vector2(0,0):
 		#tilemap_overlay.set_cellv(hex_coords, 2)
 		hover_hex.visible = true
 		hover_hex.position = tilemap.get_centre_coordinates_from_hex(hex_coords)
@@ -35,6 +35,7 @@ func _process(delta: float) -> void:
 		#distance_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )
 		#distance_label.show()
 		
+		hover_hex.visible = false
 		tilemap_overlay.clear()
 		var path = tilemap.find_path(character.position, get_global_mouse_position())
 		#path.remove(0)
@@ -66,7 +67,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		character.path = PoolVector2Array(position_path)
 		character.goal = event.global_position
 		
-			
 		#var new_path : = nav_2d.get_simple_path(character.global_position, event.global_position, false)
 		#character.path = new_path
 		#character.goal = event.global_position

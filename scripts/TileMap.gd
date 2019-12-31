@@ -81,24 +81,24 @@ func find_path(start_pos, end_pos):
 	var path_start_position = get_hex_coordinates(start_pos)
 	var path_end_position = get_hex_coordinates(end_pos)
 	
-	if not path_end_position: # Out of bounds
+	if not path_end_position and path_end_position != Vector2(0,0): # Out of bounds
 		return []
 	
 	var walkable_cells_list = []
 	var obstacles = []
 	obstacles += get_used_cells_by_id(5)
 	
+	var cell_counter = 0 # Cell counter forces equal paths to choose left side by adjusting weight by small amount
 	for cell in self.get_used_cells():
 		if cell in obstacles:
 			continue
 		walkable_cells_list.append(cell)
-		# The AStar class references points with indices
-		# Using a function to calculate the index from a point's coordinates
-		# ensures we always get the same index with the same input point
 		var cell_index = calculate_point_index(cell)
-		# AStar works for both 2d and 3d, so we have to convert the point
-		# coordinates from and to Vector3s
-		astar_node.add_point(cell_index, Vector3(cell.x, cell.y, 0.0))
+		
+		#tile_id = self.get_cellv(cell) # Use this to determine tile weight by id
+		
+		astar_node.add_point(cell_index, Vector3(cell.x, cell.y, 0.0), 100+cell_counter)
+		cell_counter += 1
 	
 	for point in walkable_cells_list:
 		var point_index = calculate_point_index(point)
