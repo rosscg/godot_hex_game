@@ -1,0 +1,10 @@
+func _input(event) -> void:
+	if event is InputEventMouseMotion:  # If the mouse is moving, we update the highlight position on the map.
+		var cell := world_to_map(get_viewport_mouse_position())
+
+		# TODO: also hide on borders
+		if not rect.has_point(cell):
+			hover.hide()
+		else:
+			hover.show() # If the hex is over a playable hex, show the hex highlight
+			hover.position = map_to_world_centered(cell)
