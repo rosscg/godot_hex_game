@@ -2,7 +2,7 @@ extends Node2D
 
 onready var nav_2d : Navigation2D = $Navigation2D
 onready var tilemap : TileMap = get_node("Navigation2D/TileMap")
-#onready var tilemap_overlay : TileMap = get_node("Navigation2D/TileMapOverlay")
+onready var tilemap_overlay : TileMap = get_node("Navigation2D/TileMapOverlay")
 onready var line_2d : Line2D = $Line2D
 onready var character : AnimatedSprite = $Character
 onready var distance_label : Label = $Distance_Label
@@ -23,17 +23,27 @@ func _process(delta: float) -> void:
 		hover_hex.visible = false
 	
 	if left_dragging:
-		var new_path : = nav_2d.get_simple_path(character.global_position, get_global_mouse_position(), false)
+		#var new_path : = nav_2d.get_simple_path(character.global_position, get_global_mouse_position(), false)
 		#var new_path : = nav_2d.get_simple_path(character.global_position, get_global_mouse_position())
-		line_2d.points = new_path
+		#line_2d.points = new_path
 		
-		var distance = 0.0
-		for i in range(new_path.size()):
-			distance += new_path[i].length()
+		#var distance = 0.0
+		#for i in range(new_path.size()):
+		#	distance += new_path[i].length()
 		
-		distance_label.text = str(int(distance / 500)) + ' days'
+		#distance_label.text = str(int(distance / 500)) + ' days'
+		#distance_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )
+		#distance_label.show()
+		
+		tilemap_overlay.clear()
+		var path = tilemap.find_path(character.position, get_global_mouse_position())
+		#path.remove(0)
+		for p in path:
+			tilemap_overlay.set_cellv(p, 2)
+		distance_label.text = str(len(path)) + ' days'
 		distance_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )
 		distance_label.show()
+		
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -45,9 +55,21 @@ func _unhandled_input(event: InputEvent) -> void:
 	left_dragging = event.pressed
 
 	if not event.pressed:
-		var new_path : = nav_2d.get_simple_path(character.global_position, event.global_position, false)
-		character.path = new_path
+		
+		tilemap_overlay.clear()
+		
+		var path = tilemap.find_path(character.position, get_global_mouse_position())
+		var position_path = []
+		for p in path:
+			position_path.append(tilemap.get_centre_coordinates_from_hex(p))
+		position_path.remove(0)
+		character.path = PoolVector2Array(position_path)
 		character.goal = event.global_position
+		
+			
+		#var new_path : = nav_2d.get_simple_path(character.global_position, event.global_position, false)
+		#character.path = new_path
+		#character.goal = event.global_position
 		#line_2d.clear_points()
 		distance_label.hide()
 

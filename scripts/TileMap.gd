@@ -7,8 +7,9 @@ var grid_cell_width = cell_size.x
 #var grid_dimensions = Vector2(19,8)
 var grid_dimensions = get_used_rect()
 
-func _ready():
-	print(tile_set.get_tiles_ids())
+#func _ready():
+	#print(tile_set.get_tiles_ids())
+	#print(get_used_cells())
 
 
 func is_left(point: Vector2, a: Vector2, b: Vector2):
@@ -65,3 +66,77 @@ func get_centre_coordinates_from_hex(point: Vector2):
 	if int(point.x) % 2 != 0:
 		coordinates.y += grid_cell_height / 2
 	return coordinates
+	
+
+func is_outside_map_bounds(point):
+	return point.x < 0 or point.y < 0 or point.x >= grid_dimensions.end.x or point.y >= grid_dimensions.end.y
+	
+func calculate_point_index(cell):
+	return cell.x + grid_dimensions.end.x * cell.y
+
+
+func find_path(start_pos, end_pos):
+	var astar_node = AStar.new()
+
+	var path_start_position = get_hex_coordinates(start_pos)
+	var path_end_position = get_hex_coordinates(end_pos)
+	
+	if not path_end_position: # Out of bounds
+		return []
+	
+	var walkable_cells_list = []
+	var obstacles = []
+	obstacles += get_used_cells_by_id(5)
+	
+	for cell in self.get_used_cells():
+		if cell in obstacles:
+			continue
+		walkable_cells_list.append(cell)
+		# The AStar class references points with indices
+		# Using a function to calculate the index from a point's coordinates
+		# ensures we always get the same index with the same input point
+		var cell_index = calculate_point_index(cell)
+		# AStar works for both 2d and 3d, so we have to convert the point
+		# coordinates from and to Vector3s
+		astar_node.add_point(cell_index, Vector3(cell.x, cell.y, 0.0))
+	
+	for point in walkable_cells_list:
+		var point_index = calculate_point_index(point)
+		var points_relative
+		
+		if fmod(point.x, 2) == 0:
+			points_relative = PoolVector2Array([
+				Vector2(point.x, point.y - 1),
+				Vector2(point.x + 1, point.y - 1),
+				Vector2(point.x + 1, point.y),
+				Vector2(point.x, point.y + 1),
+				Vector2(point.x - 1, point.y),
+				Vector2(point.x - 1, point.y - 1)])
+		else:
+			points_relative = PoolVector2Array([
+				Vector2(point.x, point.y - 1),
+				Vector2(point.x + 1, point.y),
+				Vector2(point.x + 1, point.y + 1),
+				Vector2(point.x, point.y + 1),
+				Vector2(point.x - 1, point.y + 1),
+				Vector2(point.x - 1, point.y)])
+			
+		for point_relative in points_relative:
+			var point_relative_index = calculate_point_index(point_relative)
+
+			if is_outside_map_bounds(point_relative):
+				continue
+			if not astar_node.has_point(point_relative_index):
+				continue
+			# Note the 3rd argument. It tells the astar_node that we want the
+			# connection to be bilateral: from point A to B and B to A
+			# If you set this value to false, it becomes a one-way path
+			# As we loop through all points we can set it to false
+			astar_node.connect_points(point_index, point_relative_index, false)
+			
+	var point_path = astar_node.get_point_path(calculate_point_index(path_start_position), calculate_point_index(path_end_position))
+	var point_path2 = []
+	for p in point_path:
+		point_path2.append(Vector2(p.x, p.y))
+	
+	return point_path2
