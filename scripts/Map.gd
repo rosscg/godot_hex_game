@@ -1,8 +1,8 @@
 extends Node2D
 
 onready var nav_2d : Navigation2D = $Navigation2D
-onready var tilemap : TileMap = get_node("Navigation2D/TileMap")
-onready var tilemap_overlay : TileMap = get_node("Navigation2D/TileMapOverlay")
+onready var tilemap : TileMap = get_node("TileMap")
+onready var tilemap_overlay : TileMap = get_node("TileMapOverlay")
 onready var line_2d : Line2D = $Line2D
 onready var character : AnimatedSprite = $Character
 onready var distance_label : Label = $Distance_Label
