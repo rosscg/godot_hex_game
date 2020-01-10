@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/fencer-idle-7.png-2d457fe6fdaabb85efcae60b386dbce8.stex"
+path="res://.import/general-idle-2.png-9a2c9c6e901e66c420c097e572a7b039.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fencer/fencer-idle-7.png"
-dest_files=[ "res://.import/fencer-idle-7.png-2d457fe6fdaabb85efcae60b386dbce8.stex" ]
+source_file="res://assets/units/general/general-idle-2.png"
+dest_files=[ "res://.import/general-idle-2.png-9a2c9c6e901e66c420c097e572a7b039.stex" ]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/fencer-idle-2.png-1072d7f436ea22bca94f2781cadc8ab1.s3tc.stex"
-path.etc2="res://.import/fencer-idle-2.png-1072d7f436ea22bca94f2781cadc8ab1.etc2.stex"
+path.s3tc="res://.import/fencer-idle-2.png-f2f46ad1e3f4e88c77569cd952502ee1.s3tc.stex"
+path.etc2="res://.import/fencer-idle-2.png-f2f46ad1e3f4e88c77569cd952502ee1.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/fencer/fencer-idle-2.png"
-dest_files=[ "res://.import/fencer-idle-2.png-1072d7f436ea22bca94f2781cadc8ab1.s3tc.stex", "res://.import/fencer-idle-2.png-1072d7f436ea22bca94f2781cadc8ab1.etc2.stex" ]
+source_file="res://assets/units/fencer/fencer-idle-2.png"
+dest_files=[ "res://.import/fencer-idle-2.png-f2f46ad1e3f4e88c77569cd952502ee1.s3tc.stex", "res://.import/fencer-idle-2.png-f2f46ad1e3f4e88c77569cd952502ee1.etc2.stex" ]
 
 [params]
 

@@ -1,0 +1,53 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://scripts/Unit.gd" type="Script" id=1]
+[ext_resource path="res://assets/units/bandit/bandit-idle-1.png" type="Texture" id=2]
+[ext_resource path="res://assets/units/bandit/bandit-idle-2.png" type="Texture" id=3]
+[ext_resource path="res://assets/units/bandit/bandit-idle-3.png" type="Texture" id=4]
+[ext_resource path="res://assets/units/bandit/bandit-idle-4.png" type="Texture" id=5]
+[ext_resource path="res://assets/units/bandit/bandit-idle-5.png" type="Texture" id=6]
+[ext_resource path="res://assets/units/bandit/bandit-idle-6.png" type="Texture" id=7]
+[ext_resource path="res://assets/units/general/general-idle-1.png" type="Texture" id=8]
+[ext_resource path="res://assets/units/general/general-idle-2.png" type="Texture" id=9]
+[ext_resource path="res://assets/units/general/general-idle-3.png" type="Texture" id=10]
+[ext_resource path="res://assets/units/general/general-idle-4.png" type="Texture" id=11]
+[ext_resource path="res://assets/units/general/general-idle-5.png" type="Texture" id=12]
+[ext_resource path="res://assets/units/general/general-idle-6.png" type="Texture" id=13]
+[ext_resource path="res://assets/units/fencer/fencer-idle-1.png" type="Texture" id=14]
+[ext_resource path="res://assets/units/fencer/fencer-idle-2.png" type="Texture" id=15]
+[ext_resource path="res://assets/units/footpad/footpad-idle-1.png" type="Texture" id=16]
+[ext_resource path="res://assets/units/footpad/footpad-idle-2.png" type="Texture" id=17]
+[ext_resource path="res://assets/units/footpad/footpad-idle-3.png" type="Texture" id=18]
+[ext_resource path="res://assets/units/footpad/footpad-idle-4.png" type="Texture" id=19]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "bandit",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ) ],
+"loop": true,
+"name": "general",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 14 ), ExtResource( 15 ) ],
+"loop": true,
+"name": "fencer",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 16 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 19 ) ],
+"loop": true,
+"name": "footpad",
+"speed": 5.0
+} ]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "bandit"
+frame = 1
+playing = true

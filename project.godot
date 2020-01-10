@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="gridgame"
-run/main_scene="res://Map.tscn"
+run/main_scene="res://scenes/Map.tscn"
 config/icon="res://icon.png"
 
 [rendering]

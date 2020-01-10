@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/spritesheet_tiles.png-db7496d4c934dabb135421f2e10462a9.stex"
+path="res://.import/bandit-idle-2.png-510a9003ddc9037eb7e1d33fb4332b5d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spritesheet_tiles.png"
-dest_files=[ "res://.import/spritesheet_tiles.png-db7496d4c934dabb135421f2e10462a9.stex" ]
+source_file="res://assets/units/bandit/bandit-idle-2.png"
+dest_files=[ "res://.import/bandit-idle-2.png-510a9003ddc9037eb7e1d33fb4332b5d.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

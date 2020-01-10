@@ -1,13 +1,13 @@
-extends Area2D
+extends Node2D
 
 var speed : = 100.0
-var current_position : = Vector2()
 var path : = PoolVector2Array()# setget set_path
 var goal : = Vector2()
+var unit_types = ['fencer', 'general', 'bandit', 'footpad']
 
 func _ready() -> void:
 	set_process(false)
-	#self.play("idle")
+	$AnimatedSprite.animation = unit_types[randi() % unit_types.size()]
 	
 func _process(delta: float) -> void:
 	var move_distance : = speed * delta
@@ -31,12 +31,3 @@ func _move_along_path(move_distance: float) -> void:
 	#if value.size() == 0:
 	#	return
 	#set_process(true)
-	
-func _input_event(viewport, event, shape_idx):
-    if event is InputEventMouseButton \
-    and event.button_index == BUTTON_LEFT \
-    and event.is_pressed():
-        self.on_click()
-
-func on_click():
-    print("Click")
