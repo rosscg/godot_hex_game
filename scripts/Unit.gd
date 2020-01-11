@@ -4,6 +4,9 @@ extends Node2D
 var unit_types = ['fencer', 'marshal', 'lieutenant', 'spearman']
 var speed : = 100.0
 var strength : = randi()%11 + 1
+var terrain_dict = {'grass': 1000, 'marsh': 2000, 'mountain': 5000}
+
+
 var path : = PoolVector2Array()
 var goal : = Vector2()
 var current_hex
@@ -12,7 +15,6 @@ var current_hex
 func _ready() -> void:
 	set_process(false)
 	$AnimatedSprite.animation = unit_types[randi() % unit_types.size()]
-	print($AnimatedSprite.animation)
 
 
 func _process(delta: float) -> void:
@@ -38,8 +40,8 @@ func _draw():
 	# Full strength bar is 40 px wide
 	draw_line(Vector2(-20,30), Vector2((-20+float(strength)/10*40), 30), Color(255, 0, 0), 4)
 	# Unit needs orders:
-	if len(path) == 0:
-		draw_circle(Vector2(20,-20), 5, Color( 0, 0, 1, 1 ))
+	if len(path) == 0 and strength > 0:
+		draw_circle(Vector2(16,-20), 5, Color( 0, 0, 1, 1 ))
 
 
 func take_damage(damage):
@@ -57,5 +59,5 @@ func take_damage(damage):
 		return true
 
 
-func set_goal(goal):
-	pass
+func set_goal(goal_to_set):
+	self.goal = goal_to_set

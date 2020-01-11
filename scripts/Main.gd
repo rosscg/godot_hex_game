@@ -48,7 +48,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					return
 		else:
 			map.tilemap_overlay.clear()
-			var path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position())
+			var path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position(), unit_manager.selected_unit.terrain_dict)
 			var position_path = []
 			for p in path:
 				position_path.append(map.tilemap.get_centre_coordinates_from_hex(p))
@@ -65,6 +65,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_Button_button_up():
 	unit_manager.activate_units(true)
-	yield(get_tree().create_timer(3.0), "timeout")
-	unit_manager.activate_units(false)
+	#yield(get_tree().create_timer(3.0), "timeout")
+	#unit_manager.activate_units(false)
 

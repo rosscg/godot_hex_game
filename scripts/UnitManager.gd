@@ -40,6 +40,7 @@ func get_unit_in_hex(hex_coordinates, ignored_unit=null):
 
 
 func detect_combat():
+	# TODO: Currently won't initiate when two units 'swap' hexes.
 	for unit in unit_list:
 		var hex = map.tilemap.get_hex_coordinates(unit.position)
 		var unit2 = get_unit_in_hex(hex, unit)

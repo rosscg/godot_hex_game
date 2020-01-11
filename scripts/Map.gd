@@ -17,7 +17,7 @@ func _process(delta: float) -> void:
 func display_path(selected_unit):
 	hover_hex_sprite.visible = false
 	tilemap_overlay.clear()
-	var path = tilemap.find_path(selected_unit.position, get_global_mouse_position())
+	var path = tilemap.find_path(selected_unit.position, get_global_mouse_position(), selected_unit.terrain_dict)
 	path.remove(0)
 	for p in path:
 		tilemap_overlay.set_cellv(p, 2)
