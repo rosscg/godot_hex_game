@@ -18,7 +18,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var move_distance : = speed * delta
 	_move_along_path(move_distance)
-	
+
 
 func _move_along_path(move_distance: float) -> void:
 	var start_point : = position
@@ -31,11 +31,15 @@ func _move_along_path(move_distance: float) -> void:
 			move_distance -= distance_to_next
 			start_point = path[0]
 			path.remove(0)
+	update()
 
 
 func _draw():
 	# Full strength bar is 40 px wide
-    draw_line(Vector2(-20,30), Vector2((-20+float(strength)/10*40), 30), Color(255, 0, 0), 4)
+	draw_line(Vector2(-20,30), Vector2((-20+float(strength)/10*40), 30), Color(255, 0, 0), 4)
+	# Unit needs orders:
+	if len(path) == 0:
+		draw_circle(Vector2(20,-20), 5, Color( 0, 0, 1, 1 ))
 
 
 func take_damage(damage):
@@ -46,8 +50,12 @@ func take_damage(damage):
 	else:
 		strength = 0
 		update()
-		path = PoolVector2Array([])
+		path = PoolVector2Array([]) # Stop moving
 		$AnimatedSprite.play($AnimatedSprite.animation + '_die')
 		yield($AnimatedSprite, "animation_finished" )
 		queue_free()
 		return true
+
+
+func set_goal(goal):
+	pass

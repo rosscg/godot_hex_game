@@ -53,7 +53,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			for p in path:
 				position_path.append(map.tilemap.get_centre_coordinates_from_hex(p))
 			position_path.remove(0)
+			# TODO: move into unit class:
 			unit_manager.selected_unit.path = PoolVector2Array(position_path)
+			unit_manager.selected_unit.update()
 			unit_manager.selected_unit.goal = event.global_position
 			unit_manager.selected_unit = null
 			map.selected_hex_sprite.visible = false
