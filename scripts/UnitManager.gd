@@ -44,15 +44,16 @@ func detect_combat():
 		var hex = map.tilemap.get_hex_coordinates(unit.position)
 		var unit2 = get_unit_in_hex(hex, unit)
 		if unit2:
-			print('Combat at hex: ', hex)
+			#print('Combat at hex: ', hex)
 			resolve_combat(unit, unit2)
 	return
 
 
 func resolve_combat(unit1, unit2):
-	if unit1.strength > unit2.strength:
-		unit_list.erase(unit2)
-		unit2.queue_free()
-	else:
+	# Arbitrary combat implementation
+	var u1_damage = unit1.strength
+	var u2_damage = unit2.strength
+	if unit1.take_damage(u2_damage):
 		unit_list.erase(unit1)
-		unit1.queue_free()
+	if unit2.take_damage(u1_damage):
+		unit_list.erase(unit2)

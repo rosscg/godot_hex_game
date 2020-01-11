@@ -136,6 +136,7 @@ polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5 ) ]
 script = ExtResource( 1 )
 
 [node name="Map" type="Node2D" parent="."]
+editor/display_folded = true
 script = ExtResource( 2 )
 
 [node name="TileMap" type="TileMap" parent="Map"]

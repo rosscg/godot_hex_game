@@ -1,8 +1,9 @@
 extends Node2D
 
-var unit_types = ['fencer', 'general', 'bandit', 'footpad']
+#var unit_types = ['fencer', 'general', 'bandit', 'footpad']
+var unit_types = ['fencer', 'marshal', 'lieutenant', 'spearman']
 var speed : = 100.0
-var strength : = randi()%11
+var strength : = randi()%11 + 1
 var path : = PoolVector2Array()
 var goal : = Vector2()
 var current_hex
@@ -11,6 +12,7 @@ var current_hex
 func _ready() -> void:
 	set_process(false)
 	$AnimatedSprite.animation = unit_types[randi() % unit_types.size()]
+	print($AnimatedSprite.animation)
 
 
 func _process(delta: float) -> void:
@@ -31,8 +33,21 @@ func _move_along_path(move_distance: float) -> void:
 			path.remove(0)
 
 
-#func set_path(value : PoolVector2Array) -> void:
-#	path = value
-	#if value.size() == 0:
-	#	return
-	#set_process(true)
+func _draw():
+	# Full strength bar is 40 px wide
+    draw_line(Vector2(-20,30), Vector2((-20+float(strength)/10*40), 30), Color(255, 0, 0), 4)
+
+
+func take_damage(damage):
+	if strength > damage:
+		strength -= damage
+		update()
+		return false
+	else:
+		strength = 0
+		update()
+		path = PoolVector2Array([])
+		$AnimatedSprite.play($AnimatedSprite.animation + '_die')
+		yield($AnimatedSprite, "animation_finished" )
+		queue_free()
+		return true
