@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=2]
+[gd_scene load_steps=72 format=2]
 
 [ext_resource path="res://scripts/Unit.gd" type="Script" id=1]
 [ext_resource path="res://assets/units/lieutenant/lieutenant-die-1.png" type="Texture" id=2]
@@ -69,6 +69,7 @@
 [ext_resource path="res://assets/units/spearman/spearman-idle2-5.png" type="Texture" id=67]
 [ext_resource path="res://assets/units/spearman/spearman-idle2-6.png" type="Texture" id=68]
 [ext_resource path="res://assets/units/unit_sword.png" type="Texture" id=69]
+[ext_resource path="res://assets/hover3_20px.png" type="Texture" id=70]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -131,23 +132,36 @@ animations = [ {
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="PlannedPath" type="Line2D" parent="."]
+visible = false
+points = PoolVector2Array( 51.9235, -9.17429 )
+width = 4.0
+default_color = Color( 0, 0, 0, 1 )
+texture_mode = 48
+
+[node name="BackgroundPoly" type="Polygon2D" parent="."]
 position = Vector2( -11.0813, 12.0887 )
-color = Color( 0.0352941, 0.160784, 0.839216, 1 )
-polygon = PoolVector2Array( 5.57863, -2.11957, 16.7852, -2.11957, 21.2571, -6.80694, 21.2571, -17.8519, 16.5697, -22.1622, 5.74027, -22.216, 1.05289, -17.7442, 0.837378, -6.80694 )
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( 4.79439, -1.11718, 17.0974, -1.11718, 21.7512, -6.19887, 21.7512, -17.9135, 17.0974, -22.7812, 5.16883, -22.8347, 0.0336514, -18.3949, 0.0336514, -5.82442 )
+
+[node name="SelectedPoly" type="Polygon2D" parent="."]
+visible = false
+position = Vector2( -11.0813, 12.0887 )
+color = Color( 0.929412, 0.823529, 0.121569, 1 )
+polygon = PoolVector2Array( 4.63392, 0.96899, 17.0439, 0.96899, 23.4094, -5.66395, 23.4094, -18.074, 17.3114, -24.8674, 5.11534, -24.8674, -1.94553, -19.0903, -1.99902, -5.82442 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 visible = false
 scale = Vector2( 0.8, 0.8 )
 frames = SubResource( 1 )
 animation = "general"
-frame = 9
+frame = 7
 playing = true
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 69 )
 
-[node name="PlannedPath" type="Line2D" parent="."]
-width = 4.0
-default_color = Color( 0.0196078, 0.156863, 0.843137, 1 )
-texture_mode = 48
+[node name="GoalSprite" type="Sprite" parent="."]
+visible = false
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 70 )

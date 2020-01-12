@@ -7,6 +7,9 @@ var terrain_dict = {'grass': 2, 'water': 20, 'deepwater': 50, 'road': 1, 'dirt':
 					'lowhills': 6, 'forest': 6, 'marsh': 6, 'mountain': 10}
 
 onready var planned_path : Line2D = $PlannedPath
+onready var goal_sprite : Sprite = $GoalSprite
+onready var selected_poly : Polygon2D = $SelectedPoly
+
 var path : = PoolVector2Array()
 var goal : = Vector2()
 
@@ -50,14 +53,22 @@ func _process(delta: float) -> void:
 	var move_distance : = speed * delta
 	_move_along_path(move_distance)
 
-	# Update current_hexes
+	# Update current_hexes occupied
 	current_hexes = []
 	for i in current_local_hexes:
 		current_hexes.append(tilemap.get_hex_coordinates(self.position) + i)
 	
+	# Draw unit path and goal
 	planned_path.clear_points()
-	for point in path:
+	planned_path.add_point(Vector2(0,0))
+	for point in self.path:
 		planned_path.add_point(point - position)
+	if self.goal:
+		goal_sprite.position = tilemap.get_centre_coordinates_from_hex(tilemap.get_hex_coordinates(self.goal)) - self.position
+		if tilemap.get_hex_coordinates(self.goal) == tilemap.get_hex_coordinates(self.position):
+			# Arrived at goal
+			self.goal = Vector2(0,0)
+			self.goal_sprite.visible = false
 
 
 func _move_along_path(move_distance: float) -> void:
@@ -110,5 +121,27 @@ func take_damage(damage):
 		return true
 
 
-func set_goal(goal_to_set):
+func set_goal(goal_to_set, path_to_set=null):
 	self.goal = goal_to_set
+	if path_to_set:
+		self.path = path_to_set
+	else:
+		var global_path = tilemap.find_path(self.position, goal_to_set, self.terrain_dict)
+		self.path = []
+		for p in global_path:
+			self.path.append(tilemap.get_centre_coordinates_from_hex(p))
+		self.path.remove(0)
+	### Repeating below as _process begins off, can change if this design is changed ###
+	planned_path.clear_points()
+	planned_path.add_point(Vector2(0,0))
+	for point in self.path:
+		planned_path.add_point(point - position)
+	self.goal_sprite.position = tilemap.get_centre_coordinates_from_hex(tilemap.get_hex_coordinates(self.goal)) - self.position
+	### Finished repeat ###
+	self.update()
+
+
+func select_unit(select=true):
+	goal_sprite.visible = select and self.goal != Vector2(0,0)
+	planned_path.visible = select
+	selected_poly.visible = select

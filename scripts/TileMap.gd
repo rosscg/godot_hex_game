@@ -58,7 +58,7 @@ func get_coordinates_from_hex(point: Vector2):
 
 func get_centre_coordinates_from_hex(point: Vector2):
 	### Returns global coordinates of centre of hex grid position
-	var coordinates = get_coordinates_from_hex(point) + Vector2(grid_cell_height/2, grid_cell_height/2)
+	var coordinates = get_coordinates_from_hex(point) + cell_size/2
 	return coordinates
 	
 

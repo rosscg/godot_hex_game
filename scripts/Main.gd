@@ -29,44 +29,41 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 	# Deselect on right click:
 	if event.button_index != BUTTON_LEFT:
-		unit_manager.selected_unit = null
-		map.selected_hex_sprite.visible = false
+		if unit_manager.selected_unit:
+			unit_manager.selected_unit.select_unit(false)
+			unit_manager.selected_unit = null
+		#map.selected_hex_sprite.visible = false
 		distance_label.hide()
 		map.line_2d.clear_points()
-		if unit_manager.selected_unit:
-			unit_manager.selected_unit.planned_path.visible = false
 		#map.tilemap_overlay.clear()
 		return
 	
 	#left_dragging = event.pressed
 
-	if not event.pressed: # left click released
-		if not unit_manager.selected_unit:
-			var selected_hex = map.tilemap.get_hex_coordinates(get_global_mouse_position())
-			for x in unit_manager.unit_list:
-				if selected_hex in x.current_hexes:
-					unit_manager.selected_unit = x
-					x.planned_path.visible = true
-					map.selected_hex_sprite.visible = true
-					map.selected_hex_sprite.position = map.tilemap.get_centre_coordinates_from_hex(selected_hex)
-					return
-		else:
+	if not event.pressed: # Left click released
+		if unit_manager.selected_unit:
 			#map.tilemap_overlay.clear()
 			var path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position(), unit_manager.selected_unit.terrain_dict)
 			var position_path = []
 			for p in path:
 				position_path.append(map.tilemap.get_centre_coordinates_from_hex(p))
 			position_path.remove(0)
-			# TODO: move into unit class:
-			unit_manager.selected_unit.path = PoolVector2Array(position_path)
-			unit_manager.selected_unit.planned_path.visible = false
+			unit_manager.selected_unit.set_goal(event.global_position, PoolVector2Array(position_path))
 			unit_manager.selected_unit.update()
-			unit_manager.selected_unit.goal = event.global_position
+			unit_manager.selected_unit.select_unit(false)
 			unit_manager.selected_unit = null
-			map.selected_hex_sprite.visible = false
+			#map.selected_hex_sprite.visible = false
 			map.line_2d.clear_points()
-
 			distance_label.hide()
+		else:
+			var selected_hex = map.tilemap.get_hex_coordinates(get_global_mouse_position())
+			for x in unit_manager.unit_list:
+				if selected_hex in x.current_hexes:
+					unit_manager.selected_unit = x
+					x.select_unit()
+					#map.selected_hex_sprite.visible = true
+					#map.selected_hex_sprite.position = map.tilemap.get_centre_coordinates_from_hex(selected_hex)
+					return
 
 
 func _on_Button_button_up():
