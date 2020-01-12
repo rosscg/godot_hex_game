@@ -4,6 +4,7 @@ onready var map : Node2D = get_owner().get_node("Map")
 
 onready var unit_list = []
 onready var selected_unit = null
+onready var overlay_on : bool = false
 
 
 func _process(delta: float) -> void:
@@ -59,3 +60,13 @@ func resolve_combat(unit1, unit2):
 		unit_list.erase(unit1)
 	if unit2.take_damage(u1_damage):
 		unit_list.erase(unit2)
+
+
+func toggle_overlay():
+	# Show/hide the path and goals of all units
+	overlay_on = !overlay_on
+	for unit in unit_list:
+		if unit == selected_unit:
+			continue
+		unit.goal_sprite.visible = overlay_on and unit.goal != Vector2(0,0)
+		unit.planned_path.visible = overlay_on

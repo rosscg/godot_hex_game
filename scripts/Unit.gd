@@ -9,6 +9,8 @@ var terrain_dict = {'grass': 2, 'water': 20, 'deepwater': 50, 'road': 1, 'dirt':
 onready var planned_path : Line2D = $PlannedPath
 onready var goal_sprite : Sprite = $GoalSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
+onready var tilemap : Node2D = get_parent().map.tilemap
+onready var overlay_on : bool = get_parent().overlay_on
 
 var path : = PoolVector2Array()
 var goal : = Vector2()
@@ -17,7 +19,6 @@ var goal : = Vector2()
 var current_hexes = []
 var current_local_hexes = []
 #var unit_size = 4	# unit occupies 4 hexes
-onready var tilemap : Node2D = get_parent().map.tilemap
 
 
 func _ready() -> void:
@@ -142,6 +143,6 @@ func set_goal(goal_to_set, path_to_set=null):
 
 
 func select_unit(select=true):
-	goal_sprite.visible = select and self.goal != Vector2(0,0)
-	planned_path.visible = select
+	goal_sprite.visible = (select or overlay_on) and self.goal != Vector2(0,0)
+	planned_path.visible = (select or overlay_on)
 	selected_poly.visible = select

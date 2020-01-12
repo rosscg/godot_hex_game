@@ -66,8 +66,11 @@ func _unhandled_input(event: InputEvent) -> void:
 					return
 
 
-func _on_Button_button_up():
+func _on_StartButton_button_up():
 	unit_manager.activate_units(true)
 	#yield(get_tree().create_timer(3.0), "timeout")
 	#unit_manager.activate_units(false)
 
+
+func _on_OverlayButton_button_up():
+	unit_manager.toggle_overlay()
