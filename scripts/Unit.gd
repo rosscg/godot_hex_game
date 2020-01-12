@@ -1,7 +1,7 @@
 extends Node2D
 
 #var unit_types = ['fencer', 'marshal', 'lieutenant', 'spearman']
-var speed : = 30
+var base_speed : = 40
 var strength : = randi()%11 + 1
 var terrain_dict = {'grass': 2, 'water': 20, 'deepwater': 50, 'road': 1, 'dirt': 5, 
 					'lowhills': 6, 'forest': 6, 'marsh': 6, 'mountain': 10}
@@ -26,24 +26,27 @@ func _ready() -> void:
 			Vector2(0, 0),
 			#Vector2(0, -1),
 			#Vector2(1, -1), # unique
-			Vector2(1, 0),
-			Vector2(0, 1),
+			#Vector2(1, 0),
+			#Vector2(0, 1),
 			#Vector2(-1, -1),  # unique
-			Vector2(-1, 0)])
+			#Vector2(-1, 0)
+			])
 	else:
 		current_local_hexes = PoolVector2Array([
 			Vector2(0, 0),
 			#Vector2(0, -1),
-			Vector2(1, 0),
+			#Vector2(1, 0),
 			#Vector2(1, 1), # unique
-			Vector2(0, 1),
+			#Vector2(0, 1),
 			#Vector2(-1, 1), # unique
-			Vector2(-1, 0)])
+			#Vector2(-1, 0)
+			])
 	for i in current_local_hexes:
 		current_hexes.append(tilemap.get_hex_coordinates(self.position) + i)
 
 
 func _process(delta: float) -> void:
+	var speed : float = base_speed / terrain_dict[tilemap.tile_id_types[tilemap.get_cellv(current_hexes[0])]]
 	var move_distance : = speed * delta
 	_move_along_path(move_distance)
 
@@ -76,7 +79,7 @@ func _draw():
 	draw_line(Vector2(-10,12), Vector2((-10+float(strength)/10*20), 12), Color(255, 0, 0), 3)
 	# Unit needs orders:
 	if len(path) == 0 and strength > 0:
-		draw_circle(Vector2(12,-15), 4, Color( 0, 0, 1, 1 ))
+		draw_circle(Vector2(12,-12), 4, Color( 0, 0, 1, 1 ))
 		
 	var hex_points = PoolVector2Array([Vector2(-5,-9), Vector2(5,-9), Vector2(9,0), Vector2(5,9), 
 										Vector2(-5,9), Vector2(-9,0), Vector2(-5,-9)])
@@ -89,7 +92,7 @@ func _draw():
 		for p in hex_points:
 			local_hex_points.append(p + world_offset)
 		draw_colored_polygon(local_hex_points, Color( 0.55, 0, 0, 1 ))
-		draw_polyline(local_hex_points, Color( 0.18, 0.31, 0.31, 1 ), 4.0)
+		draw_polyline(local_hex_points, Color( 0.18, 0.31, 0.31, 1 ), 3.0)
 
 
 func take_damage(damage):

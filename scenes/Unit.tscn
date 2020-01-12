@@ -141,7 +141,7 @@ visible = false
 scale = Vector2( 0.8, 0.8 )
 frames = SubResource( 1 )
 animation = "general"
-frame = 4
+frame = 9
 playing = true
 
 [node name="Sprite" type="Sprite" parent="."]

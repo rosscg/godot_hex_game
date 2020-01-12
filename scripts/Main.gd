@@ -33,6 +33,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		map.selected_hex_sprite.visible = false
 		distance_label.hide()
 		map.line_2d.clear_points()
+		if unit_manager.selected_unit:
+			unit_manager.selected_unit.planned_path.visible = false
 		#map.tilemap_overlay.clear()
 		return
 	
@@ -63,7 +65,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			unit_manager.selected_unit = null
 			map.selected_hex_sprite.visible = false
 			map.line_2d.clear_points()
-		
+
 			distance_label.hide()
 
 

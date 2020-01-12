@@ -47,7 +47,6 @@ func detect_combat():
 			#var hex = map.tilemap.get_hex_coordinates(unit.position)
 			var unit2 = get_unit_in_hex(occupied_hex, unit)
 			if unit2:
-				#print('Combat at hex: ', hex)
 				resolve_combat(unit, unit2)
 	return
 
