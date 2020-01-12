@@ -125,11 +125,11 @@ func find_path(start_pos, end_pos, terrain_dict=null):
 	
 	#### Debugging ####
 	# Inefficient vertical path chosen on odd columns using weights 1000 and 5000
-	var point_path_ids = astar_node.get_id_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position))
-	var total_weight = 0
-	for x in point_path_ids:
-		total_weight += astar_node.get_point_weight_scale(x)
-	print(total_weight)
+	#var point_path_ids = astar_node.get_id_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position))
+	#var total_weight = 0
+	#for x in point_path_ids:
+	#	total_weight += astar_node.get_point_weight_scale(x)
+	#print(total_weight)
 	##################
 	
 	var point_path = astar_node.get_point_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position))

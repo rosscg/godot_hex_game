@@ -34,7 +34,8 @@ func activate_units(active):
 func get_unit_in_hex(hex_coordinates, ignored_unit=null):
 	for unit in unit_list:
 		if unit != ignored_unit:
-			if map.tilemap.get_hex_coordinates(unit.position) == hex_coordinates:
+			#if map.tilemap.get_hex_coordinates(unit.position) == hex_coordinates:
+			if hex_coordinates in unit.current_hexes:
 				return unit
 	return false
 
@@ -42,11 +43,12 @@ func get_unit_in_hex(hex_coordinates, ignored_unit=null):
 func detect_combat():
 	# TODO: Currently won't initiate when two units 'swap' hexes.
 	for unit in unit_list:
-		var hex = map.tilemap.get_hex_coordinates(unit.position)
-		var unit2 = get_unit_in_hex(hex, unit)
-		if unit2:
-			#print('Combat at hex: ', hex)
-			resolve_combat(unit, unit2)
+		for occupied_hex in unit.current_hexes:
+			#var hex = map.tilemap.get_hex_coordinates(unit.position)
+			var unit2 = get_unit_in_hex(occupied_hex, unit)
+			if unit2:
+				#print('Combat at hex: ', hex)
+				resolve_combat(unit, unit2)
 	return
 
 

@@ -4,8 +4,6 @@ onready var tilemap : TileMap = $TileMap
 onready var tilemap_overlay : TileMap = $TileMapOverlay
 onready var hover_hex_sprite : Sprite = $HoverHex
 onready var selected_hex_sprite : Sprite = $SelectedHex
-
-
 onready var line_2d : Line2D = $Line2D
 
 func _process(delta: float) -> void:
