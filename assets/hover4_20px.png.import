@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/terrain.png-02334d89f314a8996b3c48f78734ffd5.stex"
+path="res://.import/hover4_20px.png-b5ae13ce3dfca91b838319f6fde028e8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/terrain.png"
-dest_files=[ "res://.import/terrain.png-02334d89f314a8996b3c48f78734ffd5.stex" ]
+source_file="res://assets/hover4_20px.png"
+dest_files=[ "res://.import/hover4_20px.png-b5ae13ce3dfca91b838319f6fde028e8.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

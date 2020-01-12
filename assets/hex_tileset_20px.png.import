@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/hover-hex.png-efe8fd8153126439dde0e3dbbbdc9466.stex"
+path="res://.import/hex_tileset_20px.png-460282d346ba8665d47ec034a24d721b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/hover-hex.png"
-dest_files=[ "res://.import/hover-hex.png-efe8fd8153126439dde0e3dbbbdc9466.stex" ]
+source_file="res://assets/hex_tileset_20px.png"
+dest_files=[ "res://.import/hex_tileset_20px.png-460282d346ba8665d47ec034a24d721b.stex" ]
 
 [params]
 

@@ -17,7 +17,6 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	
 	if event is InputEventKey:
 		 # Create new unit on A key press:
 		if event.get_scancode() == KEY_A and event.is_pressed() and not event.is_echo():
@@ -59,6 +58,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			unit_manager.selected_unit.goal = event.global_position
 			unit_manager.selected_unit = null
 			map.selected_hex_sprite.visible = false
+			map.line_2d.clear_points()
 		
 			distance_label.hide()
 

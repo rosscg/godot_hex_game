@@ -4,7 +4,9 @@ var grid_cell_height = cell_size.y
 var grid_cell_width = cell_size.x
 var grid_dimensions = get_used_rect()
 
-var tile_id_types = {0: 'grass', 1: 'grass', 2: 'marsh', 3: 'marsh', 4: 'mountain', 5: 'mountain', 6: 'mountain'}
+var tile_id_types = {1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 6: 'marsh', 8: 'mountain', 
+						10: 'water', 11: 'deepwater', 12: 'road'}
+var impassable_tile_ids = [11] # Tile id 3 'deepwater' considered impassable
 
 
 #func _ready():
@@ -77,7 +79,8 @@ func find_path(start_pos, end_pos, terrain_dict=null):
 	
 	var walkable_cells_list = []
 	var obstacles = []
-	obstacles += get_used_cells_by_id(5) # Tile id 5 considered impassable
+	for tile_id in impassable_tile_ids:
+		obstacles += get_used_cells_by_id(tile_id)
 	
 	var cell_counter = 0 # Cell counter forces equal paths to choose left side by adjusting weight by small amount
 	for point in self.get_used_cells():
@@ -89,7 +92,7 @@ func find_path(start_pos, end_pos, terrain_dict=null):
 		var weight = 1000
 		var tile_id = self.get_cellv(point)
 		if terrain_dict:
-			weight = terrain_dict[tile_id_types[tile_id]]
+			weight = terrain_dict[tile_id_types[tile_id]] * 1000 # Multiply by 1000 to reduce effect of cell_counter
 		astar_node.add_point(cell_index, Vector3(point.x, point.y, 0.0), weight+cell_counter)
 		cell_counter += 0.001
 
