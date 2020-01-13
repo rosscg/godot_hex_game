@@ -6,20 +6,16 @@ var grid_dimensions = get_used_rect()
 
 var tile_id_types = {1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 6: 'marsh', 8: 'mountain', 
 						10: 'water', 11: 'deepwater', 12: 'road'}
-var impassable_tile_ids = [11] # Tile id 3 'deepwater' considered impassable
-
-
-#func _ready():
-	#print(get_used_cells())
+var impassable_tile_ids = [11] # Tile id 11 'deepwater' considered impassable
 
 
 func _is_left(point: Vector2, a: Vector2, b: Vector2):
      return ((b.x - a.x)*(point.y - a.y) - (b.y - a.y)*(point.x - a.x)) < 0
 
 
-func get_hex_coordinates(point: Vector2):
-	### Converts global coordinates into hex grid coordinates.
-	# Width of cell that isn't entirely contained by the 'main' hex
+func get_cell_coordinates(point: Vector2):
+	### Converts global coordinates into cell grid coordinates.
+	# Width of cell that isn't entirely contained by the 'main' hex, used for coordinate mapping
 	var triangle_width = abs(grid_cell_height - grid_cell_width)
 	# Handle offsets for odd columns
 	if self.cell_half_offset == 0: # offset in the x coordinate: (pointy top)
@@ -59,8 +55,8 @@ func get_hex_coordinates(point: Vector2):
 		return null
 
 
-func get_coordinates_from_hex(point: Vector2):
-	### Returns top right corner global coordinates of hex grid position
+func get_coordinates_from_cell(point: Vector2):
+	### Returns top right corner global coordinates of cell grid position
 	var coordinates = Vector2(point.x * grid_cell_width, point.y * grid_cell_height)
 	# Handle offsets for odd columns
 	if self.cell_half_offset == 0: # offset in the x coordinate: (pointy top)
@@ -72,9 +68,9 @@ func get_coordinates_from_hex(point: Vector2):
 	return coordinates
 
 
-func get_centre_coordinates_from_hex(point: Vector2):
-	### Returns global coordinates of centre of hex grid position
-	var coordinates = get_coordinates_from_hex(point) + cell_size/2
+func get_centre_coordinates_from_cell(point: Vector2):
+	### Returns global coordinates of centre of cell grid position
+	var coordinates = get_coordinates_from_cell(point) + cell_size/2
 	return coordinates
 	
 
@@ -156,15 +152,19 @@ func create_astar_node(terrain_dict=null):
 	#print(total_weight)
 	##################
 	return astar_node
-	
+
+
 func find_path(start_pos, end_pos, astar_node):
-	var path_start_position = get_hex_coordinates(start_pos)
-	var path_end_position = get_hex_coordinates(end_pos)
+	var path_start_position = get_cell_coordinates(start_pos)
+	var path_end_position = get_cell_coordinates(end_pos)
 	if not path_end_position and path_end_position != Vector2(0,0): # Out of bounds
 		return []
 	var point_path = astar_node.get_point_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position))
 	var point_path2 = []
 	for p in point_path:
 		point_path2.append(Vector2(p.x, p.y))
-	
 	return point_path2
+
+
+func get_tile_terrain(cell_point):
+	return tile_id_types[self.get_cellv(cell_point)]
