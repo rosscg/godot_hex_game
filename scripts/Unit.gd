@@ -3,18 +3,13 @@ extends Node2D
 onready var planned_path : Line2D = $PlannedPath
 onready var goal_sprite : Sprite = $GoalSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
-onready var sprite : AnimatedSprite = $AnimatedSprite
+onready var sprite : Sprite = $Sprite
 onready var tilemap : Node2D = get_parent().map.tilemap
 onready var unit_manager : Node2D = get_parent()
 onready var selected_unit : Node2D = get_parent().selected_unit
 
-var unit_types = ['infantry', 'cavalry']
-var terrain_dicts = {'infantry': {'grass': 2, 'water': 20, 'deepwater': 50, 'road': 1, 'dirt': 5, 
-					'lowhills': 6, 'forest': 6, 'marsh': 6, 'mountain': 10},
-					'cavalry': {'grass': 1, 'water': 80, 'deepwater': 200, 'road': 1, 'dirt': 3, 
-					'lowhills': 20, 'forest': 20, 'marsh': 20, 'mountain': 40}}
 var base_speed : = 100	# Speed is calculated as base_speed / terrain_speed
-var strength : = randi()%10 + 1
+var strength
 var unit_type
 var terrain_dict
 var path : = PoolVector2Array()
@@ -24,13 +19,18 @@ var occupied_cells = []
 #var occupied_cells_local = []
 
 
+func init(unit_type, data_dict, strength, start_coordinates):
+	self.unit_type = unit_type
+	self.terrain_dict = data_dict
+	self.strength = strength
+	self.position = start_coordinates
+	var res = load('res://assets/units/' + unit_type + '.png')
+	get_node("Sprite").texture = res
+
+
 func _ready() -> void:
 	set_process(false)
 
-	# Set unit type:
-	unit_type = unit_types[randi() % unit_types.size()]
-	sprite.animation = unit_type
-	terrain_dict = terrain_dicts[unit_type]
 	occupied_cells = [tilemap.get_cell_coordinates(self.position)]
 	
 	# Each unit stores its own astar node

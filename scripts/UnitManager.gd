@@ -6,33 +6,56 @@ onready var unit_info_gui : Node2D = get_owner().get_node("GUI/UnitInfoUI")
 onready var unit_list = []
 onready var selected_unit = null
 onready var overlay_on : bool = false
+var unit_data = {}
+const unit_scene = preload("res://scenes/Unit.tscn")
+
+
+func _ready() -> void:
+	unit_data = load_unit_data()
 
 
 func _process(delta: float) -> void:
-	
 	detect_combat()
 	
 	if selected_unit:
 		unit_info_gui.get_node('Label').visible = true
 		unit_info_gui.get_node('Polygon2D').visible = true
-		unit_info_gui.get_node('Label').text = 'Infantry\n\nStrength: ' + str(selected_unit.strength) + \
+		unit_info_gui.get_node('Label').text = selected_unit.unit_type.capitalize() + '\n\nStrength: ' + str(selected_unit.strength) + \
 												'\n' + map.tilemap.get_tile_terrain(selected_unit.occupied_cells[0]).capitalize()
 	else:
 		unit_info_gui.get_node('Label').visible = false
 		unit_info_gui.get_node('Polygon2D').visible = false
 
 
+func load_unit_data():
+	var file = File.new()
+	file.open("res://assets/units/unit_data.json", file.READ)
+	var text = file.get_as_text()
+	var result_json = JSON.parse(text)
+	var result = {}
+	if result_json.error == OK:
+		var data = result_json.result
+		return data
+	else:
+		print("Error: ", result_json.error)
+		print("Error Line: ", result_json.error_line)
+		print("Error String: ", result_json.error_string)
+
+
 func create_unit(cell_coordinates):
 	if get_unit_in_cell(cell_coordinates):
 		print('cell already occupied')
 		return
-	var unit_scene = load("res://scenes/Unit.tscn")
-	var unit_instance = unit_scene.instance()
-	#unit_instance.set_name("unit")
 	if not cell_coordinates and cell_coordinates != Vector2(0,0): 
 		# Clicked outside of map
 		return
-	unit_instance.position = map.tilemap.get_coordinates_from_cell(cell_coordinates, true)
+	var unit_instance = unit_scene.instance()
+	# Create random unit type:
+	var unit_type = unit_data.keys()[randi() % unit_data.size()]
+	var unit_terrain_dict = unit_data[unit_type]
+	var strength = randi()%10 + 1
+	unit_instance.init(unit_type, unit_terrain_dict, strength, map.tilemap.get_coordinates_from_cell(cell_coordinates, true))
+	#unit_instance.set_name("unit")
 	add_child(unit_instance)
 	unit_list.append(unit_instance)
 	return unit_instance

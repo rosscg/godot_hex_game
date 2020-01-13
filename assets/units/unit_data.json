@@ -1,0 +1,7 @@
+{
+"infantry": {"grass": 3, "water": 20, "deepwater": 50, "road": 1, "dirt": 5,
+					"lowhills": 6, "forest": 6, "marsh": 6, "mountain": 10},
+
+"cavalry": {"grass": 2, "water": 80, "deepwater": 200, "road": 1, "dirt": 3,
+          "lowhills": 20, "forest": 20, "marsh": 20, "mountain": 40}
+}

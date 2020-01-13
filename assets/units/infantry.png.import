@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/unit_sword.png-e64789e9cf5720fe44032ed2029c3367.stex"
+path="res://.import/infantry.png-26cf8597bb0f6cd87dc31d1725b7988a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/units/unit_sword.png"
-dest_files=[ "res://.import/unit_sword.png-e64789e9cf5720fe44032ed2029c3367.stex" ]
+source_file="res://assets/units/infantry.png"
+dest_files=[ "res://.import/infantry.png-26cf8597bb0f6cd87dc31d1725b7988a.stex" ]
 
 [params]
 
