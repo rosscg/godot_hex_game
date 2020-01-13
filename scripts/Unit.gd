@@ -149,16 +149,18 @@ func set_goal(goal_to_set, path_to_set=null):
 			self.path.append(tilemap.get_centre_coordinates_from_hex(p))
 		self.path.remove(0)
 	### Repeating below as _process begins off, can change if this design is changed ###
-	planned_path.clear_points()
-	planned_path.add_point(Vector2(0,0))
+	self.planned_path.clear_points()
+	self.planned_path.add_point(Vector2(0,0))
 	for point in self.path:
 		planned_path.add_point(point - position)
 	self.goal_sprite.position = tilemap.get_centre_coordinates_from_hex(tilemap.get_hex_coordinates(self.goal)) - self.position
 	### Finished repeat ###
+	self.goal_sprite.visible = overlay_on and self.goal != Vector2(0,0)
+	self.planned_path.visible = overlay_on
 	self.update()
 
 
 func select_unit(select=true):
-	goal_sprite.visible = (select or overlay_on) and self.goal != Vector2(0,0)
-	planned_path.visible = (select or overlay_on)
-	selected_poly.visible = select
+	self.goal_sprite.visible = (select or overlay_on) and self.goal != Vector2(0,0)
+	self.planned_path.visible = (select or overlay_on)
+	self.selected_poly.visible = select
