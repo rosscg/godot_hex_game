@@ -1,9 +1,9 @@
 extends Node2D
 
-onready var tilemap : TileMap = $TileMap
-onready var tilemap_overlay : TileMap = $TileMapOverlay
+onready var tilemap : TileMap = $TileMap_SquareLarge
+#onready var tilemap_overlay : TileMap = $TileMapOverlay
 onready var hover_hex_sprite : Sprite = $HoverHex
-onready var selected_hex_sprite : Sprite = $SelectedHex
+#onready var selected_hex_sprite : Sprite = $SelectedHex
 onready var line_2d : Line2D = $Line2D
 
 
@@ -19,8 +19,8 @@ func _process(delta: float) -> void:
 
 func display_path(selected_unit):
 	hover_hex_sprite.visible = false
-	tilemap_overlay.clear()
-	var path = tilemap.find_path(selected_unit.position, get_global_mouse_position(), selected_unit.terrain_dict)
+	#tilemap_overlay.clear()
+	var path = tilemap.find_path(selected_unit.position, get_global_mouse_position(), selected_unit.astar_node)
 	#path.remove(0)
 	#for p in path:
 	#	tilemap_overlay.set_cellv(p, 1)

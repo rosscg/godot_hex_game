@@ -19,29 +19,40 @@ func _is_left(point: Vector2, a: Vector2, b: Vector2):
 
 func get_hex_coordinates(point: Vector2):
 	### Converts global coordinates into hex grid coordinates.
-	### Expects flat-top grid where odd columns start lower than even i.e. at (0, grid_cell_height/2)
 	# Width of cell that isn't entirely contained by the 'main' hex
-	var triangle_width = grid_cell_height - grid_cell_width
-	# Handle y offsets for odd columns
-	if int(point.x/grid_cell_width) % 2 != 0:
-		point.y -= grid_cell_height/2
+	var triangle_width = abs(grid_cell_height - grid_cell_width)
+	# Handle offsets for odd columns
+	if self.cell_half_offset == 0: # offset in the x coordinate: (pointy top)
+		if int(point.x/grid_cell_height) % 2 != 0:
+			point.x -= grid_cell_width/2
+	elif self.cell_half_offset == 1: # offset in y coordinate (flat top)
+		if int(point.x/grid_cell_width) % 2 != 0:
+			point.y -= grid_cell_height/2
 	# Get coordinates of grid square
 	var grid_coord = Vector2(int(point.x/grid_cell_width), int(point.y/grid_cell_height))
-	# Handle null space above alternating columns
-	if point.y < 0:
+	# Handle null space above/left of alternating columns
+	if self.cell_half_offset == 0 and point.y < 0:
 		grid_coord.y -= 1
+	elif self.cell_half_offset == 1 and point.x < 0:
+		grid_coord.x -= 1
 	# Get mouse coordinates within the grid square
 	var local_mouse_coord = Vector2(fmod(point.x, grid_cell_width), fmod(point.y, grid_cell_height))
-	# Is point outside hex, in top left corner, so belongs to adjacent hex:
-	if _is_left(local_mouse_coord, Vector2(0, grid_cell_height/2 - 1), Vector2(triangle_width - 1, 0)):
-		grid_coord.x -= 1
-		if fmod(grid_coord.x, 2) != 0:
+	# Is point outside hex, so belongs to adjacent hex:
+	if self.cell_half_offset == 0: # pointy top
+		if _is_left(local_mouse_coord, Vector2(0, triangle_width - 1), Vector2(grid_cell_width/2 - 1, 0)):
 			grid_coord.y -= 1
-	# Is point outside hex, in bottom left corner:
-	if _is_left(local_mouse_coord, Vector2(triangle_width - 1, grid_cell_height - 1), Vector2(0, grid_cell_height/2)):
-		grid_coord.x -= 1
-		if fmod(grid_coord.x, 2) == 0:
-			grid_coord.y += 1
+		if _is_left(local_mouse_coord, Vector2(grid_cell_width/2 - 1, 0), Vector2(grid_cell_width, triangle_width - 1)):
+			grid_coord.x += 1
+			grid_coord.y -= 1
+	elif self.cell_half_offset == 1: # flat top
+		if _is_left(local_mouse_coord, Vector2(0, grid_cell_height/2 - 1), Vector2(triangle_width - 1, 0)):
+			grid_coord.x -= 1
+			if fmod(grid_coord.x, 2) != 0:
+				grid_coord.y -= 1
+		if _is_left(local_mouse_coord, Vector2(triangle_width - 1, grid_cell_height - 1), Vector2(0, grid_cell_height/2)):
+			grid_coord.x -= 1
+			if fmod(grid_coord.x, 2) == 0:
+				grid_coord.y += 1
 	if grid_dimensions.has_point(grid_coord):
 		return grid_coord
 	else:
@@ -51,8 +62,13 @@ func get_hex_coordinates(point: Vector2):
 func get_coordinates_from_hex(point: Vector2):
 	### Returns top right corner global coordinates of hex grid position
 	var coordinates = Vector2(point.x * grid_cell_width, point.y * grid_cell_height)
-	if int(point.x) % 2 != 0:
-		coordinates.y += grid_cell_height / 2
+	# Handle offsets for odd columns
+	if self.cell_half_offset == 0: # offset in the x coordinate: (pointy top)
+		if int(point.y) % 2 != 0:
+			coordinates.x += grid_cell_width / 2
+	elif self.cell_half_offset == 1: # offset in y coordinate (flat top)
+		if int(point.x) % 2 != 0:
+			coordinates.y += grid_cell_height / 2
 	return coordinates
 
 
@@ -70,12 +86,8 @@ func _calculate_point_index(cell):
 	return cell.x + grid_dimensions.end.x * cell.y
 
 
-func find_path(start_pos, end_pos, terrain_dict=null):
+func create_astar_node(terrain_dict=null):
 	var astar_node = AStar.new()
-	var path_start_position = get_hex_coordinates(start_pos)
-	var path_end_position = get_hex_coordinates(end_pos)
-	if not path_end_position and path_end_position != Vector2(0,0): # Out of bounds
-		return []
 	
 	var walkable_cells_list = []
 	var obstacles = []
@@ -99,22 +111,34 @@ func find_path(start_pos, end_pos, terrain_dict=null):
 	for point in walkable_cells_list:
 		var point_index = _calculate_point_index(point)
 		var points_relative
-		if fmod(point.x, 2) == 0:
+		if self.cell_half_offset == 2: # no offset: squares
 			points_relative = PoolVector2Array([
+				Vector2(point.x - 1, point.y - 1),
+				Vector2(point.x - 1, point.y),
+				Vector2(point.x - 1, point.y + 1),
 				Vector2(point.x, point.y - 1),
+				Vector2(point.x, point.y + 1),
 				Vector2(point.x + 1, point.y - 1),
 				Vector2(point.x + 1, point.y),
-				Vector2(point.x, point.y + 1),
-				Vector2(point.x - 1, point.y),
-				Vector2(point.x - 1, point.y - 1)])
+				Vector2(point.x + 1, point.y + 1)
+				])
 		else:
-			points_relative = PoolVector2Array([
-				Vector2(point.x, point.y - 1),
-				Vector2(point.x + 1, point.y),
-				Vector2(point.x + 1, point.y + 1),
-				Vector2(point.x, point.y + 1),
-				Vector2(point.x - 1, point.y + 1),
-				Vector2(point.x - 1, point.y)])
+			if fmod(point.x, 2) == 0:
+				points_relative = PoolVector2Array([
+					Vector2(point.x, point.y - 1),
+					Vector2(point.x + 1, point.y - 1),
+					Vector2(point.x + 1, point.y),
+					Vector2(point.x, point.y + 1),
+					Vector2(point.x - 1, point.y),
+					Vector2(point.x - 1, point.y - 1)])
+			else:
+				points_relative = PoolVector2Array([
+					Vector2(point.x, point.y - 1),
+					Vector2(point.x + 1, point.y),
+					Vector2(point.x + 1, point.y + 1),
+					Vector2(point.x, point.y + 1),
+					Vector2(point.x - 1, point.y + 1),
+					Vector2(point.x - 1, point.y)])
 		for point_relative in points_relative:
 			var point_relative_index = _calculate_point_index(point_relative)
 			if is_outside_map_bounds(point_relative):
@@ -131,7 +155,13 @@ func find_path(start_pos, end_pos, terrain_dict=null):
 	#	total_weight += astar_node.get_point_weight_scale(x)
 	#print(total_weight)
 	##################
+	return astar_node
 	
+func find_path(start_pos, end_pos, astar_node):
+	var path_start_position = get_hex_coordinates(start_pos)
+	var path_end_position = get_hex_coordinates(end_pos)
+	if not path_end_position and path_end_position != Vector2(0,0): # Out of bounds
+		return []
 	var point_path = astar_node.get_point_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position))
 	var point_path2 = []
 	for p in point_path:

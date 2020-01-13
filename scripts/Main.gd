@@ -43,7 +43,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event.pressed: # Left click released
 		if unit_manager.selected_unit:
 			#map.tilemap_overlay.clear()
-			var path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position(), unit_manager.selected_unit.terrain_dict)
+			var path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position(), 
+												unit_manager.selected_unit.astar_node)
 			var position_path = []
 			for p in path:
 				position_path.append(map.tilemap.get_centre_coordinates_from_hex(p))

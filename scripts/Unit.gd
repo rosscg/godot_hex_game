@@ -1,7 +1,7 @@
 extends Node2D
 
 #var unit_types = ['fencer', 'marshal', 'lieutenant', 'spearman']
-var base_speed : = 40
+var base_speed : = 100
 var strength : = randi()%11 + 1
 var terrain_dict = {'grass': 2, 'water': 20, 'deepwater': 50, 'road': 1, 'dirt': 5, 
 					'lowhills': 6, 'forest': 6, 'marsh': 6, 'mountain': 10}
@@ -14,6 +14,7 @@ onready var overlay_on : bool = get_parent().overlay_on
 
 var path : = PoolVector2Array()
 var goal : = Vector2()
+var astar_node
 
 
 var current_hexes = []
@@ -23,6 +24,8 @@ var current_local_hexes = []
 
 func _ready() -> void:
 	set_process(false)
+	
+	astar_node = tilemap.create_astar_node(terrain_dict)
 	
 	# Deploy new unit on selected hex and all neighbours:
 	if fmod(tilemap.get_coordinates_from_hex(position).x, 2) == 0:
@@ -45,6 +48,19 @@ func _ready() -> void:
 			#Vector2(-1, 1), # unique
 			#Vector2(-1, 0)
 			])
+
+	# Square tilemap neighbours:
+#	current_local_hexes = PoolVector2Array([
+#		Vector2(-1, -1),
+#		Vector2(-1, 0),
+#		Vector2(-1, 1),
+#		Vector2(0, -1),
+#		Vector2(0, 1),
+#		Vector2(1, -1),
+#		Vector2(1, 0),
+#		Vector2(1, 1)
+#		])
+
 	for i in current_local_hexes:
 		current_hexes.append(tilemap.get_hex_coordinates(self.position) + i)
 
@@ -96,15 +112,15 @@ func _draw():
 	var hex_points = PoolVector2Array([Vector2(-5,-9), Vector2(5,-9), Vector2(9,0), Vector2(5,9), 
 										Vector2(-5,9), Vector2(-9,0), Vector2(-5,-9)])
 
-	for i in current_local_hexes:
-		var world_offset = tilemap.get_coordinates_from_hex(i)
-		if i == current_local_hexes[0]:
-			pass
-		var local_hex_points = []
-		for p in hex_points:
-			local_hex_points.append(p + world_offset)
-		draw_colored_polygon(local_hex_points, Color( 0.55, 0, 0, 1 ))
-		draw_polyline(local_hex_points, Color( 0.18, 0.31, 0.31, 1 ), 3.0)
+#	for i in current_local_hexes:
+#		var world_offset = tilemap.get_coordinates_from_hex(i)
+#		if i == current_local_hexes[0]:
+#			pass
+#		var local_hex_points = []
+#		for p in hex_points:
+#			local_hex_points.append(p + world_offset)
+#		draw_colored_polygon(local_hex_points, Color( 0.55, 0, 0, 1 ))
+#		draw_polyline(local_hex_points, Color( 0.18, 0.31, 0.31, 1 ), 3.0)
 
 
 func take_damage(damage):
@@ -127,7 +143,7 @@ func set_goal(goal_to_set, path_to_set=null):
 	if path_to_set:
 		self.path = path_to_set
 	else:
-		var global_path = tilemap.find_path(self.position, goal_to_set, self.terrain_dict)
+		var global_path = tilemap.find_path(self.position, goal_to_set, self.astar_node)
 		self.path = []
 		for p in global_path:
 			self.path.append(tilemap.get_centre_coordinates_from_hex(p))
