@@ -12,6 +12,17 @@ var tile_id_types = {1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 6: 'mars
 var impassable_tile_ids = [11] # Tile id 11 'deepwater' considered impassable
 
 
+func _ready() -> void:
+	# Check for vacant cells in tilemap:
+	if len(get_used_cells()) != grid_dimensions.end.x * grid_dimensions.end.y:
+		print(grid_dimensions.end.x * grid_dimensions.end.y - len(get_used_cells()), ' cells missing from tilemap: ', self.name)
+		for x in range(grid_dimensions.end.x):
+			for y in range(grid_dimensions.end.y):
+				if Vector2(x, y) + grid_offset in get_used_cells():
+					continue
+				print(Vector2(x, y))
+
+
 func _is_left(point: Vector2, a: Vector2, b: Vector2):
      return ((b.x - a.x)*(point.y - a.y) - (b.y - a.y)*(point.x - a.x)) < 0
 
