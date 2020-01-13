@@ -1,18 +1,18 @@
 extends Node2D
 
-onready var planned_path : Line2D = $PlannedPath
+onready var planned_path_line : Line2D = $PlannedPath
 onready var goal_sprite : Sprite = $GoalSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
-#onready var sprite : Sprite = $Sprite
 onready var tilemap : Node2D = get_parent().map.tilemap
 onready var unit_manager : Node2D = get_parent()
 #onready var selected_unit : Node2D = get_parent().selected_unit
+#onready var sprite : Sprite = $Sprite
 
 var base_speed : = 100	# Speed is calculated as base_speed / terrain_speed
 var strength
 var unit_type
 var terrain_dict
-var path : = PoolVector2Array()
+var planned_path : = PoolVector2Array()
 var goal : = Vector2()
 var astar_node
 var occupied_cells = []
@@ -55,11 +55,11 @@ func _process(delta: float) -> void:
 #		occupied_cells.append(tilemap.get_cell_coordinates(self.position) + i)
 	
 	# Draw unit path and goal
-	planned_path.clear_points()
+	planned_path_line.clear_points()
 	if self.goal:
-		planned_path.add_point(Vector2(0,0))
-		for point in self.path:
-			planned_path.add_point(point - position)
+		planned_path_line.add_point(Vector2(0,0))
+		for point in self.planned_path:
+			planned_path_line.add_point(point - position)
 		goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
 		if tilemap.get_cell_coordinates(self.goal) == tilemap.get_cell_coordinates(self.position):
 			# Arrived at goal
@@ -70,15 +70,15 @@ func _process(delta: float) -> void:
 
 func _move_along_path(move_distance: float) -> void:
 	var start_point : = position
-	for i in range(path.size()):
-		var distance_to_next : = start_point.distance_to(path[0])
+	for i in range(planned_path.size()):
+		var distance_to_next : = start_point.distance_to(planned_path[0])
 		if move_distance <= distance_to_next:
-			position = start_point.linear_interpolate(path[0], move_distance / distance_to_next)
+			position = start_point.linear_interpolate(planned_path[0], move_distance / distance_to_next)
 			break
 		else:
 			move_distance -= distance_to_next
-			start_point = path[0]
-			path.remove(0)
+			start_point = planned_path[0]
+			planned_path.remove(0)
 	update()
 
 
@@ -86,7 +86,7 @@ func _draw():
 	# Full strength bar is 20 px wide:
 	draw_line(Vector2(-10,14), Vector2((-10+float(strength)/10*20), 14), Color(255, 0, 0), 3)
 	# Circle indicates unit needs orders:
-	if len(path) == 0 and strength > 0:
+	if len(planned_path) == 0 and strength > 0:
 		draw_circle(Vector2(12,-12), 4, Color( 0, 0, 1, 1 ))
 	# Draw hexes in surrounding cells:	
 #	var hex_points = PoolVector2Array([Vector2(-5,-9), Vector2(5,-9), Vector2(9,0), Vector2(5,9), 
@@ -111,7 +111,7 @@ func take_damage(damage):
 	else:
 		strength = 0
 		update()
-		path = PoolVector2Array([]) # Stop moving
+		planned_path = PoolVector2Array([]) # Stop moving
 		#$AnimatedSprite.play($AnimatedSprite.animation + '_die')
 		#yield($AnimatedSprite, "animation_finished" )
 		if get_parent().selected_unit == self:
@@ -124,29 +124,29 @@ func set_goal(goal_to_set, path_to_set=null):
 	# Update the goal and path for a unit
 	self.goal = goal_to_set
 	if path_to_set:
-		self.path = path_to_set
+		self.planned_path = path_to_set
 	# Calculate path if not provided:
 	else:
 		var global_path = tilemap.find_path(self.position, goal_to_set, self.astar_node)
-		self.path = []
+		self.planned_path = []
 		for p in global_path:
-			self.path.append(tilemap.get_coordinates_from_cell(p, true))
-		self.path.remove(0)
+			self.planned_path.append(tilemap.get_coordinates_from_cell(p, true))
+		self.planned_path.remove(0)
 	### Repeating below as _process begins off, can change if this design is changed ###
-	self.planned_path.clear_points()
-	self.planned_path.add_point(Vector2(0,0))
-	for point in self.path:
-		planned_path.add_point(point - position)
+	self.planned_path_line.clear_points()
+	self.planned_path_line.add_point(Vector2(0,0))
+	for point in self.planned_path:
+		planned_path_line.add_point(point - position)
 	self.goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
 	### Finished repeat ###
 	self.goal_sprite.visible = unit_manager.overlay_on and self.goal != Vector2(0,0)
-	self.planned_path.visible = unit_manager.overlay_on
+	self.planned_path_line.visible = unit_manager.overlay_on
 	self.update()
 
 
 func select_unit(select=true):
 	self.goal_sprite.visible = (select or unit_manager.overlay_on) and self.goal != Vector2(0,0)
-	self.planned_path.visible = (select or unit_manager.overlay_on)
+	self.planned_path_line.visible = (select or unit_manager.overlay_on)
 	self.selected_poly.visible = select
 	# Update unit_manager:
 	if select:

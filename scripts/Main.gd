@@ -4,10 +4,10 @@ onready var map : Node2D = $Map
 onready var unit_manager : Node2D = $UnitManager
 onready var distance_label : Label = get_node("GUI/Distance_Label")
 onready var unit_info_gui : Control = get_node("GUI/UnitInfoGUI")
-#onready var left_dragging = false
+#var left_dragging = false
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Show planned path if unit is selected
 	var path = map.display_path(unit_manager.selected_unit)
 	if unit_manager.selected_unit and map.tilemap.get_cell_coordinates(get_global_mouse_position()):
@@ -20,7 +20,7 @@ func _process(delta: float) -> void:
 			'\n\nStrength: ' + str(unit_manager.selected_unit.strength) + \
 			'\nOn: ' + map.tilemap.get_tile_terrain(unit_manager.selected_unit.occupied_cells[0]).capitalize() + \
 			'\n\nTo: ' + map.tilemap.get_tile_terrain(map.tilemap.get_cell_coordinates(get_global_mouse_position())).capitalize() + \
-			'\nDistance: ' + str(unit_manager.selected_unit.calc_path_cost(path))
+			'\n' + str(unit_manager.selected_unit.calc_path_cost(path)) + ' hours'
 	else:
 		unit_info_gui.visible = false
 

@@ -1,13 +1,13 @@
 extends Node2D
 
 onready var tilemap : TileMap = $TileMap_SquareLarge
-#onready var tilemap_overlay : TileMap = $TileMapOverlay
 onready var hover_cell_sprite : Sprite = $HoverCell
-#onready var selected_cell_sprite : Sprite = $SelectedCell
 onready var line_2d : Line2D = $Line2D
+#onready var tilemap_overlay : TileMap = $TileMapOverlay
+#onready var selected_cell_sprite : Sprite = $SelectedCell
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Show cell hovered over
 	var cell_coords = tilemap.get_cell_coordinates(get_global_mouse_position())
 	if cell_coords:

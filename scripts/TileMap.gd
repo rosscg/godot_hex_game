@@ -1,7 +1,7 @@
 extends TileMap
 
 # Add 1,1 to grid coordinates as otherwise Vector2(0,0) parses as null:
-var grid_offset = Vector2(1,1)
+var grid_offset = Vector2(1,1) # Change to Vector2(0,0) to disable.
 
 var grid_cell_height = cell_size.y
 var grid_cell_width = cell_size.x
@@ -28,7 +28,7 @@ func _is_left(point: Vector2, a: Vector2, b: Vector2):
 
 
 func get_cell_coordinates(point: Vector2):
-	### Converts global coordinates into cell grid coordinates.
+	### Converts global coordinates into cell grid coordinates. ###
 	# Width of cell that isn't entirely contained by the 'main' hex, used for coordinate mapping
 	var triangle_width = abs(grid_cell_height - grid_cell_width)
 	# Handle offsets for odd columns:
@@ -72,25 +72,25 @@ func get_cell_coordinates(point: Vector2):
 		return null
 
 
-func get_coordinates_from_cell(point: Vector2, centred = false):
-	point -= grid_offset
+func get_coordinates_from_cell(cell: Vector2, centred = false):
+	cell -= grid_offset
 	### Returns top right corner global coordinates of cell grid position
-	var coordinates = Vector2(point.x * grid_cell_width, point.y * grid_cell_height)
+	var coordinates = Vector2(cell.x * grid_cell_width, cell.y * grid_cell_height)
 	# Handle offsets for odd columns if hex grid:
 	if self.cell_half_offset == 0: # offset in the x coordinate: (pointy top)
-		if int(point.y) % 2 != 0:
+		if int(cell.y) % 2 != 0:
 			coordinates.x += grid_cell_width / 2
 	elif self.cell_half_offset == 1: # offset in y coordinate (flat top)
-		if int(point.x) % 2 != 0:
+		if int(cell.x) % 2 != 0:
 			coordinates.y += grid_cell_height / 2
 	if centred: 
 		coordinates += cell_size/2
 	return coordinates
 
 
-func is_outside_map_bounds(point):
-	point -= grid_offset
-	return point.x < 0 or point.y < 0 or point.x >= grid_dimensions.end.x or point.y >= grid_dimensions.end.y
+func is_outside_map_bounds(cell):
+	cell -= grid_offset
+	return cell.x < 0 or cell.y < 0 or cell.x >= grid_dimensions.end.x or cell.y >= grid_dimensions.end.y
 
 
 func _calculate_point_index(cell):
@@ -104,61 +104,57 @@ func create_astar_node(terrain_dict=null):
 	var obstacles = []
 	for tile_id in impassable_tile_ids:
 		obstacles += get_used_cells_by_id(tile_id)
-	
-	var cell_counter = 0 # Cell counter forces equal paths to choose left side by adjusting weight by small amount
-	for point in self.get_used_cells():
-		if point in obstacles:
-			continue
-		walkable_cells_list.append(point)
-		var cell_index = _calculate_point_index(point)
-		# Set weight for tile using unit move speeds
-		var weight = 1000
-		var tile_id = self.get_cellv(point)
-		#print(point)
-		#print(tile_id)
-		if terrain_dict:
-			weight = terrain_dict[tile_id_types[tile_id]] * 1000 # Multiply by 1000 to reduce effect of cell_counter
-		astar_node.add_point(cell_index, Vector3(point.x, point.y, 0.0), weight+cell_counter)
-		cell_counter += 0.001
 
-	for point in walkable_cells_list:
-		var point_index = _calculate_point_index(point)
-		var points_relative
+	for cell in self.get_used_cells():
+		if cell in obstacles:
+			continue
+		walkable_cells_list.append(cell)
+		var cell_index = _calculate_point_index(cell)
+		# Set weight for tile using unit move speeds
+		var weight = 100
+		var tile_id = self.get_cellv(cell)
+		if terrain_dict:
+			# Weight is multiplied to reduce effect of random addition which is used for tie-breaking.
+			weight = terrain_dict[tile_id_types[tile_id]] * 100
+		astar_node.add_point(cell_index, Vector3(cell.x, cell.y, 0.0), weight + randf())
+
+	for cell in walkable_cells_list:
+		var cell_index = _calculate_point_index(cell)
+		var neighbouring_cells
 		if self.cell_half_offset == 2: # no offset: squares
-			points_relative = PoolVector2Array([
-				Vector2(point.x - 1, point.y - 1),
-				Vector2(point.x - 1, point.y),
-				Vector2(point.x - 1, point.y + 1),
-				Vector2(point.x, point.y - 1),
-				Vector2(point.x, point.y + 1),
-				Vector2(point.x + 1, point.y - 1),
-				Vector2(point.x + 1, point.y),
-				Vector2(point.x + 1, point.y + 1)
-				])
+			neighbouring_cells = PoolVector2Array([
+				Vector2(cell.x - 1, cell.y - 1),
+				Vector2(cell.x - 1, cell.y),
+				Vector2(cell.x - 1, cell.y + 1),
+				Vector2(cell.x, cell.y - 1),
+				Vector2(cell.x, cell.y + 1),
+				Vector2(cell.x + 1, cell.y - 1),
+				Vector2(cell.x + 1, cell.y),
+				Vector2(cell.x + 1, cell.y + 1)])
 		else:
-			if fmod(point.x, 2) == 0:
-				points_relative = PoolVector2Array([
-					Vector2(point.x, point.y - 1),
-					Vector2(point.x + 1, point.y - 1),
-					Vector2(point.x + 1, point.y),
-					Vector2(point.x, point.y + 1),
-					Vector2(point.x - 1, point.y),
-					Vector2(point.x - 1, point.y - 1)])
+			if fmod(cell.x, 2) == 0:
+				neighbouring_cells = PoolVector2Array([
+					Vector2(cell.x, cell.y - 1),
+					Vector2(cell.x + 1, cell.y - 1),
+					Vector2(cell.x + 1, cell.y),
+					Vector2(cell.x, cell.y + 1),
+					Vector2(cell.x - 1, cell.y),
+					Vector2(cell.x - 1, cell.y - 1)])
 			else:
-				points_relative = PoolVector2Array([
-					Vector2(point.x, point.y - 1),
-					Vector2(point.x + 1, point.y),
-					Vector2(point.x + 1, point.y + 1),
-					Vector2(point.x, point.y + 1),
-					Vector2(point.x - 1, point.y + 1),
-					Vector2(point.x - 1, point.y)])
-		for point_relative in points_relative:
-			var point_relative_index = _calculate_point_index(point_relative)
-			if is_outside_map_bounds(point_relative):
+				neighbouring_cells = PoolVector2Array([
+					Vector2(cell.x, cell.y - 1),
+					Vector2(cell.x + 1, cell.y),
+					Vector2(cell.x + 1, cell.y + 1),
+					Vector2(cell.x, cell.y + 1),
+					Vector2(cell.x - 1, cell.y + 1),
+					Vector2(cell.x - 1, cell.y)])
+		for neighbour_cell in neighbouring_cells:
+			var neighbour_index = _calculate_point_index(neighbour_cell)
+			if is_outside_map_bounds(neighbour_cell):
 				continue
-			if not astar_node.has_point(point_relative_index):
+			if not astar_node.has_point(neighbour_index):
 				continue
-			astar_node.connect_points(point_index, point_relative_index, false)
+			astar_node.connect_points(cell_index, neighbour_index, false)
 	
 	#### Debugging ####
 	# Inefficient vertical path chosen on odd columns using weights 1000 and 5000
@@ -180,21 +176,20 @@ func find_path(start_pos, end_pos, astar_node):
 	if self.get_cellv(path_end_position) in impassable_tile_ids or self.get_cellv(path_start_position) in impassable_tile_ids:
 		# Path begins or ends on impassable terrain
 		return []
-	var point_path = astar_node.get_point_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position))
-	var point_path2 = []
-	for p in point_path:
-		point_path2.append(Vector2(p.x, p.y))
-	return point_path2
+	var cell_path = []
+	for p in astar_node.get_point_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position)):
+		cell_path.append(Vector2(p.x, p.y))
+	return cell_path
 
 
-func get_tile_terrain(cell_point):
-	return tile_id_types[self.get_cellv(cell_point)]
+func get_tile_terrain(cell):
+	return tile_id_types[self.get_cellv(cell)]
 
 
-func get_cellv(point: Vector2):
+func get_cellv(cell: Vector2):
 	# Override to handle grid_offset
-	point -= grid_offset
-	return get_cell(point.x, point.y)
+	cell -= grid_offset
+	return get_cell(cell.x, cell.y)
 
 
 func get_used_cells_by_id(tile_id):

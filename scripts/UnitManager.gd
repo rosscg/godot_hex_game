@@ -1,20 +1,19 @@
 extends Node
 
 onready var map : Node2D = get_owner().get_node("Map")
-#onready var unit_info_gui : Node2D = get_owner().get_node("GUI/UnitInfoGUI")
-
-onready var unit_list = []
-onready var selected_unit = null
-onready var overlay_on : bool = false
-var unit_data = {}
 const unit_scene = preload("res://scenes/Unit.tscn")
+
+var unit_list = []
+var selected_unit = null
+var overlay_on : bool = false
+var unit_data = {}
 
 
 func _ready() -> void:
 	unit_data = load_unit_data()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	detect_combat()
 
 
@@ -23,7 +22,6 @@ func load_unit_data():
 	file.open("res://assets/units/unit_data.json", file.READ)
 	var text = file.get_as_text()
 	var result_json = JSON.parse(text)
-	var result = {}
 	if result_json.error == OK:
 		var data = result_json.result
 		return data
@@ -94,4 +92,4 @@ func toggle_overlay():
 		if unit == selected_unit:
 			continue
 		unit.goal_sprite.visible = overlay_on and unit.goal != Vector2(0,0)
-		unit.planned_path.visible = overlay_on
+		unit.planned_path_line.visible = overlay_on
