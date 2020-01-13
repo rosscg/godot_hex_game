@@ -12,7 +12,7 @@ func _process(delta: float) -> void:
 	var cell_coords = tilemap.get_cell_coordinates(get_global_mouse_position())
 	if cell_coords or cell_coords == Vector2(0,0):
 		hover_cell_sprite.visible = true
-		hover_cell_sprite.position = tilemap.get_centre_coordinates_from_cell(cell_coords)
+		hover_cell_sprite.position = tilemap.get_coordinates_from_cell(cell_coords, true)
 	else:
 		hover_cell_sprite.visible = false
 
@@ -29,6 +29,6 @@ func display_path(selected_unit):
 	#	tilemap_overlay.set_cellv(p, 1)
 	var point_path = []
 	for p in path:
-		point_path.append(tilemap.get_centre_coordinates_from_cell(p))
+		point_path.append(tilemap.get_coordinates_from_cell(p, true))
 	line_2d.points = point_path
 	return path

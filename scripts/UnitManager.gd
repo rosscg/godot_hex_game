@@ -32,7 +32,7 @@ func create_unit(cell_coordinates):
 	if not cell_coordinates and cell_coordinates != Vector2(0,0): 
 		# Clicked outside of map
 		return
-	unit_instance.position = map.tilemap.get_centre_coordinates_from_cell(cell_coordinates)
+	unit_instance.position = map.tilemap.get_coordinates_from_cell(cell_coordinates, true)
 	add_child(unit_instance)
 	unit_list.append(unit_instance)
 	return unit_instance

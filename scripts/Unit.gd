@@ -3,15 +3,20 @@ extends Node2D
 onready var planned_path : Line2D = $PlannedPath
 onready var goal_sprite : Sprite = $GoalSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
+onready var sprite : AnimatedSprite = $AnimatedSprite
 onready var tilemap : Node2D = get_parent().map.tilemap
 onready var unit_manager : Node2D = get_parent()
 onready var selected_unit : Node2D = get_parent().selected_unit
 
+var unit_types = ['infantry', 'cavalry']
+var terrain_dicts = {'infantry': {'grass': 2, 'water': 20, 'deepwater': 50, 'road': 1, 'dirt': 5, 
+					'lowhills': 6, 'forest': 6, 'marsh': 6, 'mountain': 10},
+					'cavalry': {'grass': 1, 'water': 80, 'deepwater': 200, 'road': 1, 'dirt': 3, 
+					'lowhills': 20, 'forest': 20, 'marsh': 20, 'mountain': 40}}
 var base_speed : = 100	# Speed is calculated as base_speed / terrain_speed
 var strength : = randi()%10 + 1
-#var unit_types = ['fencer', 'marshal', 'lieutenant', 'spearman']
-var terrain_dict = {'grass': 2, 'water': 20, 'deepwater': 50, 'road': 1, 'dirt': 5, 
-					'lowhills': 6, 'forest': 6, 'marsh': 6, 'mountain': 10}
+var unit_type
+var terrain_dict
 var path : = PoolVector2Array()
 var goal : = Vector2()
 var astar_node
@@ -22,6 +27,10 @@ var occupied_cells = []
 func _ready() -> void:
 	set_process(false)
 
+	# Set unit type:
+	unit_type = unit_types[randi() % unit_types.size()]
+	sprite.animation = unit_type
+	terrain_dict = terrain_dicts[unit_type]
 	occupied_cells = [tilemap.get_cell_coordinates(self.position)]
 	
 	# Each unit stores its own astar node
@@ -36,7 +45,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	# Speed based on first cell occupied in occupied_cells:
-	var speed : float = base_speed / terrain_dict[tilemap.tile_id_types[tilemap.get_cellv(occupied_cells[0])]]
+	var speed : float = base_speed / terrain_dict[tilemap.get_tile_terrain(occupied_cells[0])]
 	var move_distance : = speed * delta
 	_move_along_path(move_distance)
 
@@ -51,7 +60,7 @@ func _process(delta: float) -> void:
 		planned_path.add_point(Vector2(0,0))
 		for point in self.path:
 			planned_path.add_point(point - position)
-		goal_sprite.position = tilemap.get_centre_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal)) - self.position
+		goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
 		if tilemap.get_cell_coordinates(self.goal) == tilemap.get_cell_coordinates(self.position):
 			# Arrived at goal
 			self.goal = Vector2(0,0)
@@ -121,14 +130,14 @@ func set_goal(goal_to_set, path_to_set=null):
 		var global_path = tilemap.find_path(self.position, goal_to_set, self.astar_node)
 		self.path = []
 		for p in global_path:
-			self.path.append(tilemap.get_centre_coordinates_from_cell(p))
+			self.path.append(tilemap.get_coordinates_from_cell(p, true))
 		self.path.remove(0)
 	### Repeating below as _process begins off, can change if this design is changed ###
 	self.planned_path.clear_points()
 	self.planned_path.add_point(Vector2(0,0))
 	for point in self.path:
 		planned_path.add_point(point - position)
-	self.goal_sprite.position = tilemap.get_centre_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal)) - self.position
+	self.goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
 	### Finished repeat ###
 	self.goal_sprite.visible = unit_manager.overlay_on and self.goal != Vector2(0,0)
 	self.planned_path.visible = unit_manager.overlay_on

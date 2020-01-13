@@ -55,24 +55,20 @@ func get_cell_coordinates(point: Vector2):
 		return null
 
 
-func get_coordinates_from_cell(point: Vector2):
+func get_coordinates_from_cell(point: Vector2, centred = false):
 	### Returns top right corner global coordinates of cell grid position
 	var coordinates = Vector2(point.x * grid_cell_width, point.y * grid_cell_height)
-	# Handle offsets for odd columns
+	# Handle offsets for odd columns if hex grid:
 	if self.cell_half_offset == 0: # offset in the x coordinate: (pointy top)
 		if int(point.y) % 2 != 0:
 			coordinates.x += grid_cell_width / 2
 	elif self.cell_half_offset == 1: # offset in y coordinate (flat top)
 		if int(point.x) % 2 != 0:
 			coordinates.y += grid_cell_height / 2
+	if centred: 
+		coordinates += cell_size/2
 	return coordinates
 
-
-func get_centre_coordinates_from_cell(point: Vector2):
-	### Returns global coordinates of centre of cell grid position
-	var coordinates = get_coordinates_from_cell(point) + cell_size/2
-	return coordinates
-	
 
 func is_outside_map_bounds(point):
 	return point.x < 0 or point.y < 0 or point.x >= grid_dimensions.end.x or point.y >= grid_dimensions.end.y
