@@ -1,7 +1,7 @@
 extends Node
 
 onready var map : Node2D = get_owner().get_node("Map")
-onready var unit_info_gui : Node2D = get_owner().get_node("GUI/UnitInfoUI")
+#onready var unit_info_gui : Node2D = get_owner().get_node("GUI/UnitInfoGUI")
 
 onready var unit_list = []
 onready var selected_unit = null
@@ -37,7 +37,7 @@ func create_unit(cell_coordinates):
 	if get_unit_in_cell(cell_coordinates):
 		print('cell already occupied')
 		return
-	if not cell_coordinates and cell_coordinates != Vector2(0,0): 
+	if not cell_coordinates: 
 		# Clicked outside of map
 		return
 	var unit_instance = unit_scene.instance()

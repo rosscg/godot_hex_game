@@ -30,7 +30,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		 # Create new unit on A key press:
 		if event.get_scancode() == KEY_A and event.is_pressed() and not event.is_echo():
 			var cell_coordinates = map.tilemap.get_cell_coordinates(get_global_mouse_position())
-			unit_manager.create_unit(cell_coordinates).select_unit()
+			if cell_coordinates:
+				var unit = unit_manager.create_unit(cell_coordinates)
+				if unit:
+					unit.select_unit()
 			return
 
 	# Ignore all other keypresses

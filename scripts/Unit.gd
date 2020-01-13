@@ -3,10 +3,10 @@ extends Node2D
 onready var planned_path : Line2D = $PlannedPath
 onready var goal_sprite : Sprite = $GoalSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
-onready var sprite : Sprite = $Sprite
+#onready var sprite : Sprite = $Sprite
 onready var tilemap : Node2D = get_parent().map.tilemap
 onready var unit_manager : Node2D = get_parent()
-onready var selected_unit : Node2D = get_parent().selected_unit
+#onready var selected_unit : Node2D = get_parent().selected_unit
 
 var base_speed : = 100	# Speed is calculated as base_speed / terrain_speed
 var strength

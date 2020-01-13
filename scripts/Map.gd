@@ -10,7 +10,7 @@ onready var line_2d : Line2D = $Line2D
 func _process(delta: float) -> void:
 	# Show cell hovered over
 	var cell_coords = tilemap.get_cell_coordinates(get_global_mouse_position())
-	if cell_coords or cell_coords == Vector2(0,0):
+	if cell_coords:
 		hover_cell_sprite.visible = true
 		hover_cell_sprite.position = tilemap.get_coordinates_from_cell(cell_coords, true)
 	else:
