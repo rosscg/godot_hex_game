@@ -3,18 +3,26 @@ extends Node2D
 onready var map : Node2D = $Map
 onready var unit_manager : Node2D = $UnitManager
 onready var distance_label : Label = get_node("GUI/Distance_Label")
-
+onready var unit_info_gui : Control = get_node("GUI/UnitInfoGUI")
 #onready var left_dragging = false
 
 
 func _process(delta: float) -> void:
-	#print(unit_manager.selected_unit)
 	# Show planned path if unit is selected
 	var path = map.display_path(unit_manager.selected_unit)
-	if unit_manager.selected_unit:
-		distance_label.text = str(len(path)) + ' days'
+	if unit_manager.selected_unit and map.tilemap.get_cell_coordinates(get_global_mouse_position()):
+		distance_label.text = map.tilemap.get_tile_terrain(map.tilemap.get_cell_coordinates(get_global_mouse_position())).capitalize()
 		distance_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )
 		distance_label.show()
+		unit_info_gui.visible = true
+		unit_info_gui.get_node('Label').text = \
+			unit_manager.selected_unit.unit_type.capitalize() + \
+			'\n\nStrength: ' + str(unit_manager.selected_unit.strength) + \
+			'\nOn: ' + map.tilemap.get_tile_terrain(unit_manager.selected_unit.occupied_cells[0]).capitalize() + \
+			'\n\nTo: ' + map.tilemap.get_tile_terrain(map.tilemap.get_cell_coordinates(get_global_mouse_position())).capitalize() + \
+			'\nDistance: ' + str(unit_manager.selected_unit.calc_path_cost(path))
+	else:
+		unit_info_gui.visible = false
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -64,7 +72,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			for x in unit_manager.unit_list:
 				if selected_cell in x.occupied_cells:
 					x.select_unit()
-					#unit_manager.selected_unit = x
 					#map.selected_cell_sprite.visible = true
 					#map.selected_cell_sprite.position = map.tilemap.get_coordinates_from_cell(selected_cell, centred=true)
 					return

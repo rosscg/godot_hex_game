@@ -16,15 +16,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	detect_combat()
-	
-	if selected_unit:
-		unit_info_gui.get_node('Label').visible = true
-		unit_info_gui.get_node('Polygon2D').visible = true
-		unit_info_gui.get_node('Label').text = selected_unit.unit_type.capitalize() + '\n\nStrength: ' + str(selected_unit.strength) + \
-												'\n' + map.tilemap.get_tile_terrain(selected_unit.occupied_cells[0]).capitalize()
-	else:
-		unit_info_gui.get_node('Label').visible = false
-		unit_info_gui.get_node('Polygon2D').visible = false
 
 
 func load_unit_data():

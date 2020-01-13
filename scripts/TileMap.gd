@@ -163,4 +163,5 @@ func find_path(start_pos, end_pos, astar_node):
 
 
 func get_tile_terrain(cell_point):
+	var cell_id = self.get_cellv(cell_point)
 	return tile_id_types[self.get_cellv(cell_point)]

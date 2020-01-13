@@ -84,7 +84,7 @@ func _move_along_path(move_distance: float) -> void:
 
 func _draw():
 	# Full strength bar is 20 px wide:
-	draw_line(Vector2(-10,12), Vector2((-10+float(strength)/10*20), 12), Color(255, 0, 0), 3)
+	draw_line(Vector2(-10,14), Vector2((-10+float(strength)/10*20), 14), Color(255, 0, 0), 3)
 	# Circle indicates unit needs orders:
 	if len(path) == 0 and strength > 0:
 		draw_circle(Vector2(12,-12), 4, Color( 0, 0, 1, 1 ))
@@ -153,3 +153,12 @@ func select_unit(select=true):
 		if unit_manager.selected_unit:
 			unit_manager.selected_unit.select_unit(false)
 		unit_manager.selected_unit = self
+
+
+func calc_path_cost(path=null):
+	var cost = 0
+	if not path:
+		path = self.path
+	for p in path:
+		cost += terrain_dict[tilemap.get_tile_terrain(p)]
+	return cost
