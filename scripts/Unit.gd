@@ -4,11 +4,12 @@ onready var planned_path_line : Line2D = $PlannedPath
 onready var goal_sprite : Sprite = $GoalSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
 onready var tilemap : Node2D = get_parent().map.tilemap
+onready var map : Node2D = get_parent().map
 onready var unit_manager : Node2D = get_parent()
 #onready var selected_unit : Node2D = get_parent().selected_unit
 #onready var sprite : Sprite = $Sprite
 
-var base_speed : = 100	# Speed is calculated as base_speed / terrain_speed
+var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
 var strength
 var unit_type
 var terrain_dict
@@ -58,7 +59,7 @@ func _process(delta: float) -> void:
 	planned_path_line.clear_points()
 	if self.goal:
 		planned_path_line.add_point(Vector2(0,0))
-		for point in self.planned_path:
+		for point in map.smooth(self.planned_path):
 			planned_path_line.add_point(point - position)
 		goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
 		if tilemap.get_cell_coordinates(self.goal) == tilemap.get_cell_coordinates(self.position):
@@ -122,6 +123,9 @@ func take_damage(damage):
 
 func set_goal(goal_to_set, path_to_set=null):
 	# Update the goal and path for a unit
+	if tilemap.get_cellv(tilemap.get_cell_coordinates(goal_to_set)) in tilemap.impassable_tile_ids:
+		# Goal is in impassable terrain
+		return
 	self.goal = goal_to_set
 	if path_to_set:
 		self.planned_path = path_to_set
@@ -135,7 +139,7 @@ func set_goal(goal_to_set, path_to_set=null):
 	### Repeating below as _process begins off, can change if this design is changed ###
 	self.planned_path_line.clear_points()
 	self.planned_path_line.add_point(Vector2(0,0))
-	for point in self.planned_path:
+	for point in map.smooth(self.planned_path):
 		planned_path_line.add_point(point - position)
 	self.goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
 	### Finished repeat ###
@@ -158,7 +162,7 @@ func select_unit(select=true):
 func calc_path_cost(path=null):
 	var cost = 0
 	if not path:
-		path = self.path
+		path = self.planned_path
 	for p in path:
 		cost += terrain_dict[tilemap.get_tile_terrain(p)]
 	return cost

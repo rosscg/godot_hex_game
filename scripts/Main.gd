@@ -82,8 +82,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_StartButton_button_up():
 	unit_manager.activate_units(true)
-	#yield(get_tree().create_timer(3.0), "timeout")
-	#unit_manager.activate_units(false)
+	yield(get_tree().create_timer(5.0), "timeout")
+	unit_manager.activate_units(false)
 	return
 
 

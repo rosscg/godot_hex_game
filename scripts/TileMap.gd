@@ -183,6 +183,8 @@ func find_path(start_pos, end_pos, astar_node):
 
 
 func get_tile_terrain(cell):
+	if self.get_cellv(cell) == -1:		# Debugging
+		print(cell)
 	return tile_id_types[self.get_cellv(cell)]
 
 
