@@ -120,38 +120,9 @@ func create_astar_node(terrain_dict=null):
 
 	for cell in walkable_cells_list:
 		var cell_index = _calculate_point_index(cell)
-		var neighbouring_cells
-		if self.cell_half_offset == 2: # no offset: squares
-			neighbouring_cells = PoolVector2Array([
-				Vector2(cell.x - 1, cell.y - 1),
-				Vector2(cell.x - 1, cell.y),
-				Vector2(cell.x - 1, cell.y + 1),
-				Vector2(cell.x, cell.y - 1),
-				Vector2(cell.x, cell.y + 1),
-				Vector2(cell.x + 1, cell.y - 1),
-				Vector2(cell.x + 1, cell.y),
-				Vector2(cell.x + 1, cell.y + 1)])
-		else:
-			if fmod(cell.x, 2) == 0:
-				neighbouring_cells = PoolVector2Array([
-					Vector2(cell.x, cell.y - 1),
-					Vector2(cell.x + 1, cell.y - 1),
-					Vector2(cell.x + 1, cell.y),
-					Vector2(cell.x, cell.y + 1),
-					Vector2(cell.x - 1, cell.y),
-					Vector2(cell.x - 1, cell.y - 1)])
-			else:
-				neighbouring_cells = PoolVector2Array([
-					Vector2(cell.x, cell.y - 1),
-					Vector2(cell.x + 1, cell.y),
-					Vector2(cell.x + 1, cell.y + 1),
-					Vector2(cell.x, cell.y + 1),
-					Vector2(cell.x - 1, cell.y + 1),
-					Vector2(cell.x - 1, cell.y)])
+		var neighbouring_cells = get_neighbours(cell)
 		for neighbour_cell in neighbouring_cells:
 			var neighbour_index = _calculate_point_index(neighbour_cell)
-			if is_outside_map_bounds(neighbour_cell):
-				continue
 			if not astar_node.has_point(neighbour_index):
 				continue
 			astar_node.connect_points(cell_index, neighbour_index, false)
@@ -208,3 +179,40 @@ func get_used_cells():
 	for c in .get_used_cells():
 		cells.append(c + grid_offset)
 	return cells
+
+
+func get_neighbours(cell):
+	var neighbouring_cells
+	var neighbouring_cells_within_map = PoolVector2Array([])
+	if self.cell_half_offset == 2: # no offset: squares
+		neighbouring_cells = PoolVector2Array([
+			Vector2(cell.x - 1, cell.y - 1),
+			Vector2(cell.x - 1, cell.y),
+			Vector2(cell.x - 1, cell.y + 1),
+			Vector2(cell.x, cell.y - 1),
+			Vector2(cell.x, cell.y + 1),
+			Vector2(cell.x + 1, cell.y - 1),
+			Vector2(cell.x + 1, cell.y),
+			Vector2(cell.x + 1, cell.y + 1)])
+	else:
+		# TODO: check this works for pointy-top grids
+		if fmod(cell.x, 2) == 0:
+			neighbouring_cells = PoolVector2Array([
+				Vector2(cell.x, cell.y - 1),
+				Vector2(cell.x + 1, cell.y - 1),
+				Vector2(cell.x + 1, cell.y),
+				Vector2(cell.x, cell.y + 1),
+				Vector2(cell.x - 1, cell.y),
+				Vector2(cell.x - 1, cell.y - 1)])
+		else:
+			neighbouring_cells = PoolVector2Array([
+				Vector2(cell.x, cell.y - 1),
+				Vector2(cell.x + 1, cell.y),
+				Vector2(cell.x + 1, cell.y + 1),
+				Vector2(cell.x, cell.y + 1),
+				Vector2(cell.x - 1, cell.y + 1),
+				Vector2(cell.x - 1, cell.y)])
+	for neighbour_cell in neighbouring_cells:
+		if not is_outside_map_bounds(neighbour_cell):
+			neighbouring_cells_within_map.append(neighbour_cell)
+	return neighbouring_cells_within_map

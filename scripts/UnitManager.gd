@@ -13,8 +13,8 @@ func _ready() -> void:
 	unit_data = load_unit_data()
 
 
-func _process(_delta: float) -> void:
-	detect_combat()
+#func _process(_delta: float) -> void:
+#	detect_combat()
 
 
 func load_unit_data():
@@ -69,9 +69,14 @@ func detect_combat():
 	for unit in unit_list:
 		for occupied_cell in unit.occupied_cells:
 			#var cell = map.tilemap.get_cell_coordinates(unit.position)
-			var unit2 = get_unit_in_cell(occupied_cell, unit)
-			if unit2:
-				resolve_combat(unit, unit2)
+#			var unit2 = get_unit_in_cell(occupied_cell, unit)
+#			if unit2:
+#				resolve_combat(unit, unit2)
+				
+			for neighbour in map.tilemap.get_neighbours(occupied_cell):
+				var unit3 = get_unit_in_cell(neighbour, unit)
+				if unit3:
+					resolve_combat(unit, unit3)
 	return
 
 

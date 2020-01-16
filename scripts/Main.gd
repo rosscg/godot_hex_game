@@ -62,7 +62,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			var position_path = []
 			for p in path:
 				position_path.append(map.tilemap.get_coordinates_from_cell(p, true))
-			position_path.remove(0)
+			#position_path.remove(0)
 			unit_manager.selected_unit.set_goal(event.global_position, PoolVector2Array(position_path))
 			unit_manager.selected_unit.update()
 			unit_manager.selected_unit.select_unit(false)
