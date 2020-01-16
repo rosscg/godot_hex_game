@@ -42,7 +42,7 @@ func create_unit(cell_coordinates):
 	# Create random unit type:
 	var unit_type = unit_data.keys()[randi() % unit_data.size()]
 	var unit_terrain_dict = unit_data[unit_type]
-	var strength = randi()%10 + 1
+	var strength = randi()%5 + 6
 	unit_instance.init(unit_type, unit_terrain_dict, strength, map.tilemap.get_coordinates_from_cell(cell_coordinates, true))
 	#unit_instance.set_name("unit")
 	add_child(unit_instance)
@@ -65,29 +65,25 @@ func get_unit_in_cell(cell_coordinates, ignored_unit=null):
 
 
 func detect_combat():
-	# TODO: Currently won't initiate when two units 'swap' cells.
+	# TODO: Currently won't initiate when two units 'swap' cells. -- should be working now
 	for unit in unit_list:
 		for occupied_cell in unit.occupied_cells:
-			#var cell = map.tilemap.get_cell_coordinates(unit.position)
-#			var unit2 = get_unit_in_cell(occupied_cell, unit)
-#			if unit2:
-#				resolve_combat(unit, unit2)
-				
-			for neighbour in map.tilemap.get_neighbours(occupied_cell):
-				var unit3 = get_unit_in_cell(neighbour, unit)
-				if unit3:
-					resolve_combat(unit, unit3)
+			for neighbour in map.tilemap.get_neighbours(occupied_cell):# + occupied_cell:
+				var target_unit = get_unit_in_cell(neighbour, unit)
+				if target_unit:
+					unit.toggle_combat(target_unit)
+					#target_unit.in_combat = unit
 	return
 
 
-func resolve_combat(unit1, unit2):
-	# Arbitrary combat implementation
-	var u1_damage = unit1.strength
-	var u2_damage = unit2.strength
-	if unit1.take_damage(u2_damage):
-		unit_list.erase(unit1)
-	if unit2.take_damage(u1_damage):
-		unit_list.erase(unit2)
+func resolve_combat():
+	for unit in unit_list:
+		var target_unit = unit.in_combat
+		if target_unit:
+			if not is_instance_valid(target_unit) or target_unit.take_damage(1): # TODO: change to unit's attack value
+				unit_list.erase(target_unit)
+				unit.toggle_combat(null)
+				#target_unit = null
 
 
 func toggle_overlay():

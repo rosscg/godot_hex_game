@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scripts/Main.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Map.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://assets/hover3_20px.png" type="Texture" id=8]
 [ext_resource path="res://assets/hover2_20px.png" type="Texture" id=9]
 [ext_resource path="res://scripts/UnitManager.gd" type="Script" id=10]
+[ext_resource path="res://scripts/TurnManager.gd" type="Script" id=11]
 
 [sub_resource type="TileSet" id=1]
 0/name = "hex_tileset_20px.png 0"
@@ -367,6 +368,9 @@ texture = ExtResource( 9 )
 
 [node name="UnitManager" type="Node" parent="."]
 script = ExtResource( 10 )
+
+[node name="TurnManager" type="Node" parent="."]
+script = ExtResource( 11 )
 
 [node name="GUI" type="Control" parent="."]
 editor/display_folded = true

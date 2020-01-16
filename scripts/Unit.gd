@@ -2,6 +2,7 @@ extends Node2D
 
 onready var planned_path_line : Line2D = $PlannedPath
 onready var goal_sprite : Sprite = $GoalSprite
+onready var status_sprite : AnimatedSprite = $StatusSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
 onready var tilemap : Node2D = get_parent().map.tilemap
 onready var map : Node2D = get_parent().map
@@ -17,6 +18,7 @@ var planned_path : = PoolVector2Array()
 var goal : = Vector2()
 var astar_node
 var occupied_cells = []
+var in_combat = null
 #var occupied_cells_local = []
 
 
@@ -48,7 +50,9 @@ func _process(delta: float) -> void:
 	# Speed based on first cell occupied in occupied_cells:
 	var speed : float = base_speed / terrain_dict[tilemap.get_tile_terrain(occupied_cells[0])]
 	var move_distance : = speed * delta
-	_move_along_path(move_distance)
+	
+	if not in_combat:
+		_move_along_path(move_distance)
 
 	# Update occupied_cells occupied
 	occupied_cells = [tilemap.get_cell_coordinates(self.position)]
@@ -85,7 +89,7 @@ func _move_along_path(move_distance: float) -> void:
 
 func _draw():
 	# Full strength bar is 20 px wide:
-	draw_line(Vector2(-10,14), Vector2((-10+float(strength)/10*20), 14), Color(255, 0, 0), 3)
+	draw_line(Vector2(-10,14), Vector2((-10+float(strength)/10*20), 14), Color(255, 0, 0), 5)
 	# Circle indicates unit needs orders:
 	if len(planned_path) == 0 and strength > 0:
 		draw_circle(Vector2(12,-12), 4, Color( 0, 0, 1, 1 ))
@@ -166,3 +170,12 @@ func calc_path_cost(path=null):
 	for p in path:
 		cost += terrain_dict[tilemap.get_tile_terrain(p)]
 	return cost
+
+
+func toggle_combat(opponent):
+	self.in_combat = opponent
+	if opponent:
+		self.status_sprite.visible = true
+	else:
+		self.status_sprite.visible = false
+	

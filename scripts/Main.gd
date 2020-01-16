@@ -1,7 +1,9 @@
 extends Node2D
 
 onready var map : Node2D = $Map
-onready var unit_manager : Node2D = $UnitManager
+onready var unit_manager : Node2D = get_node("UnitManager")
+onready var turn_manager : Node2D = get_node("TurnManager")
+#onready var turn_manager = preload("TurnManager.gd").new()
 onready var distance_label : Label = get_node("GUI/Distance_Label")
 onready var unit_info_gui : Control = get_node("GUI/UnitInfoGUI")
 #var left_dragging = false
@@ -81,9 +83,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_StartButton_button_up():
-	unit_manager.activate_units(true)
-	yield(get_tree().create_timer(5.0), "timeout")
-	unit_manager.activate_units(false)
+	turn_manager.start_turn()
 	return
 
 
