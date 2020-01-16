@@ -11,6 +11,7 @@
 * Teams
 * Unit facing direction
 * Disable interface during turn processing
+* Stop units backtracking to centre of grid when in combat
 
 ### Low Priority:
 * States - march, route, retreat, combat, ranged combat, fortify, stationary

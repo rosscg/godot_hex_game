@@ -82,8 +82,9 @@ func resolve_combat():
 		if target_unit:
 			if not is_instance_valid(target_unit) or target_unit.take_damage(1): # TODO: change to unit's attack value
 				unit_list.erase(target_unit)
-				unit.toggle_combat(null)
-				#target_unit = null
+				for unit_check in unit_list:
+					if unit_check.in_combat == target_unit:
+						unit_check.toggle_combat(null)
 
 
 func toggle_overlay():
@@ -92,5 +93,5 @@ func toggle_overlay():
 	for unit in unit_list:
 		if unit == selected_unit:
 			continue
-		unit.goal_sprite.visible = overlay_on and unit.goal != Vector2(0,0)
+		unit.goal_sprite.visible = overlay_on and unit.goal != Vector2(0,0) and unit.in_combat == null
 		unit.planned_path_line.visible = overlay_on

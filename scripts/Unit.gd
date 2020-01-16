@@ -56,15 +56,23 @@ func _process(delta: float) -> void:
 
 	# Temporarily store planned path elsewhere during combat:
 	if in_combat:
-		if len(planned_path) > 1:
-			stored_path = PoolVector2Array()
-			stored_path.append_array(planned_path)
-			planned_path.resize(1)
+		if len(planned_path) > 0:
+			if len(self.stored_path) == 0:
+				self.stored_path.append_array(planned_path)
+			#planned_path = PoolVector2Array([tilemap.get_coordinates_from_cell(in_combat.occupied_cells[0], true)])
+			self.planned_path = PoolVector2Array([])
+			if is_instance_valid(in_combat):
+				for p in tilemap.find_path(self.position, tilemap.get_coordinates_from_cell(in_combat.occupied_cells[0], true), self.astar_node):
+					self.planned_path.append(tilemap.get_coordinates_from_cell(p, true))
+					#self.planned_path.remove(0)
+			else:
+				# in_combat unit killed by another unit
+				in_combat = null
 	else:
-		if len(stored_path) > 0:
-			planned_path = PoolVector2Array()
-			planned_path.append_array(stored_path)
-			stored_path = PoolVector2Array()
+		if len(self.stored_path) > 0:
+			self.planned_path = PoolVector2Array()
+			self.planned_path.append_array(stored_path)
+			self.stored_path = PoolVector2Array()
 	
 	_move_along_path(move_distance)
 
@@ -161,7 +169,7 @@ func set_goal(goal_to_set, path_to_set=null):
 	# Calculate path if not provided:
 	else:
 		var global_path = tilemap.find_path(self.position, goal_to_set, self.astar_node)
-		self.planned_path = []
+		self.planned_path = PoolVector2Array([])
 		for p in global_path:
 			self.planned_path.append(tilemap.get_coordinates_from_cell(p, true))
 		self.planned_path.remove(0)
@@ -201,6 +209,8 @@ func toggle_combat(opponent):
 	self.in_combat = opponent
 	if opponent:
 		self.status_sprite.visible = true
+		self.goal_sprite.visible = false
 	else:
 		self.status_sprite.visible = false
+		self.goal_sprite.visible = unit_manager.overlay_on or unit_manager.selected_unit == self
 	
