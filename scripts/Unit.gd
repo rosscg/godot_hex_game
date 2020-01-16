@@ -14,6 +14,7 @@ var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
 var strength
 var unit_type
 var terrain_dict
+var stored_path : = PoolVector2Array()
 var planned_path : = PoolVector2Array()
 var goal : = Vector2()
 var astar_node
@@ -50,9 +51,20 @@ func _process(delta: float) -> void:
 	# Speed based on first cell occupied in occupied_cells:
 	var speed : float = base_speed / terrain_dict[tilemap.get_tile_terrain(occupied_cells[0])]
 	var move_distance : = speed * delta
+
+	# Temporarily store planned path elsewhere during combat:
+	if in_combat:
+		if len(planned_path) > 1:
+			stored_path = PoolVector2Array()
+			stored_path.append_array(planned_path)
+			planned_path.resize(1)
+	else:
+		if len(stored_path) > 0:
+			planned_path = PoolVector2Array()
+			planned_path.append_array(stored_path)
+			stored_path = PoolVector2Array()
 	
-	if not in_combat:
-		_move_along_path(move_distance)
+	_move_along_path(move_distance)
 
 	# Update occupied_cells occupied
 	occupied_cells = [tilemap.get_cell_coordinates(self.position)]
