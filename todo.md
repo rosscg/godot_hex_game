@@ -1,10 +1,10 @@
 ## Todo:
 
 ### Next:
+* Fix: units move to next cell for combat even if it's away from target unit.
 * get_neighbours with radius
 * check for missing cell terrain ids
 * Units can still cross over / fight in same cell
-* Stop units moving onto occupied cells
 
 ### Mid:
 * Line to targetted combat unit

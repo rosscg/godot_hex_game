@@ -5,6 +5,15 @@ onready var hover_cell_sprite : Sprite = $HoverCell
 onready var line_2d : Line2D = $Line2D
 #onready var tilemap_overlay : TileMap = $TileMapOverlay
 #onready var selected_cell_sprite : Sprite = $SelectedCell
+var cell_array
+
+func _ready():
+	cell_array=[]
+	print(tilemap.grid_dimensions.end.x)
+	for x in range(tilemap.grid_dimensions.end.x):
+		cell_array.append([])
+		for y in range(tilemap.grid_dimensions.end.x):
+			cell_array[x].append([])
 
 
 func _process(_delta: float) -> void:

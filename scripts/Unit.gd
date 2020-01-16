@@ -36,6 +36,8 @@ func _ready() -> void:
 	set_process(false)
 
 	occupied_cells = [tilemap.get_cell_coordinates(self.position)]
+	for cell in occupied_cells:
+		map.cell_array[cell.x][cell.y] = self
 	
 	# Each unit stores its own astar node
 	astar_node = tilemap.create_astar_node(terrain_dict)
@@ -88,6 +90,10 @@ func _process(delta: float) -> void:
 func _move_along_path(move_distance: float) -> void:
 	var start_point : = position
 	for i in range(planned_path.size()):
+		# Wait if next cell is still occupied:
+		var next_cell = tilemap.get_cell_coordinates(planned_path[0])
+		if map.cell_array[next_cell.x][next_cell.y] and map.cell_array[next_cell.x][next_cell.y] != self:
+			break
 		var distance_to_next : = start_point.distance_to(planned_path[0])
 		if move_distance <= distance_to_next:
 			position = start_point.linear_interpolate(planned_path[0], move_distance / distance_to_next)
@@ -96,6 +102,11 @@ func _move_along_path(move_distance: float) -> void:
 			move_distance -= distance_to_next
 			start_point = planned_path[0]
 			planned_path.remove(0)
+	# Update map cell array
+	var cell_point = tilemap.get_cell_coordinates(self.position)
+	if cell_point != occupied_cells[0]:
+		map.cell_array[occupied_cells[0].x][occupied_cells[0].y] = null
+		map.cell_array[cell_point.x][cell_point.y] = self
 	update()
 
 
@@ -129,6 +140,8 @@ func take_damage(damage):
 		strength = 0
 		update()
 		planned_path = PoolVector2Array([]) # Stop moving
+		for cell in occupied_cells:
+			map.cell_array[cell.x][cell.y] = null
 		#$AnimatedSprite.play($AnimatedSprite.animation + '_die')
 		#yield($AnimatedSprite, "animation_finished" )
 		if get_parent().selected_unit == self:
