@@ -50,5 +50,5 @@ polygon = PoolVector2Array( 4.9451, 0.0850744, 17.3681, 0.169013, 22.8241, -6.21
 visible = false
 frames = SubResource( 1 )
 animation = "combat"
-frame = 2
+frame = 1
 playing = true

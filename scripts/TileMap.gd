@@ -190,7 +190,7 @@ func get_used_cells():
 	return cells
 
 
-func get_neighbours(cell):
+func get_neighbours(cell, radius=1):
 	var neighbouring_cells
 	var neighbouring_cells_within_map = PoolVector2Array([])
 	if self.cell_half_offset == 2: # no offset: squares
@@ -224,4 +224,17 @@ func get_neighbours(cell):
 	for neighbour_cell in neighbouring_cells:
 		if not is_outside_map_bounds(neighbour_cell):
 			neighbouring_cells_within_map.append(neighbour_cell)
+
+	# Get cells in radius from cell recursively:
+	var new_cells = PoolVector2Array([])
+	new_cells.append_array(neighbouring_cells_within_map)
+	if radius > 1:
+		for cell2 in new_cells:
+			new_cells = PoolVector2Array([])
+			for cell3 in get_neighbours(cell2, radius-1):
+				if cell3 in new_cells or cell3 in neighbouring_cells_within_map or cell3 == cell:
+					continue
+				new_cells.append(cell3)
+			neighbouring_cells_within_map.append_array(new_cells)
+
 	return neighbouring_cells_within_map
