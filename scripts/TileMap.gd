@@ -13,14 +13,23 @@ var impassable_tile_ids = [11] # Tile id 11 'deepwater' considered impassable
 
 
 func _ready() -> void:
+	### Map integrity checks ###
 	# Check for vacant cells in tilemap:
 	if len(get_used_cells()) != grid_dimensions.end.x * grid_dimensions.end.y:
-		print(grid_dimensions.end.x * grid_dimensions.end.y - len(get_used_cells()), ' cells missing from tilemap: ', self.name)
+		print('ERROR: ', grid_dimensions.end.x * grid_dimensions.end.y - len(get_used_cells()), ' cells missing from tilemap: ', self.name)
 		for x in range(grid_dimensions.end.x):
 			for y in range(grid_dimensions.end.y):
 				if Vector2(x, y) + grid_offset in get_used_cells():
 					continue
 				print(Vector2(x, y))
+	# Check all terrain types are defined in tile_id_types:
+	var detected_cell_ids = {}
+	for cell in get_used_cells():
+		detected_cell_ids[get_cellv(cell)] = true
+	for cell_id in detected_cell_ids.keys():
+		if cell_id in tile_id_types.keys():
+			continue
+		print('ERROR: terrain type not defined in ', self.name, ' for cell id: ', cell_id)
 
 
 func _is_left(point: Vector2, a: Vector2, b: Vector2):
