@@ -59,11 +59,11 @@ func _process(delta: float) -> void:
 		if len(planned_path) > 0:
 			if len(self.stored_path) == 0:
 				self.stored_path.append_array(planned_path)
-			#planned_path = PoolVector2Array([tilemap.get_coordinates_from_cell(in_combat.occupied_cells[0], true)])
-			self.planned_path = PoolVector2Array([])
+			#self.planned_path = PoolVector2Array([])
 			if is_instance_valid(in_combat):
-				for p in tilemap.find_path(self.position, tilemap.get_coordinates_from_cell(in_combat.occupied_cells[0], true), self.astar_node):
-					self.planned_path.append(tilemap.get_coordinates_from_cell(p, true))
+				self.planned_path = PoolVector2Array([in_combat.position])
+			#	for p in tilemap.find_path(self.position, tilemap.get_coordinates_from_cell(in_combat.occupied_cells[0], true), self.astar_node):
+			#		self.planned_path.append(tilemap.get_coordinates_from_cell(p, true))
 					#self.planned_path.remove(0)
 			else:
 				# in_combat unit killed by another unit
@@ -73,8 +73,11 @@ func _process(delta: float) -> void:
 			self.planned_path = PoolVector2Array()
 			self.planned_path.append_array(stored_path)
 			self.stored_path = PoolVector2Array()
-	
-	_move_along_path(move_distance)
+
+	if in_combat:
+		pass
+	else:
+		_move_along_path(move_distance)
 
 	# Update occupied_cells occupied
 	occupied_cells = [tilemap.get_cell_coordinates(self.position)]

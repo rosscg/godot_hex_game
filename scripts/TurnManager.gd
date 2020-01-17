@@ -2,7 +2,7 @@ extends Node
 
 onready var unit_manager : Node2D = get_owner().get_node("UnitManager")
 var time_start = 0
-var turn_length_ms = 5000
+var turn_length_ms = 12000
 var sub_turn_ms = 1000
 var subturn_count
 

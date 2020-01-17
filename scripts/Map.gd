@@ -9,9 +9,10 @@ var cell_array
 
 func _ready():
 	cell_array=[]
-	for x in range(tilemap.grid_dimensions.end.x):
+	var dimensions = tilemap.grid_dimensions.end + tilemap.grid_offset
+	for x in range(dimensions.x):
 		cell_array.append([])
-		for y in range(tilemap.grid_dimensions.end.x):
+		for y in range(dimensions.y):
 			cell_array[x].append([])
 
 
