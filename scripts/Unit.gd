@@ -215,5 +215,5 @@ func toggle_combat(opponent):
 		self.goal_sprite.visible = false
 	else:
 		self.status_sprite.visible = false
-		self.goal_sprite.visible = unit_manager.overlay_on or unit_manager.selected_unit == self
+		self.goal_sprite.visible = self.goal and (unit_manager.overlay_on or unit_manager.selected_unit == self)
 	
