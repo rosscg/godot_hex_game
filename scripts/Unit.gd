@@ -22,6 +22,8 @@ var occupied_cells = []
 var in_combat = null
 #var occupied_cells_local = []
 
+#var mask_tex = preload('res://assets/mask_test.png')
+#var light
 
 func init(unit_type, data_dict, strength, start_coordinates):
 	self.unit_type = unit_type
@@ -31,21 +33,41 @@ func init(unit_type, data_dict, strength, start_coordinates):
 	var res = load('res://assets/units/' + unit_type + '.png')
 	get_node("Sprite").texture = res
 
-
+func _update_fow():
+	for cell in occupied_cells:
+		for cell2 in tilemap.get_neighbours(cell, 3):
+			map.get_node('Viewport').get_node('fow').fog_cells.erase(cell2)
+	
 func _ready() -> void:
 	set_process(false)
-
-	occupied_cells = [tilemap.get_cell_coordinates(self.position)]
+	
+	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 	for cell in occupied_cells:
 		map.cell_array[cell.x][cell.y] = self
-	
+
 	# Each unit stores its own astar node
 	astar_node = tilemap.create_astar_node(terrain_dict)
 	
 	# Functionality used for units which occupy multiple cells (WIP):
 #	occupied_cells_local = PoolVector2Array([Vector2(0, 0)])
 #	for i in occupied_cells_local:
-#		occupied_cells.append(tilemap.get_cell_coordinates(self.position) + i)
+#		occupied_cells.append(tilemap.get_cell_from_coordinates(self.position) + i)
+#    var imageTexture = TextureRect.ImageTexture.new()
+#    var dynImage = Image.new()
+#    dynImage.create(256,256,false,Image.FORMAT_DXT5)
+#    dynImage.fill(Color(1,0,0,1))
+#    imageTexture.create_from_image(dynImage)
+#    self.texture = imageTexture
+
+# Engine currently doesn't support multiple 2d light masks.
+#	self.light = Light2D.new()
+#	self.light.texture = mask_tex
+#	self.light.range_item_cull_mask = map.get_node("MapImageFOW").light_mask
+#	self.light.mode = 3
+#	self.light.enabled = true
+#	self.light.scale = Vector2(10, 10)
+#	self.add_child(light)
+	
 	return
 
 
@@ -80,9 +102,9 @@ func _process(delta: float) -> void:
 		_move_along_path(move_distance)
 
 	# Update occupied_cells occupied
-	occupied_cells = [tilemap.get_cell_coordinates(self.position)]
+	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 #	for i in occupied_cells_local:
-#		occupied_cells.append(tilemap.get_cell_coordinates(self.position) + i)
+#		occupied_cells.append(tilemap.get_cell_from_coordinates(self.position) + i)
 	
 	# Draw unit path and goal
 	planned_path_line.clear_points()
@@ -90,8 +112,8 @@ func _process(delta: float) -> void:
 		planned_path_line.add_point(Vector2(0,0))
 		for point in map.smooth(self.planned_path):
 			planned_path_line.add_point(point - position)
-		goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
-		if tilemap.get_cell_coordinates(self.goal) == tilemap.get_cell_coordinates(self.position):
+		goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(self.goal), true) - self.position
+		if tilemap.get_cell_from_coordinates(self.goal) == tilemap.get_cell_from_coordinates(self.position):
 			# Arrived at goal
 			self.goal = Vector2(0,0)
 			self.goal_sprite.visible = false
@@ -102,7 +124,7 @@ func _move_along_path(move_distance: float) -> void:
 	var start_point : = position
 	for i in range(planned_path.size()):
 		# Wait if next cell is still occupied:
-		var next_cell = tilemap.get_cell_coordinates(planned_path[0])
+		var next_cell = tilemap.get_cell_from_coordinates(planned_path[0])
 		if map.cell_array[next_cell.x][next_cell.y] and map.cell_array[next_cell.x][next_cell.y] != self:
 			break
 		var distance_to_next : = start_point.distance_to(planned_path[0])
@@ -114,7 +136,7 @@ func _move_along_path(move_distance: float) -> void:
 			start_point = planned_path[0]
 			planned_path.remove(0)
 	# Update map cell array
-	var cell_point = tilemap.get_cell_coordinates(self.position)
+	var cell_point = tilemap.get_cell_from_coordinates(self.position)
 	if cell_point != occupied_cells[0]:
 		map.cell_array[occupied_cells[0].x][occupied_cells[0].y] = null
 		map.cell_array[cell_point.x][cell_point.y] = self
@@ -163,7 +185,7 @@ func take_damage(damage):
 
 func set_goal(goal_to_set, path_to_set=null):
 	# Update the goal and path for a unit
-	if tilemap.get_cellv(tilemap.get_cell_coordinates(goal_to_set)) in tilemap.impassable_tile_ids:
+	if tilemap.get_cellv(tilemap.get_cell_from_coordinates(goal_to_set)) in tilemap.impassable_tile_ids:
 		# Goal is in impassable terrain
 		return
 	self.goal = goal_to_set
@@ -181,7 +203,7 @@ func set_goal(goal_to_set, path_to_set=null):
 	self.planned_path_line.add_point(Vector2(0,0))
 	for point in map.smooth(self.planned_path):
 		planned_path_line.add_point(point - position)
-	self.goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_coordinates(self.goal), true) - self.position
+	self.goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(self.goal), true) - self.position
 	### Finished repeat ###
 	self.goal_sprite.visible = unit_manager.overlay_on and self.goal != Vector2(0,0)
 	self.planned_path_line.visible = unit_manager.overlay_on

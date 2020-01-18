@@ -36,7 +36,7 @@ func _is_left(point: Vector2, a: Vector2, b: Vector2):
      return ((b.x - a.x)*(point.y - a.y) - (b.y - a.y)*(point.x - a.x)) < 0
 
 
-func get_cell_coordinates(point: Vector2):
+func get_cell_from_coordinates(point: Vector2):
 	### Converts global coordinates into cell grid coordinates. ###
 	# Width of cell that isn't entirely contained by the 'main' hex, used for coordinate mapping
 	var triangle_width = abs(grid_cell_height - grid_cell_width)
@@ -148,8 +148,8 @@ func create_astar_node(terrain_dict=null):
 
 
 func find_path(start_pos, end_pos, astar_node):
-	var path_start_position = get_cell_coordinates(start_pos)
-	var path_end_position = get_cell_coordinates(end_pos)
+	var path_start_position = get_cell_from_coordinates(start_pos)
+	var path_end_position = get_cell_from_coordinates(end_pos)
 	if not path_end_position: 
 		# Out of bounds
 		return []
@@ -190,7 +190,7 @@ func get_used_cells():
 	return cells
 
 
-func get_neighbours(cell, radius=1):
+func get_neighbours(cell, radius=1, include_self = false):
 	var neighbouring_cells
 	var neighbouring_cells_within_map = PoolVector2Array([])
 	if self.cell_half_offset == 2: # no offset: squares
@@ -236,5 +236,6 @@ func get_neighbours(cell, radius=1):
 					continue
 				new_cells.append(cell3)
 			neighbouring_cells_within_map.append_array(new_cells)
-
+	if include_self:
+		neighbouring_cells_within_map.append(cell)
 	return neighbouring_cells_within_map

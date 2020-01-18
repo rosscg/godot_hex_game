@@ -12,8 +12,8 @@ onready var unit_info_gui : Control = get_node("GUI/UnitInfoGUI")
 func _process(_delta: float) -> void:
 	# Show planned path if unit is selected
 	var path = map.display_path(unit_manager.selected_unit)
-	if unit_manager.selected_unit and map.tilemap.get_cell_coordinates(get_global_mouse_position()):
-		distance_label.text = map.tilemap.get_tile_terrain(map.tilemap.get_cell_coordinates(get_global_mouse_position())).capitalize()
+	if unit_manager.selected_unit and map.tilemap.get_cell_from_coordinates(get_global_mouse_position()):
+		distance_label.text = map.tilemap.get_tile_terrain(map.tilemap.get_cell_from_coordinates(get_global_mouse_position())).capitalize()
 		distance_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )
 		distance_label.show()
 		unit_info_gui.visible = true
@@ -21,7 +21,7 @@ func _process(_delta: float) -> void:
 			unit_manager.selected_unit.unit_type.capitalize() + \
 			'\n\nStrength: ' + str(unit_manager.selected_unit.strength) + \
 			'\nOn: ' + map.tilemap.get_tile_terrain(unit_manager.selected_unit.occupied_cells[0]).capitalize() + \
-			'\n\nTo: ' + map.tilemap.get_tile_terrain(map.tilemap.get_cell_coordinates(get_global_mouse_position())).capitalize() + \
+			'\n\nTo: ' + map.tilemap.get_tile_terrain(map.tilemap.get_cell_from_coordinates(get_global_mouse_position())).capitalize() + \
 			'\n' + str(unit_manager.selected_unit.calc_path_cost(path)) + ' hours'
 	else:
 		unit_info_gui.visible = false
@@ -31,7 +31,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		 # Create new unit on A key press:
 		if event.get_scancode() == KEY_A and event.is_pressed() and not event.is_echo():
-			var cell_coordinates = map.tilemap.get_cell_coordinates(get_global_mouse_position())
+			var cell_coordinates = map.tilemap.get_cell_from_coordinates(get_global_mouse_position())
 			if cell_coordinates:
 				var unit = unit_manager.create_unit(cell_coordinates)
 				if unit:
@@ -73,7 +73,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			map.line_2d.clear_points()
 			distance_label.hide()
 		else:
-			var selected_cell = map.tilemap.get_cell_coordinates(get_global_mouse_position())
+			var selected_cell = map.tilemap.get_cell_from_coordinates(get_global_mouse_position())
 			for x in unit_manager.unit_list:
 				if selected_cell in x.occupied_cells:
 					x.select_unit()

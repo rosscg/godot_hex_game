@@ -58,7 +58,7 @@ func activate_units(active):
 func get_unit_in_cell(cell_coordinates, ignored_unit=null):
 	for unit in unit_list:
 		if unit != ignored_unit:
-			#if map.tilemap.get_cell_coordinates(unit.position) == cell_coordinates:
+			#if map.tilemap.get_cell_from_coordinates(unit.position) == cell_coordinates:
 			if cell_coordinates in unit.occupied_cells:
 				return unit
 	return false

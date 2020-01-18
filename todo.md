@@ -1,6 +1,7 @@
 ## Todo:
 
 ### Next:
+* terrain cell index error - selected unit moving, mouse over deep water (impassable)
 * Fix: units move to next cell for combat even if it's away from target unit.
 * Units can still cross over / fight in same cell
 * Select unit by raycast, not cell_occupied
