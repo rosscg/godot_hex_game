@@ -19,6 +19,7 @@ func _process(_delta: float) -> void:
 		unit_info_gui.visible = true
 		unit_info_gui.get_node('Label').text = \
 			unit_manager.selected_unit.unit_type.capitalize() + \
+			'\nTeam:' + str(unit_manager.selected_unit.team) + \
 			'\n\nStrength: ' + str(unit_manager.selected_unit.strength) + \
 			'\nOn: ' + map.tilemap.get_tile_terrain(unit_manager.selected_unit.occupied_cells[0]).capitalize() + \
 			'\n\nTo: ' + map.tilemap.get_tile_terrain(map.tilemap.get_cell_from_coordinates(get_global_mouse_position())).capitalize() + \
@@ -84,9 +85,15 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_StartButton_button_up():
 	turn_manager.start_turn()
-	turn_manager.active_player = turn_manager.active_player % 2 + 1 # TODO: Temporary
 	return
 
 
 func _on_OverlayButton_button_up():
+	unit_manager.toggle_overlay()
+
+
+func _on_ChangeTeamButton_button_up():
+	turn_manager.active_player = turn_manager.active_player % 2 + 1
+	# Reset path drawing:
+	unit_manager.toggle_overlay()
 	unit_manager.toggle_overlay()

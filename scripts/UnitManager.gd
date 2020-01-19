@@ -94,5 +94,7 @@ func toggle_overlay():
 	for unit in unit_list:
 		if unit == selected_unit:
 			continue
-		unit.goal_sprite.visible = overlay_on and unit.goal != Vector2(0,0) and unit.in_combat == null
-		unit.planned_path_line.visible = overlay_on
+#		if unit.team != get_owner().turn_manager.active_player:
+#			continue
+		unit.goal_sprite.visible = unit.team == get_parent().turn_manager.active_player and overlay_on and unit.goal != Vector2(0,0) and unit.in_combat == null
+		unit.planned_path_line.visible = overlay_on and unit.team == get_parent().turn_manager.active_player

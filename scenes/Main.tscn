@@ -311,6 +311,7 @@ script = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="Viewport" type="Viewport" parent="Map"]
+editor/display_folded = true
 size = Vector2( 1024, 600 )
 transparent_bg = true
 handle_input_locally = false
@@ -409,27 +410,26 @@ script = ExtResource( 13 )
 script = ExtResource( 14 )
 
 [node name="GUI" type="Control" parent="."]
-editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="UnitInfoGUI" type="Control" parent="GUI"]
-editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="Polygon2D" type="Polygon2D" parent="GUI/UnitInfoGUI"]
-position = Vector2( -190.044, -29.2783 )
-scale = Vector2( 1.00906, 2.69709 )
+position = Vector2( -214.43, -3.87664 )
+scale = Vector2( 1.13227, 3.02641 )
 color = Color( 0.262745, 0.262745, 0.262745, 1 )
 polygon = PoolVector2Array( 198.702, 38.7302, 197.926, 87.6029, 296.965, 87.6029, 296.965, 38.8027 )
 
 [node name="Label" type="Label" parent="GUI/UnitInfoGUI"]
 margin_left = 14.4447
-margin_top = 81.0
+margin_top = 119.156
 margin_right = 96.4447
-margin_bottom = 214.0
+margin_bottom = 252.156
 text = "[UnitType]
+[Team]
 
 [Strength]
 [Terrain]
@@ -462,5 +462,13 @@ margin_top = 43.0
 margin_right = 102.0
 margin_bottom = 69.0
 text = "Toggle Paths"
+
+[node name="ChangeTeamButton" type="Button" parent="GUI"]
+margin_left = 10.0
+margin_top = 75.8529
+margin_right = 102.0
+margin_bottom = 101.853
+text = "Change Team"
 [connection signal="button_up" from="GUI/StartButton" to="." method="_on_StartButton_button_up"]
 [connection signal="button_up" from="GUI/OverlayButton" to="." method="_on_OverlayButton_button_up"]
+[connection signal="button_up" from="GUI/ChangeTeamButton" to="." method="_on_ChangeTeamButton_button_up"]
