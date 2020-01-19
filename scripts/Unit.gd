@@ -11,6 +11,7 @@ onready var unit_manager : Node2D = get_parent()
 #onready var sprite : Sprite = $Sprite
 
 var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
+var team
 var strength
 var unit_type
 var terrain_dict
@@ -25,11 +26,12 @@ var in_combat = null
 #var mask_tex = preload('res://assets/mask_test.png')
 #var light
 
-func init(unit_type, data_dict, strength, start_coordinates):
+func init(unit_type, data_dict, strength, start_coordinates, team=1):
 	self.unit_type = unit_type
 	self.terrain_dict = data_dict
 	self.strength = strength
 	self.position = start_coordinates
+	self.team = team
 	var res = load('res://assets/units/' + unit_type + '.png')
 	get_node("Sprite").texture = res
 

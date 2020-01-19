@@ -43,7 +43,8 @@ func create_unit(cell_coordinates):
 	var unit_type = unit_data.keys()[randi() % unit_data.size()]
 	var unit_terrain_dict = unit_data[unit_type]
 	var strength = randi()%5 + 6
-	unit_instance.init(unit_type, unit_terrain_dict, strength, map.tilemap.get_coordinates_from_cell(cell_coordinates, true))
+	var team = randi()%2 + 1
+	unit_instance.init(unit_type, unit_terrain_dict, strength, map.tilemap.get_coordinates_from_cell(cell_coordinates, true), team)
 	#unit_instance.set_name("unit")
 	add_child(unit_instance)
 	unit_list.append(unit_instance)
