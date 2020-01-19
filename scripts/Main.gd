@@ -84,6 +84,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_StartButton_button_up():
 	turn_manager.start_turn()
+	turn_manager.active_player = turn_manager.active_player % 2 + 1 # TODO: Temporary
 	return
 
 
