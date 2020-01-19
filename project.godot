@@ -23,6 +23,11 @@ config/icon="res://assets/icon.png"
 
 settings/stdout/print_fps=true
 
+[display]
+
+window/size/width=1440
+window/size/height=900
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

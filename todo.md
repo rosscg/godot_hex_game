@@ -1,6 +1,7 @@
 ## Todo:
 
 ### Now:
+Calc path possible in one turn
 
 ### Next:
 * Add teammate obstructed tiles to tilemap exclusions

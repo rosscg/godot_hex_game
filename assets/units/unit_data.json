@@ -1,7 +1,9 @@
 {
-"infantry": {"grass": 2, "water": 20, "deepwater": 50, "road": 1, "dirt": 4,
-					"lowhills": 6, "forest": 6, "marsh": 6, "mountain": 10},
+"infantry": {"darkgrass": 2, "grass": 2, "dirt": 4, "lowhills": 4,  "forest": 6,
+						"lightforest": 6, "marsh": 6, "hillforest": 6, "mountain": 10,
+						"snow": 4, "water": 20, "deepwater": 50, "road": 1},
 
-"cavalry": {"grass": 2, "water": 40, "deepwater": 100, "road": 1, "dirt": 3,
-          "lowhills": 10, "forest": 10, "marsh": 10, "mountain": 20}
+"cavalry": {"darkgrass": 2, "grass": 2, "dirt": 3, "lowhills": 10,  "forest": 10,
+						"lightforest": 10, "marsh": 10, "hillforest": 10, "mountain": 20,
+						"snow": 4, "water": 20, "deepwater": 50, "road": 1}
 }

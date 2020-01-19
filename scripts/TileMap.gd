@@ -7,12 +7,13 @@ var grid_cell_height = cell_size.y
 var grid_cell_width = cell_size.x
 var grid_dimensions = get_used_rect()
 
-var tile_id_types = {1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 6: 'marsh', 8: 'mountain', 
-						10: 'water', 11: 'deepwater', 12: 'road'}
+var tile_id_types = {0: 'dark_grass', 1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 5: 'lightforest', 6: 'marsh', 
+						7: 'hillforest', 8: 'mountain', 9: 'snow', 10: 'water', 11: 'deepwater', 12: 'road'}
 var impassable_tile_ids = [11] # Tile id 11 'deepwater' considered impassable
 
 
 func _ready() -> void:
+	return # Temp skip check. TODO: reenable
 	### Map integrity checks ###
 	# Check for vacant cells in tilemap:
 	if len(get_used_cells()) != grid_dimensions.end.x * grid_dimensions.end.y:
@@ -160,6 +161,20 @@ func find_path(start_pos, end_pos, astar_node):
 	for p in astar_node.get_point_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position)):
 		cell_path.append(Vector2(p.x, p.y))
 	return cell_path
+
+#TODO: Not yet working, need to account for diagonal distance
+func find_path_for_distance(cell_path, distance, terrain_dict):
+	var cell_side = max(grid_cell_height, grid_cell_width)
+	distance *= 30
+	var cell_path_truncated = PoolVector2Array([])
+	var distance_sum = 0
+	for cell in cell_path:
+		var cost = terrain_dict[get_tile_terrain(cell)]
+		if distance_sum + cost * cell_side > distance:
+			break
+		distance_sum += cost * cell_side
+		cell_path_truncated.append(cell)
+	return cell_path_truncated
 
 
 func get_tile_terrain(cell):
