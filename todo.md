@@ -1,13 +1,16 @@
 ## Todo:
 
+### Now:
+
 ### Next:
-* terrain cell index error - selected unit moving, mouse over deep water (impassable)
-* Fix: units move to next cell for combat even if it's away from target unit.
+* Add teammate obstructed tiles to tilemap exclusions
+* Fix: terrain cell index error - selected unit moving, mouse over deep water (impassable)
 * Units can still cross over / fight in same cell
 * Select unit by raycast, not cell_occupied
 
 ### Mid:
 * Teams
+* Fix: units move to next cell for combat even if it's away from target unit.
 * Unit facing direction
 * Disable interface during turn processing
 * Stop units backtracking to centre of grid when in combat

@@ -5,6 +5,7 @@ var time_start = 0
 var turn_length_ms = 12000
 var sub_turn_ms = 1000
 var subturn_count
+var active_player = 1
 
 
 func start_turn() -> void:

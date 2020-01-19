@@ -147,7 +147,7 @@ func _move_along_path(move_distance: float) -> void:
 
 func _draw():
 	# Full strength bar is 20 px wide:
-	draw_line(Vector2(-10,14), Vector2((-10+float(strength)/10*20), 14), Color(255, 0, 0), 5)
+	draw_line(Vector2(-10,14), Vector2((-10+float(strength)/10*20), 14), Color( 0.55, 0, 0, 1), 5)
 	# Circle indicates unit needs orders:
 	if len(planned_path) == 0 and strength > 0:
 		draw_circle(Vector2(12,-12), 4, Color( 0, 0, 1, 1 ))

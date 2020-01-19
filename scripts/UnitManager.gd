@@ -71,7 +71,7 @@ func detect_combat():
 		for occupied_cell in unit.occupied_cells:
 			for neighbour in map.tilemap.get_neighbours(occupied_cell):# + occupied_cell:
 				var target_unit = get_unit_in_cell(neighbour, unit)
-				if target_unit:
+				if target_unit and target_unit.team != unit.team:
 					unit.toggle_combat(target_unit)
 					#target_unit.in_combat = unit
 	return

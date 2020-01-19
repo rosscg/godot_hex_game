@@ -54,5 +54,4 @@ visible = false
 light_mask = 262144
 frames = SubResource( 1 )
 animation = "combat"
-frame = 2
 playing = true

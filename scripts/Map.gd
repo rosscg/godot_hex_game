@@ -8,11 +8,6 @@ onready var line_2d : Line2D = $Line2D
 var cell_array
 
 
-#var mask_tex = preload('res://assets/mask_test.png')
-#onready var mask_tex = $ViewportTex
-
-
-
 func _ready():
 	cell_array=[]
 	var dimensions = tilemap.grid_dimensions.end + tilemap.grid_offset
@@ -31,16 +26,6 @@ func _process(_delta: float) -> void:
 		hover_cell_sprite.position = tilemap.get_coordinates_from_cell(cell_coords, true)
 	else:
 		hover_cell_sprite.visible = false
-
-
-#func _create_fow_mask():
-#	var light = Light2D.new()
-#	light.texture = mask_tex
-#	light.range_item_cull_mask = $MapImageFOW.light_mask
-#	light.mode = 3
-#	light.position = Vector2(300,300)
-#	light.scale = Vector2(2,2)
-#	add_child(light)
 
 
 func display_path(selected_unit):
