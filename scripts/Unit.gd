@@ -10,6 +10,7 @@ onready var unit_manager : Node2D = get_parent()
 #onready var selected_unit : Node2D = get_parent().selected_unit
 #onready var sprite : Sprite = $Sprite
 
+var team_sprite_dict = {1: 'team_red', 2: 'team_blue'}
 var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
 var team
 var strength
@@ -34,6 +35,8 @@ func init(unit_type, data_dict, strength, start_coordinates, team=1):
 	self.team = team
 	var res = load('res://assets/units/' + unit_type + '.png')
 	get_node("Sprite").texture = res
+	get_node("TeamSprite").texture = load('res://assets/units/' + team_sprite_dict[team] + '.png')
+
 
 func _update_fow():
 	for cell in occupied_cells:
