@@ -27,6 +27,7 @@ var in_combat = null
 #var mask_tex = preload('res://assets/mask_test.png')
 #var light
 
+
 func init(unit_type, data_dict, strength, start_coordinates, team=1):
 	self.unit_type = unit_type
 	self.terrain_dict = data_dict
@@ -38,21 +39,16 @@ func init(unit_type, data_dict, strength, start_coordinates, team=1):
 	get_node("TeamSprite").texture = load('res://assets/units/' + team_sprite_dict[team] + '.png')
 
 
-func _update_fow():
-	for cell in occupied_cells:
-		for cell2 in tilemap.get_neighbours(cell, 3):
-			map.get_node('Viewport').get_node('fow').fog_cells.erase(cell2)
-	
 func _ready() -> void:
 	set_process(false)
-	
+
 	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 	for cell in occupied_cells:
 		map.cell_array[cell.x][cell.y] = self
 
 	# Each unit stores its own astar node
 	astar_node = tilemap.create_astar_node(terrain_dict)
-	
+
 	# Functionality used for units which occupy multiple cells (WIP):
 #	occupied_cells_local = PoolVector2Array([Vector2(0, 0)])
 #	for i in occupied_cells_local:
@@ -72,7 +68,7 @@ func _ready() -> void:
 #	self.light.enabled = true
 #	self.light.scale = Vector2(10, 10)
 #	self.add_child(light)
-	
+
 	return
 
 
@@ -110,7 +106,7 @@ func _process(delta: float) -> void:
 	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 #	for i in occupied_cells_local:
 #		occupied_cells.append(tilemap.get_cell_from_coordinates(self.position) + i)
-	
+
 	# Draw unit path and goal
 	planned_path_line.clear_points()
 	if self.goal:
@@ -154,8 +150,8 @@ func _draw():
 	# Circle indicates unit needs orders:
 	if len(planned_path) == 0 and strength > 0:
 		draw_circle(Vector2(12,-12), 4, Color( 0, 0, 1, 1 ))
-	# Draw hexes in surrounding cells:	
-#	var hex_points = PoolVector2Array([Vector2(-5,-9), Vector2(5,-9), Vector2(9,0), Vector2(5,9), 
+	# Draw hexes in surrounding cells:
+#	var hex_points = PoolVector2Array([Vector2(-5,-9), Vector2(5,-9), Vector2(9,0), Vector2(5,9),
 #										Vector2(-5,9), Vector2(-9,0), Vector2(-5,-9)])
 #	for i in occupied_cells_local:
 #		var world_offset = tilemap.get_coordinates_from_hex(i)
@@ -226,10 +222,10 @@ func select_unit(select=true):
 		unit_manager.selected_unit = self
 
 
-func calc_path_cost(path=null):
+func calc_path_cost(path):
 	var cost = 0
-	if not path:
-		path = self.planned_path
+#	if not path:
+#		path = self.planned_path
 	for p in path:
 		cost += terrain_dict[tilemap.get_tile_terrain(p)]
 	return cost
@@ -244,4 +240,3 @@ func toggle_combat(opponent):
 		self.status_sprite.visible = false
 		self.goal_sprite.visible = self.goal and (unit_manager.overlay_on or unit_manager.selected_unit == self) and \
 										self.team == get_node("/root/Main").turn_manager.active_player
-	

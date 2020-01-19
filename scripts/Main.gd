@@ -97,3 +97,7 @@ func _on_ChangeTeamButton_button_up():
 	# Reset path drawing:
 	unit_manager.toggle_overlay()
 	unit_manager.toggle_overlay()
+
+
+func _on_FoWButton_button_up():
+	map.get_node("Light2D").enabled = !map.get_node("Light2D").enabled 
