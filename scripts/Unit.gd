@@ -223,6 +223,8 @@ func select_unit(select=true):
 
 
 func calc_path_cost(path):
+	if len(path) == 0:
+		return 0
 	path.remove(0)
 	var cost = 0
 #	if not path:

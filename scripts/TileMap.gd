@@ -9,7 +9,7 @@ var grid_dimensions = get_used_rect()
 
 var tile_id_types = {0: 'dark_grass', 1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 5: 'lightforest', 6: 'marsh', 
 						7: 'hillforest', 8: 'mountain', 9: 'snow', 10: 'water', 11: 'deepwater', 12: 'road'}
-var impassable_tile_ids = [11] # Tile id 11 'deepwater' considered impassable
+var impassable_tile_ids = [10, 11] # Tile id 11 'deepwater' considered impassable
 
 
 func _ready() -> void:

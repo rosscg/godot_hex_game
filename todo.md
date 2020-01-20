@@ -9,14 +9,17 @@ Calc path possible in one turn
 * Select unit by raycast, not cell_occupied
 
 ### Mid:
-* Teams
 * Fix: units move to next cell for combat even if it's away from target unit.
 * Unit facing direction
 * Disable interface during turn processing
 * Stop units backtracking to centre of grid when in combat
+* Generals/Unit AI
+* Messengers
 
 ### Low Priority:
 * States - march, route, retreat, combat, ranged combat, fortify, stationary
 * Units currently store their own astar node - probably only need to store one node per unit type
 
 ### Lowest Priority:
+Weather - overlay
+Night and day (depending on scale)
