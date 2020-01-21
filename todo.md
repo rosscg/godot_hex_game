@@ -1,7 +1,6 @@
 ## Todo:
 
 ### Now:
-* Remove current cell from path when moving, not when displaying
 
 ### Next:
 * Add teammate obstructed tiles to tilemap exclusions. Or just: if can't move, recalculate path exclnext cell

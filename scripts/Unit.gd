@@ -122,6 +122,11 @@ func _process(delta: float) -> void:
 
 
 func _move_along_path(move_distance: float) -> void:
+	# If already in planned cell and past the midway point, remove it from path to prevent backtracking.
+	if len(planned_path) > 1 and tilemap.get_cell_from_coordinates(planned_path[0]) == tilemap.get_cell_from_coordinates(self.position):
+		# Already closer to next cell, don't go to middle of current cell.
+		if (planned_path[0]-planned_path[1]).length() > (tilemap.get_cell_from_coordinates(self.position)-planned_path[1]).length():
+			planned_path.remove(0)
 	var start_point : = position
 	for i in range(planned_path.size()):
 		# Wait if next cell is still occupied:
