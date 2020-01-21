@@ -40,3 +40,7 @@ func _process(delta: float) -> void:
 		subturn_count += 1
 		print('subturn: ', subturn_count)
 		unit_manager.resolve_combat()
+		# Recalculate paths
+		for unit in unit_manager.unit_list:
+			if unit.goal:
+				unit.set_goal(unit.goal)

@@ -107,11 +107,10 @@ func _calculate_point_index(cell):
 	return cell.x + grid_dimensions.end.x * cell.y
 
 
-func create_astar_node(terrain_dict=null):
+func create_astar_node(terrain_dict=null, obstacles=[]):
 	var astar_node = AStar.new()
 	
 	var walkable_cells_list = []
-	var obstacles = []
 	for tile_id in impassable_tile_ids:
 		obstacles += get_used_cells_by_id(tile_id)
 
@@ -148,7 +147,7 @@ func create_astar_node(terrain_dict=null):
 	return astar_node
 
 
-func find_path(start_pos, end_pos, astar_node):
+func find_path(start_pos, end_pos, astar_node, as_cell_coords=false, obstacles=[]):
 	var path_start_position = get_cell_from_coordinates(start_pos)
 	var path_end_position = get_cell_from_coordinates(end_pos)
 	if not path_end_position: 
@@ -157,10 +156,20 @@ func find_path(start_pos, end_pos, astar_node):
 	if self.get_cellv(path_end_position) in impassable_tile_ids or self.get_cellv(path_start_position) in impassable_tile_ids:
 		# Path begins or ends on impassable terrain
 		return []
-	var cell_path = []
+	# Disable obstacles in astar node:
+	for obstacle in obstacles:
+		astar_node.set_point_disabled(_calculate_point_index(obstacle))
+	var cell_path = PoolVector2Array([])
 	for p in astar_node.get_point_path(_calculate_point_index(path_start_position), _calculate_point_index(path_end_position)):
-		cell_path.append(Vector2(p.x, p.y))
+		if as_cell_coords:
+			cell_path.append(Vector2(p.x, p.y))
+		else:
+			cell_path.append(get_coordinates_from_cell(Vector2(p.x, p.y), true))
+	# Reset obstacles
+	for obstacle in obstacles:
+		astar_node.set_point_disabled(_calculate_point_index(obstacle), false)
 	return cell_path
+
 
 #TODO: Not yet working, need to account for diagonal distance
 func find_path_for_distance(cell_path, distance, terrain_dict):

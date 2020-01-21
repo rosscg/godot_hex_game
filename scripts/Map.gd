@@ -37,7 +37,7 @@ func display_path(selected_unit):
 		return null
 	hover_cell_sprite.visible = false
 	#tilemap_overlay.clear()
-	var path = tilemap.find_path(selected_unit.position, get_global_mouse_position(), selected_unit.astar_node)
+	var path = selected_unit.calc_unit_path(get_global_mouse_position(), true)
 	#var path_truncated = tilemap.find_path_for_distance(path, 12, selected_unit.terrain_dict)
 	#path.remove(0)
 	#for p in path:
@@ -46,7 +46,7 @@ func display_path(selected_unit):
 	#for p in smooth(path_truncated):
 	for p in smooth(path):
 		point_path.append(tilemap.get_coordinates_from_cell(p, true))
-	line_2d.points = point_path
+	line_2d.points = smooth(point_path)
 	#if len(point_path) > 0:
 	#	hover_cell_sprite2.position = point_path[len(point_path)-1]
 	#	hover_cell_sprite2.visible = true

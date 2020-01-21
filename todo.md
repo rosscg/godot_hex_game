@@ -3,7 +3,6 @@
 ### Now:
 
 ### Next:
-* Add teammate obstructed tiles to tilemap exclusions. Or just: if can't move, recalculate path exclnext cell
 * Units can still cross over / fight in same cell
 * Calc path possible in one turn
 
@@ -19,6 +18,12 @@
 * Units currently store their own astar node - probably only need to store one node per unit type
 * Disable interface during turn processing
 
-### Lowest Priority:
+### Long-Term Features:
 Weather - overlay
 Night and day (depending on scale)
+
+
+## Notes:
+* Units recalculate paths but won't move at all if the route is impossible, whereas they should probably still move towards the goal.
+* Units competing over a goal cell overlap.
+* Units crossing diagonally will overlap. Consider an exclusion radius around units?

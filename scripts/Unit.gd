@@ -132,6 +132,10 @@ func _move_along_path(move_distance: float) -> void:
 		# Wait if next cell is still occupied:
 		var next_cell = tilemap.get_cell_from_coordinates(planned_path[0])
 		if map.cell_array[next_cell.x][next_cell.y] and map.cell_array[next_cell.x][next_cell.y] != self:
+			# Find alternate route unless the occupied cell is the goal, in which case, wait.
+			if next_cell != tilemap.get_cell_from_coordinates(self.goal):
+				self.planned_path = self.calc_unit_path(self.goal, false, [next_cell])
+				self.planned_path.remove(0)
 			break
 		var distance_to_next : = start_point.distance_to(planned_path[0])
 		if move_distance <= distance_to_next:
@@ -199,10 +203,7 @@ func set_goal(goal_to_set, path_to_set=null):
 		self.planned_path = path_to_set
 	# Calculate path if not provided:
 	else:
-		var global_path = tilemap.find_path(self.position, goal_to_set, self.astar_node)
-		self.planned_path = PoolVector2Array([])
-		for p in global_path:
-			self.planned_path.append(tilemap.get_coordinates_from_cell(p, true))
+		self.planned_path = self.calc_unit_path(goal_to_set, false)
 		self.planned_path.remove(0)
 	### Repeating below as _process begins off, can change if this design is changed ###
 	self.planned_path_line.clear_points()
@@ -248,3 +249,15 @@ func toggle_combat(opponent):
 		self.status_sprite.visible = false
 		self.goal_sprite.visible = self.goal and (unit_manager.overlay_on or unit_manager.selected_unit == self) and \
 										self.team == get_node("/root/Main").turn_manager.active_player
+
+
+func calc_unit_path(goal_to_set, as_cell_coords = false, obstacles = []):
+		# Navigate around teammates: 
+		for unit in unit_manager.unit_list:
+			if unit == self or unit.team != self.team:
+				continue
+			if tilemap.get_cell_from_coordinates(unit.position) == tilemap.get_cell_from_coordinates(goal_to_set):
+				continue
+			obstacles.append(tilemap.get_cell_from_coordinates(unit.position))
+		var path = tilemap.find_path(self.position, goal_to_set, self.astar_node, as_cell_coords, obstacles)
+		return path	

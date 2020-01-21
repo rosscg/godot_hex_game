@@ -60,13 +60,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not event.pressed:
 		if unit_manager.selected_unit:
 			#map.tilemap_overlay.clear()
-			var path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position(), 
-												unit_manager.selected_unit.astar_node)
-			var position_path = []
-			for p in path:
-				position_path.append(map.tilemap.get_coordinates_from_cell(p, true))
+			#var position_path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position(), 
+			#									unit_manager.selected_unit.astar_node)
+			#print(position_path[0])
+			#var position_path = []
+			#for p in path:
+			#	position_path.append(map.tilemap.get_coordinates_from_cell(p, true))
 			#position_path.remove(0)
-			unit_manager.selected_unit.set_goal(event.global_position, PoolVector2Array(position_path))
+#			unit_manager.selected_unit.set_goal(event.global_position, PoolVector2Array(position_path))
+			unit_manager.selected_unit.set_goal(event.global_position)
 			unit_manager.selected_unit.update()
 			unit_manager.selected_unit.select_unit(false)
 			unit_manager.selected_unit = null
