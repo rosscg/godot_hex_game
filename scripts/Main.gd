@@ -74,13 +74,26 @@ func _unhandled_input(event: InputEvent) -> void:
 			map.line_2d.clear_points()
 			distance_label.hide()
 		else:
-			var selected_cell = map.tilemap.get_cell_from_coordinates(get_global_mouse_position())
-			for x in unit_manager.unit_list:
-				if selected_cell in x.occupied_cells:
-					x.select_unit()
+			# Select unit
+			var pos = get_global_mouse_position()
+			for unit in unit_manager.unit_list:
+				# Get width of unit (using inner sprite rather than outer BackgroundPoly)
+				#var unit_size = unit.get_node("TeamSprite").texture.get_size()[0]
+				# Add buffer to selection range
+				#unit_size *= 1.4
+				# Using cell_size for selection radius to prevent conflicts. Assumes units not larger than one cell.
+				var cell_size = map.tilemap.grid_cell_width
+				if (unit.position - pos).length() <= cell_size / 2:
+					unit.select_unit()
+
+			# Old cell based selection method, fails when unit is between cells.
+			#var selected_cell = map.tilemap.get_cell_from_coordinates(get_global_mouse_position())
+			#for x in unit_manager.unit_list:
+			#	if selected_cell in x.occupied_cells:
+			#		x.select_unit()
 					#map.selected_cell_sprite.visible = true
 					#map.selected_cell_sprite.position = map.tilemap.get_coordinates_from_cell(selected_cell, centred=true)
-					return
+			#		return
 
 
 func _on_StartButton_button_up():
