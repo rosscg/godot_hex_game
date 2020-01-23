@@ -44,3 +44,6 @@ func _process(delta: float) -> void:
 		for unit in unit_manager.unit_list:
 			if unit.goal:
 				unit.set_goal(unit.goal)
+		for messenger in unit_manager.messenger_list:
+			if messenger.target_unit:
+				messenger.set_goal(messenger.target_unit.position)

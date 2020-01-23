@@ -2,8 +2,10 @@ extends Node
 
 onready var map : Node2D = get_owner().get_node("Map")
 const unit_scene = preload("res://scenes/Unit.tscn")
+const messenger_scene = preload("res://scenes/Messenger.tscn")
 
 var unit_list = []
+var messenger_list = []
 var selected_unit = null
 var overlay_on : bool = false
 var unit_data = {}
@@ -40,7 +42,7 @@ func create_unit(cell_coordinates):
 		return
 	var unit_instance = unit_scene.instance()
 	# Create random unit type:
-	var unit_type = unit_data.keys()[randi() % unit_data.size()]
+	var unit_type = unit_data.keys()[randi() % (unit_data.size() - 1)]
 	var unit_terrain_dict = unit_data[unit_type]
 	var strength = randi()%5 + 6
 	var team = get_parent().turn_manager.active_player
@@ -51,9 +53,25 @@ func create_unit(cell_coordinates):
 	return unit_instance
 
 
+func create_messenger(cell_coordinates):
+	if not cell_coordinates: 
+		# Clicked outside of map
+		return
+	var messenger_instance = messenger_scene.instance()
+	# Create random unit type:
+	var unit_terrain_dict = unit_data['messenger']
+	var team = get_parent().turn_manager.active_player
+	messenger_instance.init('messenger', unit_terrain_dict, 0, Vector2(630,430), team) #TODO: temp home base
+	add_child(messenger_instance)
+	messenger_list.append(messenger_instance)
+	return messenger_instance
+
+
 func activate_units(active):
 	for unit in unit_list:
 		unit.set_process(active)
+	for messenger in messenger_list:
+		messenger.set_process(active)
 
 
 func get_unit_in_cell(cell_coordinates, ignored_unit=null):
@@ -98,3 +116,7 @@ func toggle_overlay():
 #			continue
 		unit.goal_sprite.visible = unit.team == get_parent().turn_manager.active_player and overlay_on and unit.goal != Vector2(0,0) and unit.in_combat == null
 		unit.planned_path_line.visible = overlay_on and unit.team == get_parent().turn_manager.active_player
+	for messenger in messenger_list:
+		messenger.planned_path_line.visible = overlay_on and messenger.team == get_parent().turn_manager.active_player
+		messenger.orders_path_line.visible = overlay_on and messenger.team == get_parent().turn_manager.active_player
+		messenger.goal_sprite.visible = overlay_on and messenger.team == get_parent().turn_manager.active_player and messenger.target_unit_orders

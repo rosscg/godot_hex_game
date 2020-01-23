@@ -7,11 +7,14 @@
 * Calc path possible in one turn
 
 ### Mid:
+* Create team manager, set home base and update messenger spawn point/home.
+* Fix messenger redrawing target unit orders flickering & change messenger goal sprite colour.
+* Get available messenger before creating new one.
 * Fix: units move to next cell for combat even if it's away from target unit. (Only relevant if units move after detecting combat, currently disabled.)
 * Stop units backtracking to centre of grid when in combat
 * Unit facing direction
 * Generals/Unit AI
-* Messengers
+* Refactor Unit and Messenger into parent class.
 
 ### Low Priority:
 * States - march, route, retreat, combat, ranged combat, fortify, stationary
@@ -21,6 +24,8 @@
 ### Long-Term Features:
 Weather - overlay
 Night and day (depending on scale)
+Trade/Income
+Supply Wagons
 
 
 ## Notes:

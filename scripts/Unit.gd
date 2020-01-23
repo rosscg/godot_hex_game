@@ -142,9 +142,12 @@ func _move_along_path(move_distance: float) -> void:
 			position = start_point.linear_interpolate(planned_path[0], move_distance / distance_to_next)
 			break
 		else:
-			move_distance -= distance_to_next
-			start_point = planned_path[0]
-			planned_path.remove(0)
+			if len(planned_path) == 1:
+				position = planned_path[0]
+			else:
+				move_distance -= distance_to_next
+				start_point = planned_path[0]
+				planned_path.remove(0)
 	# Update map cell array
 	var cell_point = tilemap.get_cell_from_coordinates(self.position)
 	if cell_point != occupied_cells[0]:
@@ -204,7 +207,8 @@ func set_goal(goal_to_set, path_to_set=null):
 	# Calculate path if not provided:
 	else:
 		self.planned_path = self.calc_unit_path(goal_to_set, false)
-		self.planned_path.remove(0)
+		if len(self.planned_path) > 0: #TODO remove is bad is on the far side to next cell -- could cut corners.
+			self.planned_path.remove(0)
 	### Repeating below as _process begins off, can change if this design is changed ###
 	self.planned_path_line.clear_points()
 	self.planned_path_line.add_point(Vector2(0,0))
