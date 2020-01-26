@@ -9,7 +9,7 @@ func _process(delta):
 	live_units = {}
 	for key in sprite_dict.keys():
 		live_units[key] = false
-	for unit in get_node("/root/Main").unit_manager.unit_list:
+	for unit in get_node("/root/Main").unit_manager.unit_list + get_node("/root/Main").unit_manager.messenger_list:
 		# Mark unit as alive
 		live_units[unit.get_name()] = true
 		# Create or move light sprite:

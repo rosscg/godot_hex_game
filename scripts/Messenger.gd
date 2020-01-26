@@ -31,7 +31,7 @@ func init(unit_type, data_dict, strength, home_coordinates, team=1):
 	self.team = team
 	self.target_unit = null
 	self.target_unit_orders = null
-	self.base_speed *= 5
+	self.base_speed *= 6
 
 
 func _ready() -> void:
@@ -74,6 +74,10 @@ func _process(delta: float) -> void:
 
 
 func _move_along_path(move_distance: float) -> void:
+	if planned_path[0].x > self.position.x:
+		get_node('AnimatedSprite').flip_h = true
+	else:
+		get_node('AnimatedSprite').flip_h = false
 	# If already in planned cell and past the midway point, remove it from path to prevent backtracking.
 	if len(planned_path) > 1 and tilemap.get_cell_from_coordinates(planned_path[0]) == tilemap.get_cell_from_coordinates(self.position):
 		# Already closer to next cell, don't go to middle of current cell.

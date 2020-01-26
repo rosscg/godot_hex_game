@@ -1,7 +1,17 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/Messenger.gd" type="Script" id=1]
 [ext_resource path="res://assets/hover3_20px.png" type="Texture" id=2]
+[ext_resource path="res://assets/units/horse1.png" type="Texture" id=3]
+[ext_resource path="res://assets/units/horse2.png" type="Texture" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 3.0
+} ]
 
 [node name="Node2D" type="Node2D"]
 light_mask = 262144
@@ -31,12 +41,19 @@ z_index = -2
 texture = ExtResource( 2 )
 
 [node name="BackgroundPoly" type="Polygon2D" parent="."]
+visible = false
 light_mask = 262144
 position = Vector2( -5.3958, 6.00347 )
 scale = Vector2( 0.499276, 0.499276 )
 z_index = -1
 color = Color( 0, 0, 0, 1 )
 polygon = PoolVector2Array( 4.99469, 0.169639, 17.3681, 0.169013, 22.8241, -6.21036, 22.8311, -17.7743, 16.8499, -24.1708, 5.19692, -24.1733, -1.09851, -18.0458, -1.09851, -5.79067 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 1.5, 1.5 )
+frames = SubResource( 1 )
+frame = 1
+playing = true
 
 [node name="TeamSprite" type="Sprite" parent="."]
 light_mask = 262144

@@ -3,6 +3,7 @@ extends Node
 onready var map : Node2D = get_owner().get_node("Map")
 const unit_scene = preload("res://scenes/Unit.tscn")
 const messenger_scene = preload("res://scenes/Messenger.tscn")
+const building_scene = preload("res://scenes/Building.tscn")
 
 var unit_list = []
 var messenger_list = []
@@ -13,6 +14,11 @@ var unit_data = {}
 
 func _ready() -> void:
 	unit_data = load_unit_data()
+	
+	# Temporary place city sprite:
+	var building_instance = building_scene.instance()
+	building_instance.position = Vector2(630,430)
+	add_child(building_instance)
 
 
 #func _process(_delta: float) -> void:
