@@ -3,6 +3,8 @@
 ### Now:
 
 ### Next:
+* BUG: Path line does not hide during combat, or does not point to attacked unit.
+* One astar node per unit type
 * Units can still cross over / fight in same cell
 * Calc path possible in one turn
 

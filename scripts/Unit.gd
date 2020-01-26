@@ -8,12 +8,13 @@ onready var unit_manager : Node2D = get_parent()
 #onready var selected_unit : Node2D = get_parent().selected_unit
 #onready var sprite : Sprite = $Sprite
 
-var team_sprite_dict = {1: 'team_red', 2: 'team_blue'}
+#var team_sprite_dict = {1: 'team_red', 2: 'team_blue'}
 var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
 var unit_type
 var team
 var terrain_dict
 var planned_path : = PoolVector2Array()
+var smoothed_planned_path : = PoolVector2Array()
 var occupied_cells = []
 var goal : = Vector2()
 var astar_node
@@ -43,16 +44,29 @@ func _process(delta: float) -> void:
 	planned_path_line.clear_points()
 	if self.goal:
 		planned_path_line.add_point(Vector2(0,0))
-		for point in map.smooth(self.planned_path):
+		# Adding extra beginning points for smoothing (at severity=3)
+		if len(self.smoothed_planned_path) > 1:
+			planned_path_line.add_point((self.smoothed_planned_path[0] - position)/2)
+			planned_path_line.add_point((((self.smoothed_planned_path[0] - position)/2) + (self.smoothed_planned_path[0] - position) + (self.smoothed_planned_path[1] - position))/3)
+		for point in self.smoothed_planned_path:
 			planned_path_line.add_point(point - position)
+		# Remove smoothed-past point:
+		if planned_path_line.get_point_count() > 3:
+			planned_path_line.remove_point(3)
 		goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(self.goal), true) - self.position
 		if tilemap.get_cell_from_coordinates(self.goal) == tilemap.get_cell_from_coordinates(self.position):
 			# Arrived at goal
 			self.goal = Vector2(0,0)
 			#self.goal_sprite.visible = false
 			self.goal_sprite.position = Vector2(0,0)
-	# Update occupied_cells
-	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
+			
+	# Moved to new cell, update displayed path line and occupied_cells
+	if occupied_cells[0] != tilemap.get_cell_from_coordinates(self.position):
+		# Remove twice as smoothing doubles points in line:
+		self.smoothed_planned_path.remove(0)
+		self.smoothed_planned_path.remove(0)
+		# Update occupied_cells
+		occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 	return
 
 
@@ -91,12 +105,21 @@ func set_goal(goal_to_set, path_to_set=null):
 		self.planned_path = self.calc_unit_path(goal_to_set, false)
 		if len(self.planned_path) > 0: #TODO remove is bad if on the far side to next cell -- could cut corners.
 			self.planned_path.remove(0)
-	### Repeating below as _process begins off, can change if this design is changed ###
+	# Create Smoothed planned_path for display on map:
+	self.smoothed_planned_path = map.smooth(self.planned_path)
+	############ Repeating below as _process begins off, can change if this design is changed ### TODO: create as func?
 	self.planned_path_line.clear_points()
-	self.planned_path_line.add_point(Vector2(0,0))
-	for point in map.smooth(self.planned_path):
+	planned_path_line.add_point(Vector2(0,0))
+	# Adding extra beginning points for smoothing (at severity=3)
+	if len(self.smoothed_planned_path) > 1:
+		planned_path_line.add_point((Vector2(0,0) + (self.smoothed_planned_path[0] - position))/2)
+		planned_path_line.add_point((((self.smoothed_planned_path[0] - position)/2) + (self.smoothed_planned_path[0] - position) + (self.smoothed_planned_path[1] - position))/3)
+	for point in self.smoothed_planned_path:
 		planned_path_line.add_point(point - position)
-	### Finished repeat ###
+	if planned_path_line.get_point_count() > 3:
+		# Remove smoothed-past point:
+		planned_path_line.remove_point(3)		
+	############ Finished repeat ###
 	self.planned_path_line.visible = unit_manager.overlay_on
 	self.goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(self.goal), true) - self.position
 	self.goal_sprite.visible = unit_manager.overlay_on # and self.goal != Vector2(0,0)

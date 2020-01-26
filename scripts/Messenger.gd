@@ -21,7 +21,7 @@ func init(unit_type, data_dict, strength, home_coordinates, team=1):
 
 
 func _process(delta: float) -> void:
-
+	._process(delta)
 	_move_along_path(move_distance)
 	_pass_message()
 	

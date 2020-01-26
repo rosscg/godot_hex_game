@@ -38,12 +38,17 @@ func _process(delta: float) -> void:
 	._process(delta)
 	# Temporarily store planned path elsewhere during combat:
 	if in_combat:
-		if len(planned_path) > 0:
+		if len(self.planned_path) > 0:
 			if len(self.stored_path) == 0:
-				self.stored_path.append_array(planned_path)
+				self.stored_path.append_array(self.planned_path)
 			# Check if in_combat unit not killed by another unit:
-			if is_instance_valid(in_combat):
+			if is_instance_valid(self.in_combat):
 				self.planned_path = PoolVector2Array([in_combat.position])
+				##############################
+				planned_path_line.clear_points()
+				for point in self.planned_path:
+					planned_path_line.add_point(point - position)
+				###################################
 			else:
 				in_combat = null
 	# Combat over, resume path:
