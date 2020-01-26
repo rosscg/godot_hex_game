@@ -28,7 +28,7 @@ var in_combat = null
 #var light
 
 
-func init(unit_type, data_dict, strength, start_coordinates, team=1):
+func init(unit_type, data_dict, strength, start_coordinates, team=1, team_colour=Color( 0.55, 0, 0, 1 )): #TODO: remove defaults?
 	self.unit_type = unit_type
 	self.terrain_dict = data_dict
 	self.strength = strength
@@ -36,7 +36,8 @@ func init(unit_type, data_dict, strength, start_coordinates, team=1):
 	self.team = team
 	var res = load('res://assets/units/' + unit_type + '.png')
 	get_node("Sprite").texture = res
-	get_node("TeamSprite").texture = load('res://assets/units/' + team_sprite_dict[team] + '.png')
+	get_node("TeamPoly").color = team_colour
+	#get_node("TeamSprite").texture = load('res://assets/units/' + team_sprite_dict[team] + '.png')
 
 
 func _ready() -> void:

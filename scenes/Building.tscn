@@ -14,27 +14,23 @@ animations = [ {
 
 [node name="Node2D" type="Node2D"]
 light_mask = 262144
-z_index = 5
+z_index = 4
 
 [node name="SelectedPoly" type="Polygon2D" parent="."]
 visible = false
-position = Vector2( -32.1957, 38.9596 )
-scale = Vector2( 2.90564, 2.90564 )
-z_index = -1
-color = Color( 0.352941, 0.0156863, 0.0156863, 1 )
-polygon = PoolVector2Array( 4.18965, 4.03013, 18.4593, 4.03013, 26.8532, -5.53892, 26.9371, -19.7246, 17.6199, -28.2025, 5.02904, -28.2025, -5.04364, -19.7246, -5.04364, -4.78347 )
-
-[node name="BackgroundPoly" type="Polygon2D" parent="."]
-visible = false
-light_mask = 262144
-position = Vector2( -11, 12 )
+position = Vector2( -19.5528, 22.4416 )
+scale = Vector2( 1.66027, 1.66027 )
 z_index = -1
 color = Color( 0, 0, 0, 1 )
-polygon = PoolVector2Array( 4.99469, 0.169639, 17.3681, 0.169013, 22.8241, -6.21036, 22.8311, -17.7743, 16.8499, -24.1708, 5.19692, -24.1733, -1.09851, -18.0458, -1.09851, -5.79067 )
+polygon = PoolVector2Array( -0.68736, 2.36465, 23.7175, 2.43399, 26.6987, 0.423361, 26.9371, -19.7246, 21.6375, -27.864, 1.53126, -27.864, -3.66863, -19.6135, -3.66863, 0.0767031 )
 
-[node name="TeamSprite" type="Sprite" parent="."]
+[node name="TeamPoly" type="Polygon2D" parent="."]
 visible = false
-light_mask = 262144
+position = Vector2( -18.7544, 22.07 )
+scale = Vector2( 1.61751, 1.61751 )
+z_index = -1
+color = Color( 0.352941, 0.0156863, 0.0156863, 1 )
+polygon = PoolVector2Array( 24.9654, 0.00736904, 24.9654, -19.7246, 20.8055, -26.3387, 2.50191, -26.3387, -1.58867, -19.7246, -1.58867, -0.131294 )
 
 [node name="Sprite" type="Sprite" parent="."]
 light_mask = 262144
@@ -44,7 +40,22 @@ texture = ExtResource( 1 )
 [node name="StatusSprite" type="AnimatedSprite" parent="."]
 visible = false
 light_mask = 262144
+scale = Vector2( 2, 2 )
 frames = SubResource( 1 )
 animation = "combat"
 frame = 2
 playing = true
+
+[node name="TeamFlag" type="Polygon2D" parent="."]
+position = Vector2( -6.51766, 5.92374 )
+scale = Vector2( 1.61751, 1.61751 )
+z_index = -1
+color = Color( 0.176471, 0.223529, 0.521569, 1 )
+polygon = PoolVector2Array( 5.79888, -18.6089, 5.79888, -23.3766, -1.58276, -23.3744, -1.58867, -18.6089 )
+
+[node name="FlagPost" type="Polygon2D" parent="."]
+position = Vector2( -6.51766, 5.92374 )
+scale = Vector2( 1.61751, 1.61751 )
+z_index = -1
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( -0.727524, -13.9359, -0.727524, -23.3694, -1.58276, -23.3744, -1.55839, -13.9359 )

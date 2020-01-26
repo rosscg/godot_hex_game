@@ -7,22 +7,23 @@ const building_scene = preload("res://scenes/Building.tscn")
 
 var unit_list = []
 var messenger_list = []
+var building_list = []
 var selected_unit = null
 var overlay_on : bool = false
 var unit_data = {}
 
+var team_colour_dict = {1: Color( 0.55, 0, 0, 1 ), 2: Color( 0, 0, 0.55, 1 ) } # Red, Blue
+
 
 func _ready() -> void:
-	unit_data = load_unit_data()
+	unit_data = load_unit_data()['movement_costs']
 	
 	# Temporary place city sprite:
 	var building_instance = building_scene.instance()
-	building_instance.position = Vector2(630,430)
+	building_instance.position = Vector2(640,440)
+	building_instance.get_node('TeamFlag').color = team_colour_dict[1]
 	add_child(building_instance)
-
-
-#func _process(_delta: float) -> void:
-#	detect_combat()
+	building_list.append(building_instance)
 
 
 func load_unit_data():
@@ -52,7 +53,8 @@ func create_unit(cell_coordinates):
 	var unit_terrain_dict = unit_data[unit_type]
 	var strength = randi()%5 + 6
 	var team = get_parent().turn_manager.active_player
-	unit_instance.init(unit_type, unit_terrain_dict, strength, map.tilemap.get_coordinates_from_cell(cell_coordinates, true), team)
+	unit_instance.init(unit_type, unit_terrain_dict, strength, \
+		map.tilemap.get_coordinates_from_cell(cell_coordinates, true), team, team_colour_dict[team])
 	#unit_instance.set_name("unit")
 	add_child(unit_instance)
 	unit_list.append(unit_instance)
@@ -67,7 +69,7 @@ func create_messenger(cell_coordinates):
 	# Create random unit type:
 	var unit_terrain_dict = unit_data['messenger']
 	var team = get_parent().turn_manager.active_player
-	messenger_instance.init('messenger', unit_terrain_dict, 0, Vector2(630,430), team) #TODO: temp home base
+	messenger_instance.init('messenger', unit_terrain_dict, 0, building_list[0].position + Vector2(10,10), team) #TODO: temp home base
 	add_child(messenger_instance)
 	messenger_list.append(messenger_instance)
 	return messenger_instance

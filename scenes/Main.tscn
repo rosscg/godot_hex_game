@@ -412,6 +412,7 @@ texture_mode = 101
 
 [node name="HoverCell" type="Sprite" parent="Map"]
 visible = false
+z_index = 6
 texture = ExtResource( 13 )
 
 [node name="HoverCell2" type="Sprite" parent="Map"]

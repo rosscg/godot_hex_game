@@ -46,6 +46,13 @@ z_index = -1
 color = Color( 0, 0, 0, 1 )
 polygon = PoolVector2Array( 4.99469, 0.169639, 17.3681, 0.169013, 22.8241, -6.21036, 22.8311, -17.7743, 16.8499, -24.1708, 5.19692, -24.1733, -1.09851, -18.0458, -1.09851, -5.79067 )
 
+[node name="TeamPoly" type="Polygon2D" parent="."]
+light_mask = 262144
+position = Vector2( -11, 12 )
+z_index = -1
+color = Color( 0.0862745, 0.0901961, 0.431373, 1 )
+polygon = PoolVector2Array( 5.58775, -2.00501, 16.4108, -2.07182, 20.3525, -6.94885, 20.3597, -17.1456, 16.0099, -21.7804, 5.92179, -21.7804, 0.897156, -16.6751, 0.911135, -6.61481 )
+
 [node name="TeamSprite" type="Sprite" parent="."]
 light_mask = 262144
 
@@ -57,5 +64,4 @@ visible = false
 light_mask = 262144
 frames = SubResource( 1 )
 animation = "combat"
-frame = 2
 playing = true
