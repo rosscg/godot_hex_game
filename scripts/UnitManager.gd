@@ -20,10 +20,16 @@ func _ready() -> void:
 	
 	# Temporary place city sprite:
 	var building_instance = building_scene.instance()
-	building_instance.position = Vector2(640,440)
+	building_instance.position = Vector2(340,640)
 	building_instance.get_node('TeamFlag').color = team_colour_dict[1]
 	add_child(building_instance)
 	building_list.append({"team": 1, "instance": building_instance})
+	
+	building_instance = building_scene.instance()
+	building_instance.position = Vector2(1180,140)
+	building_instance.get_node('TeamFlag').color = team_colour_dict[2]
+	add_child(building_instance)
+	building_list.append({"team": 2, "instance": building_instance})
 
 
 func load_unit_data():
@@ -69,7 +75,13 @@ func create_messenger(cell_coordinates):
 	# Create random unit type:
 	var unit_terrain_dict = unit_data['messenger']
 	var team = get_parent().turn_manager.active_player
-	messenger_instance.init('messenger', unit_terrain_dict, 0, building_list[0]["instance"].position + Vector2(10,10), team) #TODO: temp home base
+	# Get coordinates of first friendly base in list:
+	var base_coordinates
+	for b in building_list:
+		if b["team"] == team:
+			base_coordinates = b["instance"].position + Vector2(10,10)
+			break
+	messenger_instance.init('messenger', unit_terrain_dict, 0, base_coordinates, team) #TODO: temp home base
 	add_child(messenger_instance)
 	messenger_list.append(messenger_instance)
 	return messenger_instance
@@ -121,6 +133,7 @@ func toggle_overlay():
 			continue
 #		if unit.team != get_owner().turn_manager.active_player:
 #			continue
-		var toggle = unit.team == get_parent().turn_manager.active_player and \
-						overlay_on and unit.goal != Vector2(0,0)
+		#var toggle = unit.team == get_parent().turn_manager.active_player and \
+		#				overlay_on and unit.goal != Vector2(0,0)
+		var toggle = overlay_on and unit.goal != Vector2(0,0)
 		unit.toggle_overlay(toggle, unit.in_combat)

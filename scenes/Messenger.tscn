@@ -22,7 +22,7 @@ script = ExtResource( 1 )
 visible = false
 z_index = -2
 points = PoolVector2Array( 51.9235, -9.17429 )
-width = 4.0
+width = 2.0
 default_color = Color( 0.419608, 0.419608, 0.419608, 1 )
 texture_mode = 48
 
@@ -36,7 +36,7 @@ texture_mode = 48
 
 [node name="GoalSprite" type="Sprite" parent="."]
 visible = false
-scale = Vector2( 0.8, 0.8 )
+scale = Vector2( 0.1, 0.1 )
 z_index = -2
 texture = ExtResource( 2 )
 
@@ -58,5 +58,4 @@ polygon = PoolVector2Array( 4.99469, 0.169639, 17.3681, 0.169013, 22.8241, -6.21
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-frame = 1
 playing = true

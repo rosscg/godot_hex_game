@@ -65,6 +65,10 @@ func set_goal(goal_to_set, path_to_set=null):
 
 
 func set_message(target_unit, target_unit_orders):
+	if get_parent().get_parent().turn_manager.active_player != target_unit.team:
+		self.queue_free()
+		unit_manager.messenger_list.erase(self)
+		return
 	self.target_unit = target_unit
 	self.target_unit_orders = target_unit_orders
 	self.set_goal(target_unit.position)
@@ -87,5 +91,6 @@ func _pass_message():
 
 func toggle_overlay(toggle, force_display_path=false):
 	.toggle_overlay(toggle)
-	orders_path_line.visible = toggle and ( self.target_unit != null )
-	orders_goal_sprite.visible = toggle and ( self.target_unit != null )
+	var teammate = get_parent().get_parent().turn_manager.active_player == self.team
+	orders_path_line.visible = toggle and ( self.target_unit != null ) and teammate
+	orders_goal_sprite.visible = toggle and ( self.target_unit != null ) and teammate

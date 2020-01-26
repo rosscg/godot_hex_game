@@ -74,6 +74,8 @@ func _process(delta: float) -> void:
 			self.goal = Vector2(0,0)
 			#self.goal_sprite.visible = false
 			self.goal_sprite.position = Vector2(0,0)
+	
+	update()
 	return
 
 
@@ -97,7 +99,6 @@ func _move_along_path(move_distance: float) -> void:
 				move_distance -= distance_to_next
 				start_point = planned_path[0]
 				planned_path.remove(0)
-	update()
 
 
 func set_goal(goal_to_set, path_to_set=null):
@@ -125,7 +126,7 @@ func set_goal(goal_to_set, path_to_set=null):
 
 
 func select_unit(select=true):
-	#self.goal_sprite.visible = (select or unit_manager.overlay_on)# and self.goal != Vector2(0,0)
+	self.goal_sprite.visible = (select or unit_manager.overlay_on)# and self.goal != Vector2(0,0)
 	self.planned_path_line.visible = (select or unit_manager.overlay_on)
 	self.selected_poly.visible = select
 	# Update unit_manager:
