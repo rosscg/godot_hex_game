@@ -1,7 +1,7 @@
 extends Node
 
 onready var map : Node2D = get_owner().get_node("Map")
-const unit_scene = preload("res://scenes/Unit.tscn")
+const unit_scene = preload("res://scenes/Army.tscn")
 const messenger_scene = preload("res://scenes/Messenger.tscn")
 const building_scene = preload("res://scenes/Building.tscn")
 
@@ -23,7 +23,7 @@ func _ready() -> void:
 	building_instance.position = Vector2(640,440)
 	building_instance.get_node('TeamFlag').color = team_colour_dict[1]
 	add_child(building_instance)
-	building_list.append(building_instance)
+	building_list.append({"team": 1, "instance": building_instance})
 
 
 func load_unit_data():
@@ -69,7 +69,7 @@ func create_messenger(cell_coordinates):
 	# Create random unit type:
 	var unit_terrain_dict = unit_data['messenger']
 	var team = get_parent().turn_manager.active_player
-	messenger_instance.init('messenger', unit_terrain_dict, 0, building_list[0].position + Vector2(10,10), team) #TODO: temp home base
+	messenger_instance.init('messenger', unit_terrain_dict, 0, building_list[0]["instance"].position + Vector2(10,10), team) #TODO: temp home base
 	add_child(messenger_instance)
 	messenger_list.append(messenger_instance)
 	return messenger_instance
@@ -100,7 +100,6 @@ func detect_combat():
 				if target_unit and target_unit.team != unit.team:
 					unit.toggle_combat(target_unit)
 					#target_unit.in_combat = unit
-	return
 
 
 func resolve_combat():
@@ -117,14 +116,11 @@ func resolve_combat():
 func toggle_overlay():
 	# Show/hide the path and goals of all units
 	overlay_on = !overlay_on
-	for unit in unit_list:
+	for unit in unit_list + messenger_list:
 		if unit == selected_unit:
 			continue
 #		if unit.team != get_owner().turn_manager.active_player:
 #			continue
-		unit.goal_sprite.visible = unit.team == get_parent().turn_manager.active_player and overlay_on and unit.goal != Vector2(0,0) and unit.in_combat == null
-		unit.planned_path_line.visible = overlay_on and unit.team == get_parent().turn_manager.active_player
-	for messenger in messenger_list:
-		messenger.planned_path_line.visible = overlay_on and messenger.team == get_parent().turn_manager.active_player
-		messenger.orders_path_line.visible = overlay_on and messenger.team == get_parent().turn_manager.active_player
-		messenger.goal_sprite.visible = overlay_on and messenger.team == get_parent().turn_manager.active_player and messenger.target_unit_orders
+		var toggle = unit.team == get_parent().turn_manager.active_player and \
+						overlay_on and unit.goal != Vector2(0,0)
+		unit.toggle_overlay(toggle, unit.in_combat)
