@@ -57,8 +57,6 @@ func _process(delta: float) -> void:
 		pass
 	else:
 		_move_along_path(move_distance)
-	# Update occupied_cells
-	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 	# Redraw health bars etc
 	update()
 	return

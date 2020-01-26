@@ -24,43 +24,20 @@ var move_distance : float
 #var occupied_cells_local = []
 
 
-func _ready() -> void:
-	
+func _ready() -> void:	
 	set_process(false)
-
 	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
-
-	# Each unit stores its own astar node
+	# Each unit stores its own astar node TODO: merge higher
 	astar_node = tilemap.create_astar_node(terrain_dict)
-
-	# Functionality used for units which occupy multiple cells (WIP):
-#	occupied_cells_local = PoolVector2Array([Vector2(0, 0)])
-#	for i in occupied_cells_local:
-#		occupied_cells.append(tilemap.get_cell_from_coordinates(self.position) + i)
-#    var imageTexture = TextureRect.ImageTexture.new()
-#    var dynImage = Image.new()
-#    dynImage.create(256,256,false,Image.FORMAT_DXT5)
-#    dynImage.fill(Color(1,0,0,1))
-#    imageTexture.create_from_image(dynImage)
-#    self.texture = imageTexture
-
-# Engine currently doesn't support multiple 2d light masks.
-#	self.light = Light2D.new()
-#	self.light.texture = mask_tex
-#	self.light.range_item_cull_mask = map.get_node("MapImageFOW").light_mask
-#	self.light.mode = 3
-#	self.light.enabled = true
-#	self.light.scale = Vector2(10, 10)
-#	self.add_child(light)
-
 	return
 
 
 func _process(delta: float) -> void:
-	# Speed based on first cell occupied in occupied_cells:
-	#speed = base_speed / terrain_dict[tilemap.get_tile_terrain(occupied_cells[0])]
-	speed = base_speed / terrain_dict[tilemap.get_tile_terrain(tilemap.get_cell_from_coordinates(self.position))]
-	move_distance = speed * delta
+	# Use terrain speed for next cell in path (rather than current position):
+	if len(planned_path) > 0:
+		speed = base_speed / terrain_dict[tilemap.get_tile_terrain(
+		tilemap.get_cell_from_coordinates( planned_path[0] ))]
+		move_distance = speed * delta
 
 	# Draw unit path and goal
 	planned_path_line.clear_points()
@@ -74,8 +51,8 @@ func _process(delta: float) -> void:
 			self.goal = Vector2(0,0)
 			#self.goal_sprite.visible = false
 			self.goal_sprite.position = Vector2(0,0)
-	
-	update()
+	# Update occupied_cells
+	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 	return
 
 

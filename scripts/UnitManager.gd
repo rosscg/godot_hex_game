@@ -67,10 +67,7 @@ func create_unit(cell_coordinates):
 	return unit_instance
 
 
-func create_messenger(cell_coordinates):
-	if not cell_coordinates: 
-		# Clicked outside of map
-		return
+func create_messenger():
 	var messenger_instance = messenger_scene.instance()
 	# Create random unit type:
 	var unit_terrain_dict = unit_data['messenger']

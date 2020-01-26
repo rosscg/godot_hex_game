@@ -443,6 +443,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="UnitInfoGUI" type="Control" parent="GUI"]
+editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -467,7 +468,7 @@ text = "[UnitType]
 [Distance]
 "
 
-[node name="Distance_Label" type="Label" parent="GUI"]
+[node name="Target_Cell_Label" type="Label" parent="GUI"]
 visible = false
 margin_left = 135.0
 margin_top = 125.0

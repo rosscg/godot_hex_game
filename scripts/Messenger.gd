@@ -29,8 +29,11 @@ func _process(delta: float) -> void:
 	#TODO: Slow, only update if unit has moved from first point in line.
 	if self.target_unit_orders:
 		orders_path_line.clear_points()
-		for point in map.smooth(self.target_unit.calc_unit_path(self.target_unit_orders)):
-			orders_path_line.add_point(point - self.position)
+		# TODO: Temp use Straight line for speed:
+		orders_path_line.add_point(target_unit.position - self.position)
+		orders_path_line.add_point(tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(target_unit_orders), true) - self.position)
+		#for point in map.smooth(self.target_unit.calc_unit_path(self.target_unit_orders)):
+		#	orders_path_line.add_point(point - self.position)
 		self.orders_goal_sprite.position = tilemap.get_coordinates_from_cell(
 											tilemap.get_cell_from_coordinates(target_unit_orders), true) - self.position
 
@@ -45,7 +48,7 @@ func _move_along_path(move_distance: float) -> void: # TODO: move into parent sc
 	._move_along_path(move_distance)
 	if planned_path[0].x > self.position.x:
 		get_node('AnimatedSprite').flip_h = true
-	else:
+	elif planned_path[0].x < self.position.x:
 		get_node('AnimatedSprite').flip_h = false
 
 
@@ -57,18 +60,17 @@ func set_goal(goal_to_set, path_to_set=null):
 	if self.target_unit_orders:
 		orders_path_line.clear_points()
 		#orders_path_line.add_point(self.target_unit.position - self.position)
-		for point in map.smooth(self.target_unit.calc_unit_path(self.target_unit_orders)):
-			orders_path_line.add_point(point - self.position)
+		# TODO: Temp use Straight line for speed:
+		orders_path_line.add_point(target_unit.position - self.position)
+		orders_path_line.add_point(tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(target_unit_orders), true) - self.position)
+		#for point in map.smooth(self.target_unit.calc_unit_path(self.target_unit_orders)):
+		#	orders_path_line.add_point(point - self.position)
 		self.orders_goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(target_unit_orders), true) - self.position
 		self.orders_goal_sprite.visible = unit_manager.overlay_on
 		self.orders_path_line.visible = unit_manager.overlay_on
 
 
 func set_message(target_unit, target_unit_orders):
-	if get_parent().get_parent().turn_manager.active_player != target_unit.team:
-		self.queue_free()
-		unit_manager.messenger_list.erase(self)
-		return
 	self.target_unit = target_unit
 	self.target_unit_orders = target_unit_orders
 	self.set_goal(target_unit.position)

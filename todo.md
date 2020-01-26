@@ -7,25 +7,26 @@
 * Calc path possible in one turn
 
 ### Mid:
-* Create team manager, set home base and update messenger spawn point/home.
+* Create team manager, store available messenger count.
 * Fix messenger redrawing target unit orders flickering & change messenger goal sprite colour.
-* Get available messenger before creating new one.
 * Fix: units move to next cell for combat even if it's away from target unit. (Only relevant if units move after detecting combat, currently disabled.)
-* Stop units backtracking to centre of grid when in combat
+* Stop units backtracking to centre of grid when in combat (Done?)
 * Unit facing direction
 * Generals/Unit AI
-* Refactor Unit and Messenger into parent class.
 
 ### Low Priority:
 * States - march, route, retreat, combat, ranged combat, fortify, stationary
 * Units currently store their own astar node - probably only need to store one node per unit type
 * Disable interface during turn processing
+* Decide on whether to keep occupied_cells as an array
+* Change Army to animated sprite and set sprite with code.
 
 ### Long-Term Features:
 Weather - overlay
 Night and day (depending on scale)
 Trade/Income
 Supply Wagons
+Use messengers as supply / disrupting other messengers instead of sending messages
 
 
 ## Notes:

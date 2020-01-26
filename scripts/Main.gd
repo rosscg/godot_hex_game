@@ -4,7 +4,7 @@ onready var map : Node2D = $Map
 onready var unit_manager : Node2D = get_node("UnitManager")
 onready var turn_manager : Node2D = get_node("TurnManager")
 #onready var turn_manager = preload("TurnManager.gd").new()
-onready var distance_label : Label = get_node("GUI/Distance_Label")
+onready var target_cell_label : Label = get_node("GUI/Target_Cell_Label")
 onready var unit_info_gui : Control = get_node("GUI/UnitInfoGUI")
 #var left_dragging = false
 
@@ -13,9 +13,9 @@ func _process(_delta: float) -> void:
 	# Show planned path if unit is selected
 	var path = map.display_path(unit_manager.selected_unit)
 	if unit_manager.selected_unit and map.tilemap.get_cell_from_coordinates(get_global_mouse_position()):
-		distance_label.text = map.tilemap.get_tile_terrain(map.tilemap.get_cell_from_coordinates(get_global_mouse_position())).capitalize()
-		distance_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )
-		distance_label.show()
+		target_cell_label.text = map.tilemap.get_tile_terrain(map.tilemap.get_cell_from_coordinates(get_global_mouse_position())).capitalize()
+		target_cell_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )
+		target_cell_label.show()
 		unit_info_gui.visible = true
 		unit_info_gui.get_node('Label').text = \
 			unit_manager.selected_unit.unit_type.capitalize() + \
@@ -49,7 +49,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			unit_manager.selected_unit.select_unit(false)
 			unit_manager.selected_unit = null
 		#map.selected_cell_sprite.visible = false
-		distance_label.hide()
+		target_cell_label.hide()
 		map.line_2d.clear_points()
 		#map.tilemap_overlay.clear()
 		return
@@ -59,10 +59,10 @@ func _unhandled_input(event: InputEvent) -> void:
  	# Left click released
 	if not event.pressed:
 		if unit_manager.selected_unit:
-		 # Create new unit on A key press:
-			var messenger = unit_manager.create_messenger(Vector2(1,1))
-			messenger.set_message(unit_manager.selected_unit, event.global_position)
-			messenger.update()
+			if unit_manager.selected_unit.team == turn_manager.active_player:
+				var messenger = unit_manager.create_messenger()
+				messenger.set_message(unit_manager.selected_unit, event.global_position)
+				
 			#map.tilemap_overlay.clear()
 			#var position_path = map.tilemap.find_path(unit_manager.selected_unit.position, get_global_mouse_position(), 
 			#									unit_manager.selected_unit.astar_node)
@@ -80,7 +80,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			unit_manager.selected_unit = null
 			#map.selected_cell_sprite.visible = false
 			map.line_2d.clear_points()
-			distance_label.hide()
+			target_cell_label.hide()
 		else:
 			# Select unit
 			var pos = get_global_mouse_position()
