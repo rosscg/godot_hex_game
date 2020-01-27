@@ -202,6 +202,34 @@ func find_path_for_time(cell_path, base_speed, milliseconds, terrain_dict):
 	return cell_path_truncated
 
 
+func get_time_for_path(cell_path, base_speed, terrain_dict):
+	var milliseconds = 0
+	for i in range(len(cell_path)-1):
+		var cell_distance
+		var travel_time
+		if self.cell_half_offset == 0: # Pointy top hex grid
+			if cell_path[i+1].y == cell_path[i].y:
+				# Horizontal movement
+				cell_distance = cell_size.x
+			else:
+				cell_distance = sqrt((pow(cell_size.y , 2) + pow((cell_size.x/2), 2)))
+		elif self.cell_half_offset == 1: # Flat top hex grid
+			if cell_path[i+1].x == cell_path[i].x:
+				# Horizontal movement
+				cell_distance = cell_size.y
+			else:
+				cell_distance = sqrt((pow(cell_size.x , 2) + pow((cell_size.y/2), 2)))
+		else: # Square grid
+			if cell_path[i+1].x != cell_path[i].x and cell_path[i+1].y != cell_path[i].y:
+				# Diagonal movement
+				cell_distance = sqrt(pow(cell_size.x, 2) + pow(cell_size.y, 2)) 
+			else:
+				cell_distance = cell_size.x
+		travel_time = (cell_distance * terrain_dict[get_tile_terrain(cell_path[i+1])])/base_speed * 1000
+		milliseconds += travel_time
+	return milliseconds
+	
+
 func get_tile_terrain(cell):
 	if self.get_cellv(cell) == -1:		# Debugging
 		print(cell)
