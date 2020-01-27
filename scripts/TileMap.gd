@@ -171,18 +171,34 @@ func find_path(start_pos, end_pos, astar_node, as_cell_coords=false, obstacles=[
 	return cell_path
 
 
-#TODO: Not yet working, need to account for diagonal distance
-func find_path_for_distance(cell_path, distance, terrain_dict):
-	var cell_side = max(grid_cell_height, grid_cell_width)
-	distance *= 30
+func find_path_for_time(cell_path, base_speed, milliseconds, terrain_dict):
 	var cell_path_truncated = PoolVector2Array([])
-	var distance_sum = 0
-	for cell in cell_path:
-		var cost = terrain_dict[get_tile_terrain(cell)]
-		if distance_sum + cost * cell_side > distance:
+	for i in range(len(cell_path)-1):
+		var cell_distance
+		var travel_time
+		if self.cell_half_offset == 0: # Pointy top hex grid
+			if cell_path[i+1].y == cell_path[i].y:
+				# Horizontal movement
+				cell_distance = cell_size.x
+			else:
+				cell_distance = sqrt((pow(cell_size.y , 2) + pow((cell_size.x/2), 2)))
+		elif self.cell_half_offset == 1: # Flat top hex grid
+			if cell_path[i+1].x == cell_path[i].x:
+				# Horizontal movement
+				cell_distance = cell_size.y
+			else:
+				cell_distance = sqrt((pow(cell_size.x , 2) + pow((cell_size.y/2), 2)))
+		else: # Square grid
+			if cell_path[i+1].x != cell_path[i].x and cell_path[i+1].y != cell_path[i].y:
+				# Diagonal movement
+				cell_distance = sqrt(pow(cell_size.x, 2) + pow(cell_size.y, 2)) 
+			else:
+				cell_distance = cell_size.x
+		travel_time = (cell_distance * terrain_dict[get_tile_terrain(cell_path[i+1])])/base_speed
+		if milliseconds - travel_time < 0:
 			break
-		distance_sum += cost * cell_side
-		cell_path_truncated.append(cell)
+		milliseconds -= travel_time * 1000
+		cell_path_truncated.append(cell_path[i+1])
 	return cell_path_truncated
 
 
@@ -227,9 +243,8 @@ func get_neighbours(cell, radius=1, include_self = false):
 			Vector2(cell.x + 1, cell.y - 1),
 			Vector2(cell.x + 1, cell.y),
 			Vector2(cell.x + 1, cell.y + 1)])
-	else:
-		# TODO: check this works for pointy-top grids
-		if fmod(cell.x, 2) == 0:
+	elif self.cell_half_offset == 1: # Flat-top hex grid
+		if fmod(cell.x, 2) != 0:
 			neighbouring_cells = PoolVector2Array([
 				Vector2(cell.x, cell.y - 1),
 				Vector2(cell.x + 1, cell.y - 1),
@@ -245,6 +260,23 @@ func get_neighbours(cell, radius=1, include_self = false):
 				Vector2(cell.x, cell.y + 1),
 				Vector2(cell.x - 1, cell.y + 1),
 				Vector2(cell.x - 1, cell.y)])
+	else: # Pointy-top hex grid
+		if fmod(cell.y, 2) != 0:
+			neighbouring_cells = PoolVector2Array([
+				Vector2(cell.x, cell.y - 1),
+				Vector2(cell.x + 1, cell.y),
+				Vector2(cell.x, cell.y + 1),
+				Vector2(cell.x - 1, cell.y - 1),
+				Vector2(cell.x - 1, cell.y),
+				Vector2(cell.x - 1, cell.y + 1)])
+		else:
+			neighbouring_cells = PoolVector2Array([
+				Vector2(cell.x + 1, cell.y - 1),
+				Vector2(cell.x + 1, cell.y),
+				Vector2(cell.x + 1, cell.y + 1),
+				Vector2(cell.x, cell.y + 1),
+				Vector2(cell.x - 1, cell.y),
+				Vector2(cell.x, cell.y - 1)])
 	for neighbour_cell in neighbouring_cells:
 		if not is_outside_map_bounds(neighbour_cell):
 			neighbouring_cells_within_map.append(neighbour_cell)

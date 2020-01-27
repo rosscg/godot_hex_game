@@ -398,16 +398,16 @@ cell_size = Vector2( 14, 18 )
 cell_half_offset = 1
 format = 1
 
-[node name="Line2D2" type="Line2D" parent="Map"]
-points = PoolVector2Array( 0, 0 )
-width = 4.0
-default_color = Color( 0.403922, 0.403922, 0.403922, 1 )
-texture_mode = 101
-
 [node name="Line2D" type="Line2D" parent="Map"]
 points = PoolVector2Array( 0, 0 )
-width = 4.0
-default_color = Color( 0.0470588, 0.156863, 0.568627, 1 )
+width = 3.0
+default_color = Color( 0.458824, 0.482353, 0.576471, 1 )
+texture_mode = 101
+
+[node name="Line2D2" type="Line2D" parent="Map"]
+points = PoolVector2Array( 0, 0 )
+width = 5.0
+default_color = Color( 0.494118, 0.160784, 0.133333, 1 )
 texture_mode = 101
 
 [node name="HoverCell" type="Sprite" parent="Map"]

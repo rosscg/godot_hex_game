@@ -3,9 +3,7 @@
 ### Now:
 
 ### Next:
-* Don't send messenger if path is into impassable terrain
-* Units can still cross over / fight in same cell
-* Calc path possible in one turn
+* Calc path possible in one turn minus messenger time
 
 ### Mid:
 * Check connections on pointy hex astar -- appears to be erroneous connection heading NE (or cells not registering as occupied)
@@ -16,6 +14,7 @@
 * Stop units backtracking to centre of grid when in combat (Done?)
 * Unit facing direction
 * Generals/Unit AI
+* ?? Units can still cross over / fight in same cell
 
 ### Low Priority:
 * States - march, route, retreat, combat, ranged combat, fortify, stationary
@@ -24,6 +23,7 @@
 * Decide on whether to keep occupied_cells as an array
 * Change Army to animated sprite and set sprite with code.
 * Blue unit path display line misses origin point for hex map when hovering NW of unit.
+* Don't send messenger if path is into impassable terrain
 
 ### Long-Term Features:
 Weather - overlay

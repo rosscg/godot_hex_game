@@ -3,9 +3,9 @@ extends Node2D
 #onready var tilemap : TileMap = $TileMap_SquareLarge2
 onready var tilemap : TileMap = $TileMap_PointyHex
 onready var hover_cell_sprite : Sprite = $HoverCell
-#onready var hover_cell_sprite2 : Sprite = $HoverCell2
+onready var hover_cell_sprite2 : Sprite = $HoverCell2
 onready var line_2d : Line2D = $Line2D
-#onready var line_2d2 : Line2D = $Line2D2
+onready var line_2d2 : Line2D = $Line2D2
 #onready var tilemap_overlay : TileMap = $TileMapOverlay
 #onready var selected_cell_sprite : Sprite = $SelectedCell
 var cell_array
@@ -30,11 +30,11 @@ func _process(_delta: float) -> void:
 		hover_cell_sprite.visible = false
 
 
-func display_path(selected_unit):
+func display_path(selected_unit, milliseconds=12000): #TODO: set default milliseconds
 	if not selected_unit:
 		line_2d.clear_points()
-#		line_2d2.clear_points()
-#		hover_cell_sprite2.visible = false
+		line_2d2.clear_points()
+		hover_cell_sprite2.visible = false
 		return null
 	hover_cell_sprite.visible = false
 	#tilemap_overlay.clear()
@@ -57,6 +57,17 @@ func display_path(selected_unit):
 	#for p in smooth(path):
 	#	point_path.append(tilemap.get_coordinates_from_cell(p, true))
 	#line_2d2.points = point_path
+	
+	var path_truncated = tilemap.find_path_for_time(path, selected_unit.base_speed, milliseconds, selected_unit.terrain_dict)
+	var point_path_truncated = [selected_unit.position]
+	for p in smooth(path_truncated):
+		point_path_truncated.append(tilemap.get_coordinates_from_cell(p, true))
+	line_2d2.points = smooth(point_path_truncated)
+	if len(point_path_truncated) > 0:
+		hover_cell_sprite2.position = point_path_truncated[len(point_path_truncated)-1]
+		hover_cell_sprite2.visible = true
+	else:
+		hover_cell_sprite2.visible = false
 	return path
 
 
