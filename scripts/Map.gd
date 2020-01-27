@@ -1,6 +1,7 @@
 extends Node2D
 
-onready var tilemap : TileMap = $TileMap_SquareLarge2
+#onready var tilemap : TileMap = $TileMap_SquareLarge2
+onready var tilemap : TileMap = $TileMap_PointyHex
 onready var hover_cell_sprite : Sprite = $HoverCell
 #onready var hover_cell_sprite2 : Sprite = $HoverCell2
 onready var line_2d : Line2D = $Line2D
@@ -60,26 +61,29 @@ func display_path(selected_unit):
 
 
 func smooth(path, severity=3):
-	### Note: smoothing path for traversal (as opposed to display) can cause
+	### Warning: smoothing path for traversal (as opposed to display) can cause
 	### unit to cross into wrong hex (i.e. on hairpin turns).
 	if len(path) == 0:
 		return path
-	# Double points in path for smoother curves:
-	var doubled_path = []
+	# Adjust points in path for smoother curves:
+	var adjusted_path = []
 	for i in range(len(path)-1):
-		doubled_path.append(path[i])
-		doubled_path.append((path[i]+path[i+1])/2)
-	doubled_path.append(path[len(path)-1])
+		# If using square map, double path for smoothing
+		# Otherwise path is simply edge intercepts between hexes
+		if tilemap.cell_half_offset == 2:
+			adjusted_path.append(path[i])
+		adjusted_path.append((path[i]+path[i+1])/2)
+	adjusted_path.append(path[len(path)-1])
 	
 	var smoothed_path = []
-	for i in range(len(doubled_path)):
+	for i in range(len(adjusted_path)):
 		var start = max(i-severity, 0)
-		#var end = min(i+severity+1, len(doubled_path))
-		var end = min(i+1, len(doubled_path)) # Don't look ahead for smoothing
+		#var end = min(i+severity+1, len(adjusted_path))
+		var end = min(i+1, len(adjusted_path)) # Don't look ahead for smoothing
 		var sum = Vector2(0,0)
 		for j in range(start, end):
-			sum += doubled_path[j]
+			sum += adjusted_path[j]
 		var avg = sum / (end-start)
 		smoothed_path.append(avg)
-	smoothed_path.append(doubled_path[len(doubled_path)-1])
+	smoothed_path.append(adjusted_path[len(adjusted_path)-1])
 	return PoolVector2Array(smoothed_path)

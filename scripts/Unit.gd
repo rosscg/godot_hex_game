@@ -67,10 +67,11 @@ func _process(delta: float) -> void:
 			
 	# Moved to new cell, update displayed path line and occupied_cells
 	if occupied_cells[0] != tilemap.get_cell_from_coordinates(self.position):
-		# Remove twice as smoothing doubles points in line:
 		if len(smoothed_planned_path) > 2:
 			self.smoothed_planned_path.remove(0)
-			self.smoothed_planned_path.remove(0)
+			# Square tilemap has doubled points in line. Remove extra: 
+			if tilemap.cell_half_offset == 2:
+				self.smoothed_planned_path.remove(0)
 		# Update occupied_cells
 		occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 	return

@@ -5,7 +5,7 @@ const unit_scene = preload("res://scenes/Army.tscn")
 const messenger_scene = preload("res://scenes/Messenger.tscn")
 const building_scene = preload("res://scenes/Building.tscn")
 # Detachment Testing
-const detachment_scene = preload("res://scenes/Detachment.tscn")
+#const detachment_scene = preload("res://scenes/Detachment.tscn")
 
 var unit_list = []
 var messenger_list = []
@@ -22,13 +22,19 @@ func _ready() -> void:
 	
 	# Temporary place city sprite:
 	var building_instance = building_scene.instance()
-	building_instance.position = Vector2(340,640)
+	if map.tilemap.cell_half_offset == 2: # Squares
+		building_instance.position = Vector2(340,640)
+	else: # Hex
+		building_instance.position = map.tilemap.get_coordinates_from_cell(Vector2(18, 46), true)
 	building_instance.get_node('TeamFlag').color = team_colour_dict[1]
 	add_child(building_instance)
 	building_list.append({"team": 1, "instance": building_instance})
 	
 	building_instance = building_scene.instance()
-	building_instance.position = Vector2(1180,140)
+	if map.tilemap.cell_half_offset == 2: # Squares
+		building_instance.position = Vector2(1180,140)
+	else: # Hex
+		building_instance.position = map.tilemap.get_coordinates_from_cell(Vector2(68, 11), true)
 	building_instance.get_node('TeamFlag').color = team_colour_dict[2]
 	add_child(building_instance)
 	building_list.append({"team": 2, "instance": building_instance})
@@ -69,16 +75,16 @@ func create_unit(cell_coordinates):
 	
 	
 	# Detachment Testing
-	var detachment_instance = detachment_scene.instance()
-	detachment_instance.init(unit_instance, 1, unit_type, unit_terrain_dict, strength, \
-		unit_instance.position + Vector2(20,0), team, team_colour_dict[team])
-	add_child(detachment_instance)
-	unit_instance.detachment_list.append(detachment_instance)
-	var detachment_instance2 = detachment_scene.instance()
-	detachment_instance2.init(unit_instance, 2, unit_type, unit_terrain_dict, strength, \
-		unit_instance.position + Vector2(-20,0), team, team_colour_dict[team])
-	add_child(detachment_instance2)
-	unit_instance.detachment_list.append(detachment_instance2)
+#	var detachment_instance = detachment_scene.instance()
+#	detachment_instance.init(unit_instance, 1, unit_type, unit_terrain_dict, strength, \
+#		unit_instance.position + Vector2(20,0), team, team_colour_dict[team])
+#	add_child(detachment_instance)
+#	unit_instance.detachment_list.append(detachment_instance)
+#	var detachment_instance2 = detachment_scene.instance()
+#	detachment_instance2.init(unit_instance, 2, unit_type, unit_terrain_dict, strength, \
+#		unit_instance.position + Vector2(-20,0), team, team_colour_dict[team])
+#	add_child(detachment_instance2)
+#	unit_instance.detachment_list.append(detachment_instance2)
 	
 	return unit_instance
 
@@ -92,9 +98,12 @@ func create_messenger():
 	var base_coordinates
 	for b in building_list:
 		if b["team"] == team:
-			base_coordinates = b["instance"].position + Vector2(10,10)
+			base_coordinates = b["instance"].position
+			# If square tilemap, base spans 2x2 grid so choose a cell middle point:
+			if map.tilemap.cell_half_offset == 2:
+				base_coordinates += Vector2(map.tilemap.grid_cell_width/2, map.tilemap.grid_cell_width/2)
 			break
-	messenger_instance.init('messenger', unit_terrain_dict, 0, base_coordinates, team) #TODO: temp home base
+	messenger_instance.init('messenger', unit_terrain_dict, 0, base_coordinates, team)
 	add_child(messenger_instance)
 	messenger_list.append(messenger_instance)
 	return messenger_instance
@@ -103,8 +112,9 @@ func create_messenger():
 func activate_units(active):
 	for unit in unit_list:
 		unit.set_process(active)
-		for d in unit.detachment_list:
-			d.set_process(active)
+		# Detachment Testing
+		#for d in unit.detachment_list:
+		#	d.set_process(active)
 	for messenger in messenger_list:
 		messenger.set_process(active)
 

@@ -1,9 +1,9 @@
 extends "res://scripts/Unit.gd"
 
 # Detachment Testing
-var detachment_list = []
-var formation = 'column'
-var orientation = 'N'
+#var detachment_list = []
+#var formation = 'column'
+#var orientation = 'N'
 
 onready var status_sprite : AnimatedSprite = $StatusSprite
 onready var selected_poly : Polygon2D = $SelectedPoly
@@ -45,15 +45,16 @@ func _process(delta: float) -> void:
 	var starting_cell = tilemap.get_cell_from_coordinates(self.position)
 	
 	._process(delta)
-	
+
+	# Detachment Testing	
 	# Use slowest move speed when moving with detachments:
-	if len(detachment_list) > 0 and len(planned_path) > 0:
-		var speed_list = [base_speed / terrain_dict[tilemap.get_tile_terrain(
-			tilemap.get_cell_from_coordinates( planned_path[0] ))]]
-		for d in detachment_list:
-			if d.speed > 0:
-				speed_list.append(d.speed)
-		move_distance = speed_list.min() * delta
+#	if len(detachment_list) > 0 and len(planned_path) > 0:
+#		var speed_list = [base_speed / terrain_dict[tilemap.get_tile_terrain(
+#			tilemap.get_cell_from_coordinates( planned_path[0] ))]]
+#		for d in detachment_list:
+#			if d.speed > 0:
+#				speed_list.append(d.speed)
+#		move_distance = speed_list.min() * delta
 		
 	# Temporarily store planned path elsewhere during combat:
 	if in_combat:
@@ -87,8 +88,9 @@ func _process(delta: float) -> void:
 		second_last_cell = last_cell
 		last_cell = starting_cell
 		
-		for d in detachment_list:
-			d.update_destination()
+		# Detachment Testing
+#		for d in detachment_list:
+#			d.update_destination()
 			
 	# Redraw health bars etc
 	update()
@@ -151,8 +153,11 @@ func take_damage(damage):
 		#yield($AnimatedSprite, "animation_finished" )
 		if get_parent().selected_unit == self:
 			get_parent().selected_unit = null
-		for d in detachment_list:
-			d.queue_free()
+			
+		# Detachment Testing
+#		for d in detachment_list:
+#			d.queue_free()
+
 		queue_free()
 		return true
 
