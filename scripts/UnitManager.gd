@@ -4,6 +4,8 @@ onready var map : Node2D = get_owner().get_node("Map")
 const unit_scene = preload("res://scenes/Army.tscn")
 const messenger_scene = preload("res://scenes/Messenger.tscn")
 const building_scene = preload("res://scenes/Building.tscn")
+# Detachment Testing
+const detachment_scene = preload("res://scenes/Detachment.tscn")
 
 var unit_list = []
 var messenger_list = []
@@ -64,6 +66,20 @@ func create_unit(cell_coordinates):
 	#unit_instance.set_name("unit")
 	add_child(unit_instance)
 	unit_list.append(unit_instance)
+	
+	
+	# Detachment Testing
+	var detachment_instance = detachment_scene.instance()
+	detachment_instance.init(unit_instance, 1, unit_type, unit_terrain_dict, strength, \
+		unit_instance.position + Vector2(20,0), team, team_colour_dict[team])
+	add_child(detachment_instance)
+	unit_instance.detachment_list.append(detachment_instance)
+	var detachment_instance2 = detachment_scene.instance()
+	detachment_instance2.init(unit_instance, 2, unit_type, unit_terrain_dict, strength, \
+		unit_instance.position + Vector2(-20,0), team, team_colour_dict[team])
+	add_child(detachment_instance2)
+	unit_instance.detachment_list.append(detachment_instance2)
+	
 	return unit_instance
 
 
@@ -87,6 +103,8 @@ func create_messenger():
 func activate_units(active):
 	for unit in unit_list:
 		unit.set_process(active)
+		for d in unit.detachment_list:
+			d.set_process(active)
 	for messenger in messenger_list:
 		messenger.set_process(active)
 

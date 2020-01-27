@@ -45,11 +45,11 @@ func _process(delta: float) -> void:
 
 
 func _move_along_path(move_distance: float) -> void: # TODO: move into parent script.
-	._move_along_path(move_distance)
 	if planned_path[0].x > self.position.x:
 		get_node('AnimatedSprite').flip_h = true
 	elif planned_path[0].x < self.position.x:
 		get_node('AnimatedSprite').flip_h = false
+	._move_along_path(move_distance)
 
 
 

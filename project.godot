@@ -22,11 +22,13 @@ config/icon="res://assets/units/horse2.png"
 [debug]
 
 settings/stdout/print_fps=true
+gdscript/warnings/shadowed_variable=false
 
 [display]
 
 window/size/width=1440
 window/size/height=900
+window/vsync/use_vsync=false
 
 [network]
 

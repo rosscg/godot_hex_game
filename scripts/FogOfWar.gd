@@ -4,6 +4,11 @@ extends Node2D
 var sprite_dict = {}	# Pair unit name to light sprite name
 var live_units			# Whether unit name is still alive
 
+
+func _ready() -> void:
+	set_process(false)
+	
+
 func _process(delta):
 	# Create list of units with light sprites:
 	live_units = {}

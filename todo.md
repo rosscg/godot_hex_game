@@ -1,14 +1,15 @@
 ## Todo:
 
 ### Now:
+* BUG: Path line does not hide during combat, or does not point to attacked unit.
 
 ### Next:
-* BUG: Path line does not hide during combat, or does not point to attacked unit.
 * One astar node per unit type
 * Units can still cross over / fight in same cell
 * Calc path possible in one turn
 
 ### Mid:
+* Try changing combat detection radius to +1
 * Create team manager, store available messenger count.
 * Fix messenger redrawing target unit orders flickering & change messenger goal sprite colour.
 * Fix: units move to next cell for combat even if it's away from target unit. (Only relevant if units move after detecting combat, currently disabled.)

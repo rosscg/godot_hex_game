@@ -8,6 +8,9 @@ onready var unit_manager : Node2D = get_parent()
 #onready var selected_unit : Node2D = get_parent().selected_unit
 #onready var sprite : Sprite = $Sprite
 
+var line_formation_dict = {'N': Vector2(20,0), 'E': Vector2(0,20), 'S': Vector2(-20,0), 'W': Vector2(0,-20)}
+#var col_formation_dict = {'N': Vector2(0,20), 'E': Vector2(-20,0), 'S': Vector2(0,-20), 'W': Vector2(20,0)}
+
 #var team_sprite_dict = {1: 'team_red', 2: 'team_blue'}
 var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
 var unit_type
@@ -16,6 +19,8 @@ var terrain_dict
 var planned_path : = PoolVector2Array()
 var smoothed_planned_path : = PoolVector2Array()
 var occupied_cells = []
+var last_cell
+var second_last_cell
 var goal : = Vector2()
 var astar_node
 var in_combat = null
@@ -37,7 +42,7 @@ func _process(delta: float) -> void:
 	# Use terrain speed for next cell in path (rather than current position):
 	if len(planned_path) > 0:
 		speed = base_speed / terrain_dict[tilemap.get_tile_terrain(
-		tilemap.get_cell_from_coordinates( planned_path[0] ))]
+			tilemap.get_cell_from_coordinates( planned_path[0] ))]
 		move_distance = speed * delta
 
 	# Draw unit path and goal
@@ -63,8 +68,9 @@ func _process(delta: float) -> void:
 	# Moved to new cell, update displayed path line and occupied_cells
 	if occupied_cells[0] != tilemap.get_cell_from_coordinates(self.position):
 		# Remove twice as smoothing doubles points in line:
-		self.smoothed_planned_path.remove(0)
-		self.smoothed_planned_path.remove(0)
+		if len(smoothed_planned_path) > 2:
+			self.smoothed_planned_path.remove(0)
+			self.smoothed_planned_path.remove(0)
 		# Update occupied_cells
 		occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
 	return
@@ -86,6 +92,7 @@ func _move_along_path(move_distance: float) -> void:
 		else:
 			if len(planned_path) == 1:
 				position = planned_path[0]
+				planned_path.remove(0)
 			else:
 				move_distance -= distance_to_next
 				start_point = planned_path[0]
