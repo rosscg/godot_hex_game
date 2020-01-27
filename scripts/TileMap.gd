@@ -1,7 +1,9 @@
 extends TileMap
 
-# Add 1,1 to grid coordinates as otherwise Vector2(0,0) parses as null:
-var grid_offset = Vector2(1,1) # Change to Vector2(0,0) to disable.
+# Add 1,1 to grid coordinates as otherwise Vector2(0,0) parses as null
+# Change to Vector2(0,0) to disable
+# Warning: changing may disrupt get_neighbours() mapping (untested)
+const grid_offset = Vector2(1,1)
 
 var grid_cell_height = cell_size.y
 var grid_cell_width = cell_size.x

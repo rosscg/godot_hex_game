@@ -34,6 +34,7 @@ func _ready() -> void:
 	building_instance.get_node('TeamFlag').color = team_colour_dict[1]
 	add_child(building_instance)
 	building_list.append({"team": 1, "instance": building_instance})
+	
 	building_instance = building_scene.instance()
 	if map.tilemap.cell_half_offset == 2: # Squares
 		building_instance.position = Vector2(1180,140)
@@ -81,7 +82,6 @@ func create_unit(cell_coordinates):
 
 func create_messenger():
 	var messenger_instance = messenger_scene.instance()
-	# Create random unit type:
 	var unit_terrain_dict = unit_data['messenger']
 	var team = get_parent().turn_manager.active_player
 	# Get coordinates of first friendly base in list:

@@ -3,15 +3,18 @@ extends Node2D
 onready var map : Node2D = $Map
 onready var unit_manager : Node2D = get_node("UnitManager")
 onready var turn_manager : Node2D = get_node("TurnManager")
-#onready var turn_manager = preload("TurnManager.gd").new()
 onready var target_cell_label : Label = get_node("GUI/Target_Cell_Label")
 onready var unit_info_gui : Control = get_node("GUI/UnitInfoGUI")
 #var left_dragging = false
 
 
 func _process(_delta: float) -> void:
+	# Get time for messenger to reach selected unit
+	var messenger_time = 0
+	if unit_manager.selected_unit:
+		messenger_time = unit_manager.selected_unit.get_messenger_time()
 	# Show planned path if unit is selected
-	var path = map.display_path(unit_manager.selected_unit)
+	var path = map.display_path(unit_manager.selected_unit, 12000 - messenger_time)
 	if unit_manager.selected_unit and map.tilemap.get_cell_from_coordinates(get_global_mouse_position()):
 		target_cell_label.text = map.tilemap.get_tile_terrain(map.tilemap.get_cell_from_coordinates(get_global_mouse_position())).capitalize()
 		target_cell_label.rect_position = get_global_mouse_position() + Vector2( 20.0, 0.0 )

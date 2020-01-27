@@ -174,3 +174,22 @@ func toggle_combat(opponent):
 										self.team == get_node("/root/Main").turn_manager.active_player
 		self.planned_path_line.visible = self.goal and (unit_manager.overlay_on or unit_manager.selected_unit == self) and \
 										self.team == get_node("/root/Main").turn_manager.active_player
+
+
+func get_messenger_time():
+	var base_coordinates
+	for b in unit_manager.building_list:
+		if b["team"] == self.team:
+			base_coordinates = b["instance"].position
+			# If square tilemap, base spans 2x2 grid so choose a cell middle point:
+			if map.tilemap.cell_half_offset == 2:
+				base_coordinates += Vector2(map.tilemap.grid_cell_width/2, map.tilemap.grid_cell_width/2)
+			break
+	var messenger_astar = unit_manager.unit_astar_nodes['messenger']
+	var messenger_dict = unit_manager.unit_data['messenger']
+	var messenger_path = tilemap.find_path(base_coordinates, self.position, messenger_astar, true)
+	var messenger_time = tilemap.get_time_for_path(messenger_path, self.base_speed * 6, messenger_dict) # TODO: Keep multiplied synchronous
+	return messenger_time
+	
+	
+	

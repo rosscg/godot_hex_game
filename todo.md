@@ -3,20 +3,16 @@
 ### Now:
 
 ### Next:
-* Calc path possible in one turn minus messenger time
 
 ### Mid:
-* Check connections on pointy hex astar -- appears to be erroneous connection heading NE (or cells not registering as occupied)
 * Try changing combat detection radius to +1
 * Create team manager, store available messenger count.
-* Fix messenger redrawing target unit orders flickering & change messenger goal sprite colour.
-* Fix: units move to next cell for combat even if it's away from target unit. (Only relevant if units move after detecting combat, currently disabled.)
-* Stop units backtracking to centre of grid when in combat (Done?)
 * Unit facing direction
 * Generals/Unit AI
-* ?? Units can still cross over / fight in same cell
 
 ### Low Priority:
+* Pass and display length of path for current turn in unit's overlay.
+* Fix: units move to next cell for combat even if it's away from target unit. (Only relevant if units move after detecting combat, currently disabled.)
 * States - march, route, retreat, combat, ranged combat, fortify, stationary
 * Units currently store their own astar node - probably only need to store one node per unit type
 * Disable interface during turn processing
@@ -24,6 +20,8 @@
 * Change Army to animated sprite and set sprite with code.
 * Blue unit path display line misses origin point for hex map when hovering NW of unit.
 * Don't send messenger if path is into impassable terrain
+* Consider whether astars need to be stored in units at all -- perhaps just hold them in unit_manager
+* Change messenger goal sprite colour.
 
 ### Long-Term Features:
 Weather - overlay

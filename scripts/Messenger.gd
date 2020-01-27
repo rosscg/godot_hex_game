@@ -18,7 +18,7 @@ func init(unit_type, astar_node, data_dict, strength, home_coordinates, team=1):
 	self.position = self.home_coordinates
 	self.target_unit = null
 	self.target_unit_orders = null
-	self.base_speed *= 6
+	self.base_speed *= 6 # TODO: keep synchronous with get_messenger_time() in Army.gd
 
 
 func _process(delta: float) -> void:
