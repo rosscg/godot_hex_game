@@ -3,11 +3,12 @@
 ### Now:
 
 ### Next:
-* One astar node per unit type
+* Don't send messenger if path is into impassable terrain
 * Units can still cross over / fight in same cell
 * Calc path possible in one turn
 
 ### Mid:
+* Check connections on pointy hex astar -- appears to be erroneous connection heading NE (or cells not registering as occupied)
 * Try changing combat detection radius to +1
 * Create team manager, store available messenger count.
 * Fix messenger redrawing target unit orders flickering & change messenger goal sprite colour.

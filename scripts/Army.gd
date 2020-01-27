@@ -10,13 +10,13 @@ onready var selected_poly : Polygon2D = $SelectedPoly
 
 var strength
 var stored_path : = PoolVector2Array()
-#var occupied_cells_local = []
 
 
-func init(unit_type, data_dict, strength, start_coordinates, team=1, team_colour=Color( 0.55, 0, 0, 1 )): #TODO: remove defaults?
+func init(unit_type, astar_node, data_dict, strength, start_coordinates, team=1, team_colour=Color( 0.55, 0, 0, 1 )): #TODO: remove defaults?
 	self.team = team
 	self.unit_type = unit_type
 	self.terrain_dict = data_dict
+	self.astar_node = astar_node
 	
 	self.strength = strength
 	self.position = start_coordinates

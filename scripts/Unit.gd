@@ -25,14 +25,11 @@ var in_combat = null
 
 var speed : float
 var move_distance : float
-#var occupied_cells_local = []
 
 
 func _ready() -> void:	
 	set_process(false)
 	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
-	# Each unit stores its own astar node TODO: merge higher
-	astar_node = tilemap.create_astar_node(terrain_dict)
 	return
 
 

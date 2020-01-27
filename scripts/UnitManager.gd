@@ -13,6 +13,7 @@ var building_list = []
 var selected_unit = null
 var overlay_on : bool = false
 var unit_data = {}
+var unit_astar_nodes = {}
 
 var team_colour_dict = {1: Color( 0.55, 0, 0, 1 ), 2: Color( 0, 0, 0.55, 1 ) } # Red, Blue
 
@@ -20,7 +21,11 @@ var team_colour_dict = {1: Color( 0.55, 0, 0, 1 ), 2: Color( 0, 0, 0.55, 1 ) } #
 func _ready() -> void:
 	unit_data = load_unit_data()['movement_costs']
 	
-	# Temporary place city sprite:
+	# Pre-generate astar nodes for each unit type
+	for unit_type in unit_data.keys():
+		unit_astar_nodes[unit_type] = map.tilemap.create_astar_node(unit_data[unit_type])
+	
+	# Temporary place 2x city sprites:
 	var building_instance = building_scene.instance()
 	if map.tilemap.cell_half_offset == 2: # Squares
 		building_instance.position = Vector2(340,640)
@@ -29,7 +34,6 @@ func _ready() -> void:
 	building_instance.get_node('TeamFlag').color = team_colour_dict[1]
 	add_child(building_instance)
 	building_list.append({"team": 1, "instance": building_instance})
-	
 	building_instance = building_scene.instance()
 	if map.tilemap.cell_half_offset == 2: # Squares
 		building_instance.position = Vector2(1180,140)
@@ -38,20 +42,6 @@ func _ready() -> void:
 	building_instance.get_node('TeamFlag').color = team_colour_dict[2]
 	add_child(building_instance)
 	building_list.append({"team": 2, "instance": building_instance})
-
-
-func load_unit_data():
-	var file = File.new()
-	file.open("res://assets/units/unit_data.json", file.READ)
-	var text = file.get_as_text()
-	var result_json = JSON.parse(text)
-	if result_json.error == OK:
-		var data = result_json.result
-		return data
-	else:
-		print("Error: ", result_json.error)
-		print("Error Line: ", result_json.error_line)
-		print("Error String: ", result_json.error_string)
 
 
 func create_unit(cell_coordinates):
@@ -67,7 +57,7 @@ func create_unit(cell_coordinates):
 	var unit_terrain_dict = unit_data[unit_type]
 	var strength = randi()%5 + 6
 	var team = get_parent().turn_manager.active_player
-	unit_instance.init(unit_type, unit_terrain_dict, strength, \
+	unit_instance.init(unit_type, unit_astar_nodes[unit_type], unit_terrain_dict, strength, \
 		map.tilemap.get_coordinates_from_cell(cell_coordinates, true), team, team_colour_dict[team])
 	#unit_instance.set_name("unit")
 	add_child(unit_instance)
@@ -103,7 +93,7 @@ func create_messenger():
 			if map.tilemap.cell_half_offset == 2:
 				base_coordinates += Vector2(map.tilemap.grid_cell_width/2, map.tilemap.grid_cell_width/2)
 			break
-	messenger_instance.init('messenger', unit_terrain_dict, 0, base_coordinates, team)
+	messenger_instance.init('messenger', unit_astar_nodes['messenger'], unit_terrain_dict, 0, base_coordinates, team)
 	add_child(messenger_instance)
 	messenger_list.append(messenger_instance)
 	return messenger_instance
@@ -156,10 +146,18 @@ func toggle_overlay():
 	for unit in unit_list + messenger_list:
 		if unit == selected_unit:
 			continue
-#		if unit.team != get_owner().turn_manager.active_player:
-#			continue
-		#var toggle = unit.team == get_parent().turn_manager.active_player and \
-		#				overlay_on and unit.goal != Vector2(0,0)
-		var toggle = overlay_on and unit.goal != Vector2(0,0)
-		#unit.toggle_overlay(toggle, unit.in_combat)
-		unit.toggle_overlay(toggle)
+		unit.toggle_overlay(overlay_on)
+
+
+func load_unit_data():
+	var file = File.new()
+	file.open("res://assets/units/unit_data.json", file.READ)
+	var text = file.get_as_text()
+	var result_json = JSON.parse(text)
+	if result_json.error == OK:
+		var data = result_json.result
+		return data
+	else:
+		print("Error: ", result_json.error)
+		print("Error Line: ", result_json.error_line)
+		print("Error String: ", result_json.error_string)

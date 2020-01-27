@@ -8,10 +8,11 @@ var target_unit_orders
 var home_coordinates
 
 
-func init(unit_type, data_dict, strength, home_coordinates, team=1):
+func init(unit_type, astar_node, data_dict, strength, home_coordinates, team=1):
 	self.team = team
 	self.unit_type = unit_type
 	self.terrain_dict = data_dict
+	self.astar_node = astar_node
 	
 	self.home_coordinates = home_coordinates
 	self.position = self.home_coordinates
