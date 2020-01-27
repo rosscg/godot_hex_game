@@ -67,8 +67,9 @@ func set_goal(goal_to_set, path_to_set=null):
 		#for point in map.smooth(self.target_unit.calc_unit_path(self.target_unit_orders)):
 		#	orders_path_line.add_point(point - self.position)
 		self.orders_goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(target_unit_orders), true) - self.position
-		self.orders_goal_sprite.visible = unit_manager.overlay_on
-		self.orders_path_line.visible = unit_manager.overlay_on
+		self.toggle_overlay(unit_manager.overlay_on)
+		#self.orders_goal_sprite.visible = unit_manager.overlay_on
+		#self.orders_path_line.visible = unit_manager.overlay_on
 
 
 func set_message(target_unit, target_unit_orders):
@@ -94,6 +95,5 @@ func _pass_message():
 
 func toggle_overlay(toggle, force_display_path=false):
 	.toggle_overlay(toggle)
-	var teammate = get_parent().get_parent().turn_manager.active_player == self.team
-	orders_path_line.visible = toggle and ( self.target_unit != null ) and teammate
-	orders_goal_sprite.visible = toggle and ( self.target_unit != null ) and teammate
+	orders_path_line.visible = toggle and self.team == turn_manager.active_player
+	orders_goal_sprite.visible = toggle and self.team == turn_manager.active_player and self.target_unit != null

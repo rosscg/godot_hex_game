@@ -1,7 +1,6 @@
 ## Todo:
 
 ### Now:
-* BUG: Path line does not hide during combat, or does not point to attacked unit.
 
 ### Next:
 * One astar node per unit type
@@ -23,6 +22,7 @@
 * Disable interface during turn processing
 * Decide on whether to keep occupied_cells as an array
 * Change Army to animated sprite and set sprite with code.
+* Blue unit path display line misses origin point for hex map when hovering NW of unit.
 
 ### Long-Term Features:
 Weather - overlay

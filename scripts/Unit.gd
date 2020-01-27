@@ -5,11 +5,9 @@ onready var goal_sprite : Sprite = $GoalSprite
 onready var tilemap : Node2D = get_parent().map.tilemap
 onready var map : Node2D = get_parent().map
 onready var unit_manager : Node2D = get_parent()
+onready var turn_manager : Node2D = get_parent().get_parent().turn_manager
 #onready var selected_unit : Node2D = get_parent().selected_unit
 #onready var sprite : Sprite = $Sprite
-
-var line_formation_dict = {'N': Vector2(20,0), 'E': Vector2(0,20), 'S': Vector2(-20,0), 'W': Vector2(0,-20)}
-#var col_formation_dict = {'N': Vector2(0,20), 'E': Vector2(-20,0), 'S': Vector2(0,-20), 'W': Vector2(20,0)}
 
 #var team_sprite_dict = {1: 'team_red', 2: 'team_blue'}
 var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
@@ -128,14 +126,12 @@ func set_goal(goal_to_set, path_to_set=null):
 		# Remove smoothed-past point:
 		planned_path_line.remove_point(3)		
 	############ Finished repeat ###
-	self.planned_path_line.visible = unit_manager.overlay_on
 	self.goal_sprite.position = tilemap.get_coordinates_from_cell(tilemap.get_cell_from_coordinates(self.goal), true) - self.position
-	self.goal_sprite.visible = unit_manager.overlay_on # and self.goal != Vector2(0,0)
+	toggle_overlay(unit_manager.overlay_on)
 
 
 func select_unit(select=true):
-	self.goal_sprite.visible = (select or unit_manager.overlay_on)# and self.goal != Vector2(0,0)
-	self.planned_path_line.visible = (select or unit_manager.overlay_on)
+	self.toggle_overlay(select or unit_manager.overlay_on)
 	self.selected_poly.visible = select
 	# Update unit_manager:
 	if select:
@@ -169,7 +165,7 @@ func calc_unit_path(goal_to_set, as_cell_coords = false, obstacles = []):
 		
 
 func toggle_overlay(toggle, force_display_path=false):
-	self.goal_sprite.visible = toggle
-	self.planned_path_line.visible = toggle or force_display_path
+	self.goal_sprite.visible = toggle and in_combat == null and self.team == turn_manager.active_player
+	self.planned_path_line.visible = ( toggle or force_display_path ) and in_combat == null and self.team == turn_manager.active_player
 	
 	

@@ -115,6 +115,7 @@ func _on_OverlayButton_button_up():
 
 func _on_ChangeTeamButton_button_up():
 	turn_manager.active_player = turn_manager.active_player % 2 + 1
+	get_node("GUI/ActivePlayerPoly").color = unit_manager.team_colour_dict[turn_manager.active_player]
 	# Reset path drawing:
 	unit_manager.toggle_overlay()
 	unit_manager.toggle_overlay()

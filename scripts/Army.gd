@@ -65,9 +65,9 @@ func _process(delta: float) -> void:
 			if is_instance_valid(self.in_combat):
 				self.planned_path = PoolVector2Array([in_combat.position])
 				##############################
-				planned_path_line.clear_points()
+				self.planned_path_line.clear_points()
 				for point in self.planned_path:
-					planned_path_line.add_point(point - position)
+					self.planned_path_line.add_point(point - position)
 				###################################
 			else:
 				in_combat = null
@@ -167,7 +167,10 @@ func toggle_combat(opponent):
 	if opponent:
 		self.status_sprite.visible = true
 		self.goal_sprite.visible = false
+		self.planned_path_line.visible = false
 	else:
 		self.status_sprite.visible = false
 		self.goal_sprite.visible = self.goal and (unit_manager.overlay_on or unit_manager.selected_unit == self) and \
+										self.team == get_node("/root/Main").turn_manager.active_player
+		self.planned_path_line.visible = self.goal and (unit_manager.overlay_on or unit_manager.selected_unit == self) and \
 										self.team == get_node("/root/Main").turn_manager.active_player

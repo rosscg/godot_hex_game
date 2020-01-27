@@ -425,6 +425,7 @@ visible = false
 texture = ExtResource( 13 )
 
 [node name="Light2D" type="Light2D" parent="Map"]
+position = Vector2( 6.19016, 10.8797 )
 enabled = false
 texture = SubResource( 4 )
 offset = Vector2( 720, 450 )
@@ -492,6 +493,12 @@ margin_top = 77.0
 margin_right = 109.0
 margin_bottom = 103.0
 text = "Toggle Paths"
+
+[node name="ActivePlayerPoly" type="Polygon2D" parent="GUI"]
+position = Vector2( -642.458, -200.425 )
+scale = Vector2( 3.11983, 1.19548 )
+color = Color( 0.55, 0, 0, 1 )
+polygon = PoolVector2Array( 207.898, 228.919, 207.945, 200.094, 242.412, 200.055, 242.412, 228.919 )
 
 [node name="ChangeTeamButton" type="Button" parent="GUI"]
 margin_left = 10.0

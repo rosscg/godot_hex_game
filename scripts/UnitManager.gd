@@ -161,4 +161,5 @@ func toggle_overlay():
 		#var toggle = unit.team == get_parent().turn_manager.active_player and \
 		#				overlay_on and unit.goal != Vector2(0,0)
 		var toggle = overlay_on and unit.goal != Vector2(0,0)
-		unit.toggle_overlay(toggle, unit.in_combat)
+		#unit.toggle_overlay(toggle, unit.in_combat)
+		unit.toggle_overlay(toggle)

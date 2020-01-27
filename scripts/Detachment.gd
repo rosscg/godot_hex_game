@@ -1,5 +1,7 @@
 extends "res://scripts/Unit.gd"
 
+var line_formation_dict = {'N': Vector2(20,0), 'E': Vector2(0,20), 'S': Vector2(-20,0), 'W': Vector2(0,-20)}
+
 var parent_army
 var rank
 
