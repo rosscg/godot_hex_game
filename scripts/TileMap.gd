@@ -8,7 +8,7 @@ var grid_cell_height = cell_size.y
 var grid_cell_width = cell_size.x
 var grid_dimensions = get_used_rect()
 
-var tile_id_types = {0: 'dark_grass', 1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 5: 'lightforest', 6: 'marsh', 
+var tile_id_types = {0: 'darkgrass', 1: 'grass', 2: 'dirt', 3: 'lowhills', 4: 'forest', 5: 'lightforest', 6: 'marsh', 
 						7: 'hillforest', 8: 'mountain', 9: 'snow', 10: 'water', 11: 'deepwater', 12: 'road'}
 var impassable_tile_ids = [10, 11] # Tile id 11 'deepwater' considered impassable
 
@@ -96,8 +96,9 @@ func get_coordinates_from_cell(cell: Vector2, centred = false):
 	elif self.cell_half_offset == 1: # offset in y coordinate (flat top)
 		if int(cell.x) % 2 != 0:
 			coordinates.y += grid_cell_height / 2
-	if centred: 
-		coordinates += cell_size/2
+	if centred:
+		var half_cell_size = max(cell_size.x, cell_size.y)/2 
+		coordinates += Vector2(half_cell_size, half_cell_size)
 	return coordinates
 
 
@@ -275,8 +276,8 @@ func get_neighbours(cell, radius=1, include_self = false):
 			Vector2(cell.x + 1, cell.y),
 			Vector2(cell.x + 1, cell.y + 1)])
 	elif self.cell_half_offset == 1: # Flat-top hex grid
-		if (grid_offset == Vector2(0,0) and fmod(cell.y, 2) == 0) or \
-			 ( grid_offset == Vector2(1,1) and fmod(cell.y, 2) != 0 ):
+		if (grid_offset == Vector2(0,0) and fmod(cell.x, 2) == 0) or \
+			 ( grid_offset == Vector2(1,1) and fmod(cell.x, 2) != 0 ):
 			neighbouring_cells = PoolVector2Array([
 				Vector2(cell.x, cell.y - 1),
 				Vector2(cell.x + 1, cell.y - 1),
