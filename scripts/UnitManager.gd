@@ -58,12 +58,11 @@ func create_unit(cell_coordinates):
 	var unit_terrain_dict = unit_data[unit_type]
 	var strength = randi()%5 + 6
 	var team = get_parent().turn_manager.active_player
-	unit_instance.init(unit_type, unit_astar_nodes[unit_type], unit_terrain_dict, strength, \
+	unit_instance.init(unit_type, unit_terrain_dict, strength, \
 		map.tilemap.get_coordinates_from_cell(cell_coordinates, true), team, team_colour_dict[team])
 	#unit_instance.set_name("unit")
 	add_child(unit_instance)
 	unit_list.append(unit_instance)
-	
 	
 	# Detachment Testing
 #	var detachment_instance = detachment_scene.instance()
@@ -93,7 +92,7 @@ func create_messenger():
 			if map.tilemap.cell_half_offset == 2:
 				base_coordinates += Vector2(map.tilemap.grid_cell_width/2, map.tilemap.grid_cell_width/2)
 			break
-	messenger_instance.init('messenger', unit_astar_nodes['messenger'], unit_terrain_dict, 0, base_coordinates, team)
+	messenger_instance.init('messenger', unit_terrain_dict, 0, base_coordinates, team)
 	add_child(messenger_instance)
 	messenger_list.append(messenger_instance)
 	return messenger_instance

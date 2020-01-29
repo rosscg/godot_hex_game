@@ -12,11 +12,10 @@ var strength
 var stored_path : = PoolVector2Array()
 
 
-func init(unit_type, astar_node, data_dict, strength, start_coordinates, team=1, team_colour=Color( 0.55, 0, 0, 1 )): #TODO: remove defaults?
+func init(unit_type, data_dict, strength, start_coordinates, team=1, team_colour=Color( 0.55, 0, 0, 1 )): #TODO: remove defaults?
 	self.team = team
 	self.unit_type = unit_type
 	self.terrain_dict = data_dict
-	self.astar_node = astar_node
 	
 	self.strength = strength
 	self.position = start_coordinates
@@ -33,9 +32,6 @@ func _ready() -> void:
 	#Add occupied cell to map array
 	for cell in occupied_cells:
 		map.cell_array[cell.x][cell.y] = self
-
-	# Each unit stores its own astar node
-	astar_node = tilemap.create_astar_node(terrain_dict)
 
 	return
 

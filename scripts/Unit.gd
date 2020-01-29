@@ -9,7 +9,6 @@ onready var turn_manager : Node2D = get_parent().get_parent().turn_manager
 #onready var selected_unit : Node2D = get_parent().selected_unit
 #onready var sprite : Sprite = $Sprite
 
-#var team_sprite_dict = {1: 'team_red', 2: 'team_blue'}
 var base_speed : = 30	# Speed is calculated as base_speed / terrain_speed
 var unit_type
 var team
@@ -20,7 +19,6 @@ var occupied_cells = []
 var last_cell
 var second_last_cell
 var goal : = Vector2()
-var astar_node
 var in_combat = null
 
 var speed : float
@@ -157,7 +155,7 @@ func calc_unit_path(goal_to_set, as_cell_coords = false, obstacles = []):
 			if tilemap.get_cell_from_coordinates(unit.position) == tilemap.get_cell_from_coordinates(goal_to_set):
 				continue
 			obstacles.append(tilemap.get_cell_from_coordinates(unit.position))
-		var path = tilemap.find_path(self.position, goal_to_set, self.astar_node, as_cell_coords, obstacles)
+		var path = tilemap.find_path(self.position, goal_to_set, unit_manager.unit_astar_nodes[self.unit_type], as_cell_coords, obstacles)
 		return path
 		
 
