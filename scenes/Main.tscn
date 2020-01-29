@@ -425,7 +425,6 @@ visible = false
 texture = ExtResource( 13 )
 
 [node name="Light2D" type="Light2D" parent="Map"]
-position = Vector2( 6.19016, 10.8797 )
 enabled = false
 texture = SubResource( 4 )
 offset = Vector2( 720, 450 )

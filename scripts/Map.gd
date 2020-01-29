@@ -39,13 +39,12 @@ func display_path(selected_unit, milliseconds=12000): #TODO: set default millise
 	hover_cell_sprite.visible = false
 	#tilemap_overlay.clear()
 	var path = selected_unit.calc_unit_path(get_global_mouse_position(), true)
-	#var path_truncated = tilemap.find_path_for_distance(path, 12, selected_unit.terrain_dict)
 	#path.remove(0)
 	#for p in path:
 	#	tilemap_overlay.set_cellv(p, 1)
-	var point_path = []
-	#for p in smooth(path_truncated):
-	for p in smooth(path):
+	var point_path = [selected_unit.position]
+#	for p in smooth(path):
+	for p in path:
 		point_path.append(tilemap.get_coordinates_from_cell(p, true))
 	line_2d.points = smooth(point_path)
 	#if len(point_path) > 0:
@@ -53,14 +52,10 @@ func display_path(selected_unit, milliseconds=12000): #TODO: set default millise
 	#	hover_cell_sprite2.visible = true
 	#else:
 	#	hover_cell_sprite2.visible = false
-	#point_path = []
-	#for p in smooth(path):
-	#	point_path.append(tilemap.get_coordinates_from_cell(p, true))
-	#line_2d2.points = point_path
-	
 	var path_truncated = tilemap.find_path_for_time(path, selected_unit.base_speed, milliseconds, selected_unit.terrain_dict)
 	var point_path_truncated = [selected_unit.position]
-	for p in smooth(path_truncated):
+#	for p in smooth(path_truncated):
+	for p in path_truncated:
 		point_path_truncated.append(tilemap.get_coordinates_from_cell(p, true))
 	line_2d2.points = smooth(point_path_truncated)
 	if len(point_path_truncated) > 0:

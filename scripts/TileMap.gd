@@ -1,8 +1,7 @@
 extends TileMap
 
 # Add 1,1 to grid coordinates as otherwise Vector2(0,0) parses as null
-# Change to Vector2(0,0) to disable
-# Warning: changing may disrupt get_neighbours() mapping (untested)
+#const grid_offset = Vector2(0,0)
 const grid_offset = Vector2(1,1)
 
 var grid_cell_height = cell_size.y
@@ -14,9 +13,11 @@ var tile_id_types = {0: 'dark_grass', 1: 'grass', 2: 'dirt', 3: 'lowhills', 4: '
 var impassable_tile_ids = [10, 11] # Tile id 11 'deepwater' considered impassable
 
 
-func _ready() -> void:
-	return # Temp skip check. TODO: reenable
-	### Map integrity checks ###
+#func _ready() -> void:
+#	_validate_tilemap()
+
+
+func _validate_tilemap():
 	# Check for vacant cells in tilemap:
 	if len(get_used_cells()) != grid_dimensions.end.x * grid_dimensions.end.y:
 		print('ERROR: ', grid_dimensions.end.x * grid_dimensions.end.y - len(get_used_cells()), ' cells missing from tilemap: ', self.name)
@@ -233,8 +234,8 @@ func get_time_for_path(cell_path, base_speed, terrain_dict):
 	
 
 func get_tile_terrain(cell):
-	if self.get_cellv(cell) == -1:		# Debugging
-		print(cell)
+	if self.get_cellv(cell) == -1:				# Debugging
+		print('No terrain for cell: ', cell)	#
 	return tile_id_types[self.get_cellv(cell)]
 
 
@@ -263,7 +264,7 @@ func get_used_cells():
 func get_neighbours(cell, radius=1, include_self = false):
 	var neighbouring_cells
 	var neighbouring_cells_within_map = PoolVector2Array([])
-	if self.cell_half_offset == 2: # no offset: squares
+	if self.cell_half_offset == 2: # No offset: square grid
 		neighbouring_cells = PoolVector2Array([
 			Vector2(cell.x - 1, cell.y - 1),
 			Vector2(cell.x - 1, cell.y),
@@ -274,7 +275,8 @@ func get_neighbours(cell, radius=1, include_self = false):
 			Vector2(cell.x + 1, cell.y),
 			Vector2(cell.x + 1, cell.y + 1)])
 	elif self.cell_half_offset == 1: # Flat-top hex grid
-		if fmod(cell.x, 2) != 0:
+		if (grid_offset == Vector2(0,0) and fmod(cell.y, 2) == 0) or \
+			 ( grid_offset == Vector2(1,1) and fmod(cell.y, 2) != 0 ):
 			neighbouring_cells = PoolVector2Array([
 				Vector2(cell.x, cell.y - 1),
 				Vector2(cell.x + 1, cell.y - 1),
@@ -291,7 +293,8 @@ func get_neighbours(cell, radius=1, include_self = false):
 				Vector2(cell.x - 1, cell.y + 1),
 				Vector2(cell.x - 1, cell.y)])
 	else: # Pointy-top hex grid
-		if fmod(cell.y, 2) != 0:
+		if (grid_offset == Vector2(0,0) and fmod(cell.y, 2) == 0) or \
+			 ( grid_offset == Vector2(1,1) and fmod(cell.y, 2) != 0 ):
 			neighbouring_cells = PoolVector2Array([
 				Vector2(cell.x, cell.y - 1),
 				Vector2(cell.x + 1, cell.y),

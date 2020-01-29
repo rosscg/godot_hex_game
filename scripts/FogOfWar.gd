@@ -6,7 +6,8 @@ var live_units			# Whether unit name is still alive
 
 
 func _ready() -> void:
-	set_process(false)
+	pass
+	#set_process(false)
 	
 
 func _process(delta):
