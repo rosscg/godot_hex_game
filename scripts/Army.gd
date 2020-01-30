@@ -31,7 +31,7 @@ func _ready() -> void:
 	
 	#Add occupied cell to map array
 	for cell in occupied_cells:
-		map.cell_array[cell.x][cell.y] = self
+		map.cell_array[cell.x][cell.y] = self.name
 
 	return
 
@@ -97,10 +97,10 @@ func _move_along_path(move_distance: float) -> void:
 	# Wait if next cell is still occupied:
 	if len(planned_path) > 0:
 		var next_cell = tilemap.get_cell_from_coordinates(planned_path[0])
-		if map.cell_array[next_cell.x][next_cell.y] and map.cell_array[next_cell.x][next_cell.y] != self:
+		if map.cell_array[next_cell.x][next_cell.y] and map.cell_array[next_cell.x][next_cell.y] != self.name:
 			# Find alternate route unless the occupied cell is the goal, in which case, wait.
 			if next_cell != tilemap.get_cell_from_coordinates(self.goal):
-				self.planned_path = self.calc_unit_path(self.goal, false, [next_cell])
+				self.planned_path = self.calc_unit_path(self.goal, false, true, PoolVector2Array([next_cell]))
 				self.planned_path.remove(0)
 			# If waiting, move to centre of cell:
 			else:
@@ -109,8 +109,10 @@ func _move_along_path(move_distance: float) -> void:
 	# Update map cell array
 	var cell_point = tilemap.get_cell_from_coordinates(self.position)
 	if cell_point != occupied_cells[0]:
-		map.cell_array[occupied_cells[0].x][occupied_cells[0].y] = null
-		map.cell_array[cell_point.x][cell_point.y] = self
+		for cell in occupied_cells:
+			map.cell_array[cell.x][cell.y] = null
+		for cell in tilemap.get_neighbours(tilemap.get_cell_from_coordinates(self.position), 1, true):
+			map.cell_array[cell.x][cell.y] = self.name
 
 
 func _draw():
@@ -184,7 +186,7 @@ func get_messenger_time():
 	var messenger_astar = unit_manager.unit_astar_nodes['messenger']
 	var messenger_dict = unit_manager.unit_data['messenger']
 	var messenger_path = tilemap.find_path(base_coordinates, self.position, messenger_astar, true)
-	var messenger_time = tilemap.get_time_for_path(messenger_path, self.base_speed * 6, messenger_dict) # TODO: Keep multiplied synchronous
+	var messenger_time = tilemap.get_time_for_path(messenger_path, self.base_speed * 3, messenger_dict) # TODO: Keep multiplied synchronous
 	return messenger_time
 	
 	

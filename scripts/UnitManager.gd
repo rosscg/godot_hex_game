@@ -121,7 +121,7 @@ func detect_combat():
 	# TODO: Currently won't initiate when two units 'swap' cells. -- should be working now
 	for unit in unit_list:
 		for occupied_cell in unit.occupied_cells:
-			for neighbour in map.tilemap.get_neighbours(occupied_cell):# + occupied_cell:
+			for neighbour in map.tilemap.get_neighbours(occupied_cell, 2):
 				var target_unit = get_unit_in_cell(neighbour, unit)
 				if target_unit and target_unit.team != unit.team:
 					unit.toggle_combat(target_unit)
@@ -152,6 +152,7 @@ func load_unit_data():
 	var file = File.new()
 	file.open("res://assets/units/unit_data.json", file.READ)
 	var text = file.get_as_text()
+	file.close()
 	var result_json = JSON.parse(text)
 	if result_json.error == OK:
 		var data = result_json.result

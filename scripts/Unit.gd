@@ -15,7 +15,7 @@ var team
 var terrain_dict
 var planned_path : = PoolVector2Array()
 var smoothed_planned_path : = PoolVector2Array()
-var occupied_cells = []
+var occupied_cells = PoolVector2Array()
 var last_cell
 var second_last_cell
 var goal : = Vector2()
@@ -27,7 +27,7 @@ var move_distance : float
 
 func _ready() -> void:	
 	set_process(false)
-	occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
+	occupied_cells = tilemap.get_neighbours(tilemap.get_cell_from_coordinates(self.position), 1, true)
 	return
 
 
@@ -66,7 +66,8 @@ func _process(delta: float) -> void:
 			if tilemap.cell_half_offset == 2:
 				self.smoothed_planned_path.remove(0)
 		# Update occupied_cells
-		occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
+		#occupied_cells = [tilemap.get_cell_from_coordinates(self.position)]
+		occupied_cells = tilemap.get_neighbours(tilemap.get_cell_from_coordinates(self.position), 1, true)
 	return
 
 
@@ -93,7 +94,7 @@ func _move_along_path(move_distance: float) -> void:
 				planned_path.remove(0)
 
 
-func set_goal(goal_to_set, path_to_set=null):
+func set_goal(goal_to_set, path_to_set=null, avoid_teammates=false):
 	# Update the goal and path for a unit
 	if tilemap.get_cellv(tilemap.get_cell_from_coordinates(goal_to_set)) in tilemap.impassable_tile_ids:
 		# Goal is in impassable terrain
@@ -103,7 +104,7 @@ func set_goal(goal_to_set, path_to_set=null):
 		self.planned_path = path_to_set
 	# Calculate path if not provided:
 	else:
-		self.planned_path = self.calc_unit_path(goal_to_set, false)
+		self.planned_path = self.calc_unit_path(goal_to_set, false, avoid_teammates)
 		if len(self.planned_path) > 0: #TODO remove is bad if on the far side to next cell -- could cut corners.
 			self.planned_path.remove(0)
 	# Create Smoothed planned_path for display on map:
@@ -147,14 +148,16 @@ func calc_path_cost(path):
 	return cost
 
 
-func calc_unit_path(goal_to_set, as_cell_coords = false, obstacles = []):
-		# Navigate around teammates: 
-		for unit in unit_manager.unit_list:
-			if unit == self or unit.team != self.team:
-				continue
-			if tilemap.get_cell_from_coordinates(unit.position) == tilemap.get_cell_from_coordinates(goal_to_set):
-				continue
-			obstacles.append(tilemap.get_cell_from_coordinates(unit.position))
+func calc_unit_path(goal_to_set, as_cell_coords = false, avoid_teammates = false, obstacles = PoolVector2Array()):
+		# Navigate around teammates:
+		if avoid_teammates:
+			for unit in unit_manager.unit_list:
+				if unit == self or unit.team != self.team:
+					continue
+				if tilemap.get_cell_from_coordinates(unit.position) == tilemap.get_cell_from_coordinates(goal_to_set):
+					continue
+				#obstacles.append(tilemap.get_cell_from_coordinates(unit.position))
+				obstacles += unit.occupied_cells
 		var path = tilemap.find_path(self.position, goal_to_set, unit_manager.unit_astar_nodes[self.unit_type], as_cell_coords, obstacles)
 		return path
 		

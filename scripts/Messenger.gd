@@ -17,7 +17,7 @@ func init(unit_type, data_dict, strength, home_coordinates, team=1):
 	self.position = self.home_coordinates
 	self.target_unit = null
 	self.target_unit_orders = null
-	self.base_speed *= 6 # TODO: keep synchronous with get_messenger_time() in Army.gd
+	self.base_speed *= 3 # TODO: keep synchronous with get_messenger_time() in Army.gd
 
 
 func _process(delta: float) -> void:
@@ -54,7 +54,7 @@ func _move_along_path(move_distance: float) -> void: # TODO: move into parent sc
 
 
 
-func set_goal(goal_to_set, path_to_set=null):
+func set_goal(goal_to_set, path_to_set=null, avoid_teammates=false):
 	if .set_goal(goal_to_set, path_to_set) == false:
 		return # False if impassable terrain
 	
@@ -85,7 +85,7 @@ func _pass_message():
 	# If reached target unit, give orders and return home:
 	if self.target_unit and tilemap.get_cell_from_coordinates(self.position) == \
 			tilemap.get_cell_from_coordinates(self.target_unit.position):
-		self.target_unit.set_goal(self.target_unit_orders)
+		self.target_unit.set_goal(self.target_unit_orders, null, true)
 		self.target_unit = null
 		self.target_unit_orders = null
 		self.orders_path_line.clear_points()

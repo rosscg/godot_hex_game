@@ -327,5 +327,5 @@ func get_neighbours(cell, radius=1, include_self = false):
 				new_cells.append(cell3)
 			neighbouring_cells_within_map.append_array(new_cells)
 	if include_self:
-		neighbouring_cells_within_map.append(cell)
+		neighbouring_cells_within_map = PoolVector2Array([cell]) + neighbouring_cells_within_map
 	return neighbouring_cells_within_map

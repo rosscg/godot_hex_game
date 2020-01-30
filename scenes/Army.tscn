@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/Army.gd" type="Script" id=1]
-[ext_resource path="res://assets/hover3_20px.png" type="Texture" id=2]
+[ext_resource path="res://assets/hover_hex_solid.png" type="Texture" id=2]
 [ext_resource path="res://assets/units/combat1.png" type="Texture" id=3]
 [ext_resource path="res://assets/units/combat2.png" type="Texture" id=4]
 

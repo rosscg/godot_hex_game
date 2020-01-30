@@ -38,7 +38,7 @@ func display_path(selected_unit, milliseconds=12000): #TODO: set default millise
 		return null
 	hover_cell_sprite.visible = false
 	#tilemap_overlay.clear()
-	var path = selected_unit.calc_unit_path(get_global_mouse_position(), true)
+	var path = selected_unit.calc_unit_path(get_global_mouse_position(), true, true)
 	#path.remove(0)
 	#for p in path:
 	#	tilemap_overlay.set_cellv(p, 1)

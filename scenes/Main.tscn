@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://scripts/Main.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Map.gd" type="Script" id=2]
@@ -10,11 +10,10 @@
 [ext_resource path="res://assets/hex_tileset_20px.png" type="Texture" id=8]
 [ext_resource path="res://scripts/TileMap.gd" type="Script" id=9]
 [ext_resource path="res://assets/hex_tileset_20px.tres" type="TileSet" id=10]
-[ext_resource path="res://assets/hover_20px.png" type="Texture" id=11]
-[ext_resource path="res://assets/hover3_20px.png" type="Texture" id=12]
-[ext_resource path="res://assets/hover2_20px.png" type="Texture" id=13]
-[ext_resource path="res://scripts/UnitManager.gd" type="Script" id=14]
-[ext_resource path="res://scripts/TurnManager.gd" type="Script" id=15]
+[ext_resource path="res://assets/hover_hex.png" type="Texture" id=11]
+[ext_resource path="res://assets/hover_hex_solid.png" type="Texture" id=12]
+[ext_resource path="res://scripts/UnitManager.gd" type="Script" id=13]
+[ext_resource path="res://scripts/TurnManager.gd" type="Script" id=14]
 
 [sub_resource type="TileSet" id=1]
 0/name = "hex_tileset_20px.png 0"
@@ -413,7 +412,7 @@ texture_mode = 101
 [node name="HoverCell" type="Sprite" parent="Map"]
 visible = false
 z_index = 6
-texture = ExtResource( 13 )
+texture = ExtResource( 11 )
 
 [node name="HoverCell2" type="Sprite" parent="Map"]
 visible = false
@@ -422,7 +421,7 @@ texture = ExtResource( 12 )
 
 [node name="SelectedCell" type="Sprite" parent="Map"]
 visible = false
-texture = ExtResource( 13 )
+texture = ExtResource( 11 )
 
 [node name="Light2D" type="Light2D" parent="Map"]
 enabled = false
@@ -432,10 +431,10 @@ mode = 3
 range_item_cull_mask = 262144
 
 [node name="UnitManager" type="Node" parent="."]
-script = ExtResource( 14 )
+script = ExtResource( 13 )
 
 [node name="TurnManager" type="Node" parent="."]
-script = ExtResource( 15 )
+script = ExtResource( 14 )
 
 [node name="GUI" type="Control" parent="."]
 editor/display_folded = true
