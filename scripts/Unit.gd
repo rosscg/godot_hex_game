@@ -158,7 +158,7 @@ func calc_unit_path(goal_to_set, as_cell_coords = false, avoid_teammates = false
 					continue
 				#obstacles.append(tilemap.get_cell_from_coordinates(unit.position))
 				obstacles += unit.occupied_cells
-		var path = tilemap.find_path(self.position, goal_to_set, unit_manager.unit_astar_nodes[self.unit_type], as_cell_coords, obstacles)
+		var path = tilemap.find_path_or_closest(self.position, goal_to_set, unit_manager.unit_astar_nodes[self.unit_type], as_cell_coords, obstacles)
 		return path
 		
 

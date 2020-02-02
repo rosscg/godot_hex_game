@@ -175,6 +175,20 @@ func find_path(start_pos, end_pos, astar_node, as_cell_coords=false, obstacles=[
 	return cell_path
 
 
+func find_path_or_closest(start_pos, end_pos, astar_node, as_cell_coords=false, obstacles=[]):
+	var cell_path = find_path(start_pos, end_pos, astar_node, as_cell_coords, obstacles)
+	if len(cell_path) == 0:
+		var path_no_obstructions = find_path(start_pos, end_pos, astar_node, false, [])
+		if len(path_no_obstructions) < 2:
+			return cell_path
+		for i in range(len(path_no_obstructions)-1):
+			var penultimate_point = path_no_obstructions[len(path_no_obstructions)-2-i]
+			var cell_path_2 = find_path(start_pos, Vector2(penultimate_point.x, penultimate_point.y), astar_node, as_cell_coords, obstacles)
+			if len(cell_path_2) > 0:
+				return cell_path_2
+	return cell_path
+
+
 func find_path_for_time(cell_path, base_speed, milliseconds, terrain_dict):
 	var cell_path_truncated = PoolVector2Array([])
 	for i in range(len(cell_path)-1):

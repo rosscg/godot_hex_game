@@ -120,12 +120,13 @@ func get_unit_in_cell(cell_coordinates, ignored_unit=null):
 func detect_combat():
 	# TODO: Currently won't initiate when two units 'swap' cells. -- should be working now
 	for unit in unit_list:
-		for occupied_cell in unit.occupied_cells:
-			for neighbour in map.tilemap.get_neighbours(occupied_cell, 2):
-				var target_unit = get_unit_in_cell(neighbour, unit)
-				if target_unit and target_unit.team != unit.team:
-					unit.toggle_combat(target_unit)
-					#target_unit.in_combat = unit
+		#for occupied_cell in unit.occupied_cells:
+		#for neighbour in map.tilemap.get_neighbours(occupied_cell, 2):
+		for neighbour in map.tilemap.get_neighbours(unit.occupied_cells[0], 1):
+			var target_unit = get_unit_in_cell(neighbour, unit)
+			if target_unit and target_unit.team != unit.team:
+				unit.toggle_combat(target_unit)
+				#target_unit.in_combat = unit
 
 
 func resolve_combat():
