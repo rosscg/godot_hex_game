@@ -46,8 +46,7 @@ func _process(delta: float) -> void:
 		
 		# Units update path to account for new obstructions (e.g. other units)
 		for unit in unit_manager.unit_list:
-			if unit.goal:
-				unit.set_goal(unit.goal, null, true)
+			unit.process_logic()
 		# Messengers update goal in case target_unit has moved
 		for messenger in unit_manager.messenger_list:
 			if messenger.target_unit:

@@ -45,7 +45,8 @@ func _process(delta: float) -> void:
 		# Adding extra beginning points for smoothing (at severity=3)
 		if len(self.smoothed_planned_path) > 1:
 			planned_path_line.add_point((self.smoothed_planned_path[0] - position)/2)
-			planned_path_line.add_point((((self.smoothed_planned_path[0] - position)/2) + (self.smoothed_planned_path[0] - position) + (self.smoothed_planned_path[1] - position))/3)
+			planned_path_line.add_point((((self.smoothed_planned_path[0] - position)/2) + \
+				(self.smoothed_planned_path[0] - position) + (self.smoothed_planned_path[1] - position))/3)
 		for point in self.smoothed_planned_path:
 			planned_path_line.add_point(point - position)
 		# Remove smoothed-past point:
@@ -73,7 +74,8 @@ func _process(delta: float) -> void:
 
 func _move_along_path(move_distance: float) -> void:
 	# If already in planned cell and past the midway point, remove it from path to prevent backtracking.
-	if len(planned_path) > 1 and tilemap.get_cell_from_coordinates(planned_path[0]) == tilemap.get_cell_from_coordinates(self.position):
+	if len(planned_path) > 1 and tilemap.get_cell_from_coordinates(planned_path[0]) == \
+									tilemap.get_cell_from_coordinates(self.position):
 		# Already closer to next cell, don't go to middle of current cell.
 		if (planned_path[0]-planned_path[1]).length() > (tilemap.get_cell_from_coordinates(self.position)-planned_path[1]).length():
 			planned_path.remove(0)
@@ -115,7 +117,8 @@ func set_goal(goal_to_set, path_to_set=null, avoid_teammates=false):
 	# Adding extra beginning points for smoothing (at severity=3)
 	if len(self.smoothed_planned_path) > 1:
 		planned_path_line.add_point((Vector2(0,0) + (self.smoothed_planned_path[0] - position))/2)
-		planned_path_line.add_point((((self.smoothed_planned_path[0] - position)/2) + (self.smoothed_planned_path[0] - position) + (self.smoothed_planned_path[1] - position))/3)
+		planned_path_line.add_point((((self.smoothed_planned_path[0] - position)/2) + \
+			(self.smoothed_planned_path[0] - position) + (self.smoothed_planned_path[1] - position))/3)
 	for point in self.smoothed_planned_path:
 		planned_path_line.add_point(point - position)
 	if planned_path_line.get_point_count() > 3:
@@ -158,12 +161,14 @@ func calc_unit_path(goal_to_set, as_cell_coords = false, avoid_teammates = false
 					continue
 				#obstacles.append(tilemap.get_cell_from_coordinates(unit.position))
 				obstacles += unit.occupied_cells
-		var path = tilemap.find_path_or_closest(self.position, goal_to_set, unit_manager.unit_astar_nodes[self.unit_type], as_cell_coords, obstacles)
+		var path = tilemap.find_path_or_closest(self.position, goal_to_set, 
+			unit_manager.unit_astar_nodes[self.unit_type], as_cell_coords, obstacles)
 		return path
 		
 
 func toggle_overlay(toggle, force_display_path=false):
 	self.goal_sprite.visible = toggle and in_combat == null and self.team == turn_manager.active_player
-	self.planned_path_line.visible = ( toggle or force_display_path ) and in_combat == null and self.team == turn_manager.active_player
+	self.planned_path_line.visible = ( toggle or force_display_path ) and \
+		in_combat == null and self.team == turn_manager.active_player
 	
 	

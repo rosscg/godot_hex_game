@@ -190,4 +190,18 @@ func get_messenger_time():
 	return messenger_time
 	
 	
-	
+func process_logic():
+	# Recalculate path
+	if self.goal:
+		self.set_goal(self.goal, null, true)
+	# Get cells in radius and check for enemies
+	var neighbours = tilemap.get_neighbours(occupied_cells[0], 4)
+	for cell in neighbours:
+		var target_unit = unit_manager.get_unit_in_cell(cell)
+		if target_unit and target_unit.team != self.team:
+			# Target first unit detected
+			self.set_goal(target_unit.position)
+			# TODO: instead, calculate propensity to attack per enemy and choose
+			# favoured target.
+			# TODO: need to reset goal once target dies
+			break
